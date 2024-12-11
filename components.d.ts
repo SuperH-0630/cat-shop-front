@@ -44,6 +44,7 @@ declare module '@vue/runtime-core' {
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanPopup: typeof import('vant/es')['Popup']
+    Wechat: typeof import('./src/components/wechat.vue')['default']
     Wupinitem: typeof import('./src/components/wupinitem.vue')['default']
     Wupinlist: typeof import('./src/components/wupinlist.vue')['default']
   }

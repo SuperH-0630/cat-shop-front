@@ -2,6 +2,7 @@ import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import { clearPlaceholderLoading } from '@/utils/placeholder-loading'
 import useUserStore from "@/store/user"
 import usePathStore from "@/store/path"
+import useWechatStore from "@/store/wechat";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -12,7 +13,8 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     component: () => import('@/views/home.vue'),
     meta: {
-      title: '主页'
+      title: '主页',
+      wechat: true,
     }
   },
   {
@@ -49,6 +51,11 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to) => {
   if (to.meta.title && typeof to.meta.title === 'string') {
     document.title = "猫猫商城 - " + (to.meta.title || "首页")
+  }
+  if (to.meta.wechat && to.meta.wechat === true) {
+    useWechatStore().open()
+  } else {
+    useWechatStore().close()
   }
   usePathStore().pushPath()
   clearPlaceholderLoading()

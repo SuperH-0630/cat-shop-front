@@ -19,6 +19,7 @@
   </el-container>
   <Rightwin></Rightwin>
   <Back></Back>
+  <Wechat></Wechat>
 </template>
 
 <style scoped lang="scss">
