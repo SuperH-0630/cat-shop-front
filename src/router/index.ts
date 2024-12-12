@@ -15,7 +15,6 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: '主页',
       wechat: true,
-      keepAlive: false, //此组件不需要被缓存
     }
   },
   {
@@ -23,7 +22,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/search.vue'),
     meta: {
       title: '搜索',
-      keepAlive: false, //此组件不需要被缓存
     }
   },
   {
@@ -31,7 +29,19 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/wupin.vue'),
     meta: {
       title: '商品',
-      keepAlive: false, //此组件不需要被缓存
+      wechat: true,
+    }
+  },
+  {
+    path: '/center',
+    redirect: '/center/user',
+  },
+  {
+    path: '/center/user',
+    component: () => import('@/views/mine.vue'),
+    meta: {
+      title: '我的',
+      xauth: true,
     }
   }
 ]

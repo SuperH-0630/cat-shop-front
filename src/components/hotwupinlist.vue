@@ -3,7 +3,7 @@
   import useHotWupinStore from "@/store/hotwupin"
 
   const hotWupinStore = useHotWupinStore()
-  hotWupinStore.getLstMust()
+  hotWupinStore.getLst()
 </script>
 
 <template>

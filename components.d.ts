@@ -13,10 +13,12 @@ declare module '@vue/runtime-core' {
     Back: typeof import('./src/components/back.vue')['default']
     Classitem: typeof import('./src/components/classitem.vue')['default']
     Classlist: typeof import('./src/components/classlist.vue')['default']
+    Defaultbuyrecord: typeof import('./src/components/defaultbuyrecord.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDivider: typeof import('element-plus/es')['ElDivider']
@@ -31,6 +33,7 @@ declare module '@vue/runtime-core' {
     ElMain: typeof import('element-plus/es')['ElMain']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElPageHeader: typeof import('element-plus/es')['ElPageHeader']
+    ElResult: typeof import('element-plus/es')['ElResult']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTag: typeof import('element-plus/es')['ElTag']
@@ -50,5 +53,8 @@ declare module '@vue/runtime-core' {
     Wechat: typeof import('./src/components/wechat.vue')['default']
     Wupinitem: typeof import('./src/components/wupinitem.vue')['default']
     Wupinlist: typeof import('./src/components/wupinlist.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }

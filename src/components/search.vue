@@ -33,7 +33,7 @@
   watch(() => route.query?.info, infoController)
 
   const classStore = useClassStore()
-  classStore.getLstMust()
+  classStore.getLst()
 
   const onSearch = () => {
     router.push({
@@ -70,7 +70,7 @@
         @change="onChange"
     >
       <el-option
-          v-for="(item, j) in classStore.getLstWithAll"
+          v-for="(item, j) in classStore.classLstWithAll"
           :key="j"
           :label="item.name"
           :value="item.id"

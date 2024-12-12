@@ -19,7 +19,7 @@
   }
 
   const classStore = useClassStore()
-  classStore.getLstMust()
+  classStore.getLst()
 
   const classId = 2
   const classOf = classStore.findClass(classId) as Class | undefined | null
@@ -122,7 +122,7 @@
   const onClickBag = () => {
     ElNotification({
       title: '已经加入购物车',
-      message: `尊敬的用户您好，我们已经将${num.value}件${wupin.value.name}添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
+      message: `尊敬的用户您好，我们已经将 ${num.value}件 ${wupin.value.name} 添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
       duration: 0,
       type: "success",
       position: 'top-left',

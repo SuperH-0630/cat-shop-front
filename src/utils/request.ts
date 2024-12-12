@@ -16,7 +16,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.status === 200) {
-      return response.data
+      return response
     }
     return Promise.reject()
   },
@@ -24,21 +24,14 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-export default service
 
-export interface Result<T = unknown> {
+export type Result<T = unknown> = Promise<AxiosResponse<result<T>>> | any
+
+export interface result<T = unknown> {
   message: string
   code: number
   data: T
   [key: string]: any // 任意额外数学
 }
 
-export const http = {
-  get<T = any>(url: string, data?: object): Promise<Result<T>> {
-    return service.get<T, Result<T>>(url, data)
-  },
-
-  post<T = any>(url: string, data?: object): Promise<Result<T>> {
-    return service.post<T, Result<T>>(url, data)
-  }
-}
+export default service

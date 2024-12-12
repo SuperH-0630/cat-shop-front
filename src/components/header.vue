@@ -1,20 +1,6 @@
 <script setup lang="ts">
 import logo from '@/assets/images/logo.jpg'
-import wupinPic from "@/assets/images/logo.jpg"
 import UserTitle from "@/components/user_title.vue"
-
-const wupinlst = ref([] as { name: string, id: number, pic: string, classname?: string, tag?: string, price?: number }[])
-
-for (let i = 0; i < 50; i++) {
-  wupinlst.value.push({
-    name: "物品" + i,
-    id: i,
-    pic: wupinPic,
-    classname: "测试",
-    tag: "火爆",
-    price: 9999,
-  })
-}
 
 const router = useRouter()
 const goHome = () => {
@@ -55,7 +41,7 @@ const goHome = () => {
             400-930-1318
           </el-text>
 
-          <UserTitle></UserTitle>
+          <UserTitle class="extrainfo"></UserTitle>
         </div>
       </template>
     </el-page-header>

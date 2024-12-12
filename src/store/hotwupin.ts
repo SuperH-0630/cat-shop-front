@@ -21,6 +21,7 @@ export interface Wupin {
 
 const useHotWupinStore = defineStore("hotWupinStore", () => {
     const wupinLst = ref([] as Wupin[])
+    const lastUpdateTime = ref(Date.now())
 
     const deleteAll = () => {
         wupinLst.value = []
@@ -54,19 +55,25 @@ const useHotWupinStore = defineStore("hotWupinStore", () => {
             })
         }
 
+        lastUpdateTime.value = Date.now()
         return Promise.resolve()
     }
 
     const getLst = () => {
-        if (wupinLst.value.length !== 0) {
-            return Promise.resolve()
+        if (wupinLst.value.length === 0) {
+            return getLstMust()
         }
 
-        return getLstMust()
+        if (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000)) {
+            return getLstMust()
+        }
+
+        return Promise.resolve()
     }
 
     return {
         wupinLst,
+        lastUpdateTime,
         deleteAll,
         getLstMust,
         getLst,

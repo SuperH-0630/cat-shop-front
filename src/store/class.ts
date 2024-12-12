@@ -9,6 +9,7 @@ const useClassStore = defineStore("classStore", () => {
         id: -1,
         name: "全部",
     } as Class)
+    const lastUpdateTime = ref(Date.now())
 
     const deleteAll = () => {
         classLst.value = []
@@ -24,18 +25,24 @@ const useClassStore = defineStore("classStore", () => {
                 id: i,
             })
         }
+
+        lastUpdateTime.value = Date.now()
         return Promise.resolve()
     }
 
     const getLst = () => {
-        if (classLst.value.length !== 0) {
-            return Promise.resolve()
+        if (classLst.value.length === 0) {
+            return getLstMust()
         }
 
-        return getLstMust()
+        if (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000)) {
+            return getLstMust()
+        }
+
+        return Promise.resolve()
     }
 
-    const getLstWithAll = computed(() => {
+    const classLstWithAll = computed(() => {
         getLst()
         return ([allClass.value] as Class[]).concat(classLst.value as Class[])
     })
@@ -51,7 +58,7 @@ const useClassStore = defineStore("classStore", () => {
         deleteAll,
         getLstMust,
         getLst,
-        getLstWithAll,
+        classLstWithAll,
         findClass,
     }
 })
