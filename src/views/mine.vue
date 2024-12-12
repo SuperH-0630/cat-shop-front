@@ -66,9 +66,9 @@
 
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <div style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
-      <div style="display: inline-block; width: 15vw; max-height: 80vh; min-height: 60vh; margin-right: 20px; margin-left: 20px">
-        <el-scrollbar height="80vh">
+    <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
+      <div style="display: inline-block; width: 15vw; max-height: 75vh; min-height: 60vh; margin-right: 20px; margin-left: 20px">
+        <el-scrollbar height="75vh">
           <div style="padding-right: 15px">
             <el-image :src="userStore.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.avatar]"></el-image>
             <div style="margin-right: 15px">
@@ -149,8 +149,8 @@
           </div>
         </el-scrollbar>
       </div>
-      <div style="display: inline-block; width: 40vw; max-height: 85vh; margin-right: 20px; margin-left: 20px">
-        <el-scrollbar height="80vh">
+      <div style="display: inline-block; width: 35vw; max-height: 85vh; margin-right: 20px; margin-left: 20px">
+        <el-scrollbar height="75vh">
           <el-badge :value="kehutag" style="margin-top: 10px">
             <el-text class="user_name"> {{ userStore.name }} </el-text>
           </el-badge>
@@ -174,7 +174,7 @@
           </div>
         </el-scrollbar>
       </div>
-    </div>
+    </el-card>
   </div>
 </template>
 

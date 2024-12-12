@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Rightwin from "@/components/rightwin.vue"
+  // import Rightwin from "@/components/rightwin.vue"
   import logo from "@/assets/images/logo.jpg"
 
   let s = document.querySelector('link[rel="icon"]')
@@ -11,15 +11,17 @@
 </script>
 
 <template>
-  <Header></Header>
-  <el-container>
-    <el-main>
-      <router-view></router-view>
-    </el-main>
-  </el-container>
-  <Rightwin></Rightwin>
-  <Back></Back>
-  <Wechat></Wechat>
+  <div id="home">
+    <Header></Header>
+    <el-container>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+    </el-container>
+    <Rightwin></Rightwin>
+    <Back></Back>
+    <Wechat></Wechat>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -56,13 +58,5 @@
     font-size: 2vh;
     margin-right: 10px;
     vertical-align: middle;
-  }
-
-  .el-container {
-    background-image: url("@/assets/images/bg.jpg");
-  }
-
-  .el-main {
-    background-color: rgba(255, 255, 255, 0.8);
   }
 </style>

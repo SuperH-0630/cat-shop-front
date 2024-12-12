@@ -8,6 +8,16 @@ const props = defineProps({
 })
 
 const item = ref(props.record)
+const router = useRouter()
+
+const goBuyRecord = () => {
+  router.push({
+    path: "/center/buyrecord",
+    query: {
+      id: item.value.id,
+    }
+  })
+}
 
 </script>
 
@@ -22,7 +32,7 @@ const item = ref(props.record)
             </el-text>
           </div>
           <div style="float: right">
-            <el-button>
+            <el-button @click="goBuyRecord">
               <el-icon style="margin-right: 5px"><Shop /></el-icon>
               查看详情
             </el-button>

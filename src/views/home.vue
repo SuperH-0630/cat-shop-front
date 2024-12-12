@@ -68,12 +68,4 @@ const adDiv = ref(null)
   vertical-align: middle;
 }
 
-.el-container {
-  background-image: url("@/assets/images/bg.jpg");
-}
-
-.el-main {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
 </style>

@@ -22,6 +22,7 @@ export interface BuyRecord {
     num: number
     price: number
     time: number
+    fukuantime: number
     fahuotime: number
     shouhuotime: number
     pingjiatime: number
@@ -73,6 +74,7 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
             num: 2,
             price: 9999,
             time: 1734024269,
+            fukuantime: 1734024269,
             fahuotime: 1734024269,
             shouhuotime: 1734024269,
             pingjiatime: 1734024269,
@@ -117,3 +119,57 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
         status: 200,
     })
 }
+
+export function getBuyRecordData(id: number): Result<BuyRecord> {
+    if (id <= 0) {
+        return Promise.reject()
+    }
+
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                id: id,
+                userid: 1,
+                wupinid: 1,
+                classid: 1,
+                num: 2,
+                price: 9999,
+                time: 1734024269,
+                fukuantime: 1734024269,
+                fahuotime: 1734024269,
+                shouhuotime: 1734024269,
+                pingjiatime: 1734024269,
+                dengjituihuotime: 1734024269,
+                tuohuotime: 1734024269,
+                status: 6,
+                kuaidi: "顺丰",
+                kuaidinum: "SF1234",
+                backkuaidi: "",
+                backkuaidinum: "",
+                isgood: true,
+                wupin: {
+                    id: 1,
+                    name: "物品",
+                    pic: wupinPic,
+                    classid: 1,
+                    classOf: {
+                        id: 1,
+                        name: "分类1",
+                    },
+                    tag: "火爆",
+                    hotPrice: 9999,
+                    realPrice: 19999,
+                    info: "hhhhhh",
+                    phone: "17322061610",
+                    email: "songzihuan@song-zh.com",
+                    location: "广东广州",
+                    buytotal: 100,
+                    buygood: 90,
+                },
+            },
+        },
+        status: 200,
+    })
+}
+

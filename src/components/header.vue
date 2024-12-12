@@ -12,7 +12,7 @@ const goHome = () => {
 </script>
 
 <template>
-  <el-header height="10vh">
+  <el-header height="10vh" style="background-color: white">
     <el-page-header icon="">
       <template #title>
         <div class="title_box" @click="goHome">

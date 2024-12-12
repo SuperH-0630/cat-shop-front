@@ -2,7 +2,7 @@ import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import { clearPlaceholderLoading } from '@/utils/placeholder-loading'
 import useUserStore from "@/store/user"
 import usePathStore from "@/store/path"
-import useWechatStore from "@/store/wechat";
+import useWechatStore from "@/store/wechat"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -40,7 +40,16 @@ const routes: RouteRecordRaw[] = [
     path: '/center/user',
     component: () => import('@/views/mine.vue'),
     meta: {
-      title: '我的',
+      title: '个人中心',
+      xauth: true,
+      wechat: true,
+    }
+  },
+  {
+    path: '/center/buyrecord',
+    component: () => import('@/views/buyrecord.vue'),
+    meta: {
+      title: '消费详情',
       xauth: true,
     }
   }

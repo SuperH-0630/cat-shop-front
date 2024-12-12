@@ -8,6 +8,7 @@ import 'element-plus/dist/index.css'
 import '@/assets/styles/reset.scss'
 import '@/assets/styles/scrollbar.scss'
 import '@/assets/styles/common.scss'
+import '@/assets/styles/background.css'
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 

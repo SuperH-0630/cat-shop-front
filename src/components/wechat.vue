@@ -22,10 +22,19 @@
     img_height.value = "auto"
     showWechat.value = true
   }
+
+  const deleayShow = ref(false)
+
+  onMounted(() => {
+    setTimeout(() => {
+      deleayShow.value = true
+    }, 1500)
+  })
+
 </script>
 
 <template>
-  <div v-if="wechatStore.show" class="wechat">
+  <div v-if="wechatStore.show && deleayShow" class="wechat">
     <div class="wechat_box">
       <el-card>
         <template v-if="showWechat" #header>
