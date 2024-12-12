@@ -10,6 +10,13 @@ export interface Wupin {
     tag?: string
     hotPrice?: number
     realPrice: number
+    info: string
+    phone?: string
+    email?: string
+    wechat?: string
+    location?: string
+    buytotal: number
+    buygood: number
 }
 
 const useHotWupinStore = defineStore("hotWupinStore", () => {
@@ -37,6 +44,13 @@ const useHotWupinStore = defineStore("hotWupinStore", () => {
                 tag: "火爆",
                 hotPrice: 9999,
                 realPrice: 19999,
+                info: "hhhhhh",
+                phone: "17322061610",
+                email: "songzihuan@song-zh.com",
+                location: "广东广州",
+                wechat: "12345",
+                buytotal: 100,
+                buygood: 90,
             })
         }
 

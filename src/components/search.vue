@@ -36,7 +36,6 @@
   classStore.getLstMust()
 
   const onSearch = () => {
-    console.log("Tag B")
     router.push({
       path: "/search",
       query: {
@@ -79,10 +78,9 @@
       </el-option>
     </el-select>
     <el-input v-model="search" maxlength="120" placeholder="搜索感兴趣的内容吧" size="large" :clearable="true"></el-input>
-    <el-button size="large" :bg="true" type="success" style="margin-left: 5px" @click="onSearch"> 立刻搜索 </el-button>
+    <el-button size="large" :bg="true" type="success" style="margin-left: 5px" @click="onSearch"> <el-icon style="margin-right: 3px"><Search /></el-icon> 立刻搜索 </el-button>
   </div>
 </template>
 
 <style scoped lang="scss">
-
 </style>
