@@ -1,17 +1,14 @@
 <script setup lang="ts">
   import WupinItem from "@/components/wupinitem.vue"
-  import { Wupin } from "@/store/hotwupin"
+  import useHotWupinStore from "@/store/hotwupin"
 
-  const props = defineProps({
-    "wp": Array as PropType<Wupin[]>,
-  })
-
-  const wupinLst = ref(props.wp as Wupin[])
+  const hotWupinStore = useHotWupinStore()
+  hotWupinStore.getLstMust()
 </script>
 
 <template>
   <div class="classLst">
-    <WupinItem v-for="(item, j) in wupinLst" :key="j" :wp="item"> </WupinItem>
+    <WupinItem v-for="(item, j) in hotWupinStore.wupinLst" :key="j" :wp="item"> </WupinItem>
   </div>
 </template>
 

@@ -32,20 +32,18 @@ const useClassStore = defineStore("classStore", () => {
             return Promise.resolve()
         }
 
-        for (let i = 0; i < 60; i++) {
-            classLst.value.push({
-                name: "分类" + i,
-                id: i,
-            })
-        }
-
-        return Promise.resolve()
+        return getLstMust()
     }
 
     const getLstWithAll = computed(() => {
         getLst()
         return ([allClass.value] as Class[]).concat(classLst.value as Class[])
     })
+
+    const findClass = (id: number) => {
+        getLst()
+        return classLst.value.find((item) => item.id === id)
+    }
 
     return {
         classLst,
@@ -54,6 +52,7 @@ const useClassStore = defineStore("classStore", () => {
         getLstMust,
         getLst,
         getLstWithAll,
+        findClass,
     }
 })
 

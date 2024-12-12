@@ -1,53 +1,32 @@
 <script setup lang="ts">
-import wupinPic from "@/assets/images/logo.jpg"
-
 import ClassLst from '@/components/classlist.vue'
-import WupinLst from '@/components/wupinlist.vue'
 import Search from "@/components/search.vue"
 import Ad from "@/components/ad.vue"
-
-const classification = ref([] as { name: string, id: number }[])
-const wupinlst = ref([] as { name: string, id: number, pic: string, classname?: string, tag?: string, price?: number }[])
-
-for (let i = 0; i < 60; i++) {
-  classification.value.push({
-    name: "分类" + i,
-    id: i,
-  })
-}
-
-for (let i = 0; i < 50; i++) {
-  wupinlst.value.push({
-    name: "物品" + i,
-    id: i,
-    pic: wupinPic,
-    classname: "测试",
-    tag: "火爆",
-    price: 9999,
-  })
-}
+import Hotwupinlist from "@/components/hotwupinlist.vue"
 
 const adDiv = ref(null)
 
 </script>
 
 <template>
-  <Search  style="margin-top: 10px; margin-bottom: 10px" :tyoe="-1" :cl="classification"></Search>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <div style="width: 65%; display: flex; flex-direction: row-reverse; justify-content: space-between; margin-top: 10px">
-      <div style="margin-left: 2vw; flex-grow: 2">
-        <Ad ref="adDiv"></Ad>
-      </div>
-      <div>
-        <el-scrollbar :height="adDiv && adDiv.height">
-          <ClassLst style="width: 100%" :cl="classification"></ClassLst>
-        </el-scrollbar>
+    <div style="width: 65%;">
+      <Search  style="margin-top: 10px; margin-bottom: 10px" :tyoe="-1"></Search>
+      <div style="display: flex; flex-direction: row-reverse; justify-content: space-between; margin-top: 10px">
+        <div style="margin-left: 2vw; flex-grow: 2">
+          <Ad ref="adDiv"></Ad>
+        </div>
+        <div>
+          <el-scrollbar :height="adDiv && adDiv.height">
+            <ClassLst style="width: 100%"></ClassLst>
+          </el-scrollbar>
+        </div>
       </div>
     </div>
   </div>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <div style="width: 90%; display: flex; justify-content: space-between; margin-top: 10px">
-      <WupinLst :cl="wupinlst"></WupinLst>
+      <Hotwupinlist></Hotwupinlist>
     </div>
   </div>
 </template>

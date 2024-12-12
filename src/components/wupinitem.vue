@@ -1,8 +1,20 @@
 <script setup lang="ts">
+  import { Wupin } from "@/store/hotwupin"
+
   const props = defineProps({
-    "wp": Object,
+    "wp": Object as PropType<Wupin>,
   })
   const item = ref(props.wp)
+  const router = useRouter()
+
+  const onClick = () => {
+    router.push({
+      path: "/wupin",
+      query: {
+        "id": item.value?.id || 0,
+      }
+    })
+  }
 </script>
 
 <template>
@@ -10,8 +22,8 @@
     <template #header>
       <el-text class="WupinTitle">
         {{ item.name }} 
-        <span v-if="item.classname">
-        （{{item.classname}}）
+        <span v-if="item.classid && item.classOf && item.classid > 0">
+        （{{item.classOf.name}}）
         </span>
       </el-text>
     </template>
@@ -22,13 +34,24 @@
     </div>
     <template #footer>
       <div style="display: flow-root">
-        <el-text v-if="item.price >= 0" class="hotprice">
+        <el-text v-if="item.hotPrice  && item.hotPrice > 0" class="hotprice">
           火热价：￥{{ (item.price / 100).toFixed(2) }}
+        </el-text>
+        <el-text v-else-if="item.hotPrice  && item.hotPrice <= 0" class="hotprice">
+          免费抢购
+        </el-text>
+        <el-text v-else-if="item.realPrice  && item.realPrice > 0" class="baseprice">
+          售价：￥{{ (item.price / 100).toFixed(2) }}
+        </el-text>
+        <el-text v-else class="hotprice">
+          免费抢购
         </el-text>
         <el-tag v-if="item.tag" type="primary" class="hottag">
           {{ item.tag }}
         </el-tag>
-        <el-button style="float: right" class="btn">查看详情</el-button>
+        <div style="float: right; display: inline">
+          <el-button class="btn" @click="onClick">查看详情</el-button>
+        </div>
       </div>
     </template>
   </el-card>
@@ -58,6 +81,14 @@
 .hotprice {
   font-size: 2vh;
   color: red;
+  font-weight: bold;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.baseprice {
+  font-size: 2vh;
+  color: black;
   font-weight: bold;
   vertical-align: middle;
   margin-right: 10px;

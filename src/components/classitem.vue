@@ -1,18 +1,19 @@
 <script setup lang="ts">
-  import { Class } from "@/store/class"
+  import useClassStore, { Class } from "@/store/class"
 
   const props = defineProps({
     "cl": Object as PropType<Class>,
   })
   const item = ref(props.cl)
   const router = useRouter()
+  const classStore = useClassStore()
 
   const onClick = () => {
     router.push({
       path: "/search",
       query: {
         "info": JSON.stringify({
-          select: [item.value],
+          select: [item.value?.id || classStore.allClass.id],
           search: "",
         })
       }
