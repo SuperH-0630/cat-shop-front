@@ -15,6 +15,25 @@
       }
     })
   }
+
+  const facePrice = computed(() => {
+    if (!item.value) {
+      return 0
+    }
+
+    if (typeof item.value.hotPrice === "number" && item.value.hotPrice < item.value.realPrice) {
+      return item.value.hotPrice >= 0 ? item.value.hotPrice : 0
+    }
+
+    if (typeof item.value.realPrice === "number") {
+      return item.value.realPrice >= 0 ? item.value.realPrice : 0
+    }
+
+    return 0
+  })
+
+  const realPrice = ref(item.value && (item.value.realPrice >= 0 ? item.value.realPrice : 0))
+
 </script>
 
 <template>
@@ -34,17 +53,20 @@
     </div>
     <template #footer>
       <div style="display: flow-root">
-        <el-text v-if="item.hotPrice  && item.hotPrice > 0" class="hotprice">
-          火热价：￥{{ (item.price / 100).toFixed(2) }}
-        </el-text>
-        <el-text v-else-if="item.hotPrice  && item.hotPrice <= 0" class="hotprice">
+        <el-text v-if="facePrice == 0" class="hotprice">
           免费抢购
         </el-text>
-        <el-text v-else-if="item.realPrice  && item.realPrice > 0" class="baseprice">
+        <el-text v-if="facePrice < realPrice" class="hotprice">
+          促销：￥{{ (itfacePrice / 100).toFixed(2) }}
+        </el-text>
+        <el-text v-else-if="facePrice > realPrice" class="hotprice">
+          冤种：￥{{ (itfacePrice / 100).toFixed(2) }}
+        </el-text>
+        <el-text v-else-if="facePrice == realPrice" class="baseprice">
           售价：￥{{ (item.price / 100).toFixed(2) }}
         </el-text>
-        <el-text v-else class="hotprice">
-          免费抢购
+        <el-text v-else-if="realPrice == 0" class="hotprice">
+          冤种：￥{{ (itfacePrice / 100).toFixed(2) }}
         </el-text>
         <el-tag v-if="item.tag" type="primary" class="hottag">
           {{ item.tag }}

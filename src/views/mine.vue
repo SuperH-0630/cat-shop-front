@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import useUserStore from "@/store/user"
-  import {Edit} from "@element-plus/icons-vue"
+  // import {Edit} from "@element-plus/icons-vue"
   import {BuyRecord, getUserBuyRecord} from "@/api/user"
-  import Defaultbuyrecord from "@/components/defaultbuyrecord.vue";
+  // import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
+  import {ElNotification} from "element-plus"
 
   const route = useRoute()
   const router = useRouter()
@@ -19,14 +20,14 @@
 
   userStore.updateInfo()
 
-  const goHome = () => {
-    router.push({
-      path: "/home"
-    })
-  }
+  // const goHome = () => {
+  //   router.push({
+  //     path: "/home"
+  //   })
+  // }
 
   let offset = 0
-  const limit = 3
+  const limit = 20
   const stop = ref(false)
 
   const buyRecord = ref([] as BuyRecord[])
@@ -36,15 +37,12 @@
     }
 
     getUserBuyRecord(offset, limit).then((res) => {
-      console.log("res", res)
       if (res.data.data.total < limit) {
         stop.value = true
       }
 
       offset += res.data.data.total
       buyRecord.value = buyRecord.value.concat(res.data.data.list)
-      console.log("res.data.data.list", res.data.data.list)
-      console.log("buyRecord.value", buyRecord.value)
     })
   }
   updater()
@@ -60,6 +58,16 @@
     kehutag.value = "高级客户"
   } else {
     kehutag.value = "普通客户"
+  }
+
+  if (buyRecord.value.some((item) => item.status === 2)) {
+    ElNotification({
+      title: '支付提示',
+      message: '支付失败，请尝试重新支付',
+      type: 'warning',
+      duration: 0,
+      position: 'top-left',
+    })
   }
 
 </script>
@@ -150,29 +158,27 @@
         </el-scrollbar>
       </div>
       <div style="display: inline-block; width: 35vw; max-height: 85vh; margin-right: 20px; margin-left: 20px">
-        <el-scrollbar height="75vh">
-          <el-badge :value="kehutag" style="margin-top: 10px">
-            <el-text class="user_name"> {{ userStore.name }} </el-text>
-          </el-badge>
-          <div v-if="buyRecord.length === 0" style="margin-top: 10px">
-            <el-result icon="info" title="文学提示">
-              <template #sub-title>
-                <p>你还没有任何购买记录。</p>
-                <p>你可以去主页看看，那里或许有你想要的。</p>
-              </template>
-              <template #extra>
-                <el-button type="success" size="large" @click="goHome">去首页看看</el-button>
-              </template>
-            </el-result>
-          </div>
-          <div v-else style="margin-top: 10px">
-            <div v-infinite-scroll="updater"  style="overflow: auto">
-              <div v-for="(item, index) in buyRecord" :key="index">
+        <el-badge :value="kehutag" style="margin-top: 10px; height: 5vh">
+          <el-text class="user_name"> {{ userStore.name }} </el-text>
+        </el-badge>
+        <div v-if="buyRecord.length === 0" style="margin-top: 10px">
+          <el-result icon="info" title="文学提示">
+            <template #sub-title>
+              <p>你还没有任何购买记录。</p>
+              <p>你可以去主页看看，那里或许有你想要的。</p>
+            </template>
+            <template #extra>
+              <el-button type="success" size="large" @click="goHome">去首页看看</el-button>
+            </template>
+          </el-result>
+        </div>
+        <div v-else style="margin-top: 10px">
+          <div v-infinite-scroll="updater" style="overflow: auto; height: 70vh">
+            <div v-for="(item, index) in buyRecord" :key="index">
                 <Defaultbuyrecord :record="item" class="buy_record_box"></Defaultbuyrecord>
-              </div>
             </div>
           </div>
-        </el-scrollbar>
+        </div>
       </div>
     </el-card>
   </div>

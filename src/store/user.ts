@@ -94,11 +94,11 @@ const useUserStore = defineStore("user", () => {
             return Promise.reject("未登录")
         }
 
-        if (lastUpdateTime.value && (Date.now() - lastUpdateTime.value < 5 * 60 * 1000)) {
+        if (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000)) {
+            lastUpdateTime.value = Date.now()
             return Promise.resolve()
         }
 
-        lastUpdateTime.value = Date.now()
         return Promise.resolve()
     }
 

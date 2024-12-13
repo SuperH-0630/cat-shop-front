@@ -1,168 +1,20 @@
 <script setup lang="ts">
-import {BuyRecordStatus, getBuyRecordData, BuyRecord} from "@/api/user"
-import {formatDate} from "@/utils/time"
-import { ElNotification } from 'element-plus'
+import {getBuyRecordData, BuyRecord} from "@/api/user"
 
 const route = useRoute()
-const recordId = ref(route.query?.id || 0 as number)
-
-const record = ref(null as BuyRecord | null)
-const router = useRouter()
+const recordId = ref((route.query?.id || 0) as number)
 
 getBuyRecordData(recordId.value as number).then((res) => {
   record.value = res.data.data as BuyRecord
-  if (record.value.status === 2) {
-    ElNotification({
-      title: '支付提示',
-      message: '支付失败，请尝试重新支付',
-      type: 'warning',
-      duration: 0,
-      position: 'top-left',
-    })
-  }
 })
 
-const onClassClick = () => {
-  record.value && router.push({
-    path: "/search",
-    query: {
-      "info": JSON.stringify({
-        select: [record.value.wupin.classid],
-        search: "",
-      })
-    }
-  })
-}
-
-const onGoWupin = () => {
-  record.value && record.value && router.push({
-    path: "/wupin",
-    query: {
-      "id": record.value.id,
-    }
-  })
-}
-
+const record = ref(null as BuyRecord | null)
 </script>
 
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <div style="width: 65%;">
-      <el-card v-if="record" style="margin-right: 15px">
-        <template #header>
-          <div style="display: flow-root">
-            <div style="float: left">
-              <el-badge :value="record.wupin.tag" style="margin-top: 10px">
-                <el-text class="wupin_name" @click="onGoWupin"> {{ record.wupin.name }} </el-text>
-              </el-badge>
-              <el-text class="wupin_class_name">
-                商品来源：
-                <el-text class="wupin_class_name_btn" @click="onClassClick"> {{ record.wupin.classOf.name }} > </el-text>
-              </el-text>
-            </div>
-            <div v-if="record.status === 2" style="float:right;">
-              <el-button type="warning">
-                重新支付
-              </el-button>
-            </div>
-            <div v-if="record.status === 4" style="float:right;">
-              <el-button type="success">
-                确认收获
-              </el-button>
-            </div>
-            <div v-if="[5, 6].some((i) => i == record.status)" style="float:right;">
-              <el-button type="danger">
-                登记退货
-              </el-button>
-            </div>
-            <div v-if="record.status === 5" style="float:right;">
-              <el-button type="success">
-                前往评价
-              </el-button>
-            </div>
-          </div>
-        </template>
-        <div>
-          <el-text>
-            当前状态：{{ (BuyRecordStatus[record.status]) || "未知" }}
-          </el-text>
-        </div>
-        <div>
-          <el-text>
-            购买数量：{{ record.num }} 件
-          </el-text>
-        </div>
-        <div>
-          <el-text>
-            付款金额：￥{{ ((record.price / 100).toFixed(2)) }}
-          </el-text>
-        </div>
-        <div>
-          <el-text>
-            平均金额：￥{{ (((record.price / record.num) / 100).toFixed(2)) }}
-          </el-text>
-        </div>
-        <div>
-          <el-text>
-            下单时间：{{ formatDate(record.time) }}
-          </el-text>
-        </div>
-        <div v-if="[3, 4, 5, 6, 7, 8].some((i) => i == record.status)">
-          <el-text>
-            付款时间：{{ formatDate(record.fukuantime) }}
-          </el-text>
-        </div>
-        <div v-if="[4, 5, 6, 7, 8].some((i) => i == record.status)">
-          <el-text>
-            发货时间：{{ formatDate(record.fahuotime) }}
-          </el-text>
-        </div>
-        <div v-if="[4, 5, 6, 7, 8].some((i) => i == record.status) && record.kuaidi && record.kuaidinum">
-          <el-text>
-            发货快递公司：{{ record.kuaidi }}
-          </el-text>
-        </div>
-        <div v-if="[4, 5, 6, 7, 8].some((i) => i == record.status) && record.kuaidi && record.kuaidinum">
-          <el-text>
-            发货运单号：{{ record.kuaidinum }}
-          </el-text>
-        </div>
-        <div v-if="[5, 6, 7, 8].some((i) => i == record.status)">
-          <el-text>
-            到货时间：{{ formatDate(record.shouhuotime) }}
-          </el-text>
-        </div>
-        <div v-if="[6, 7, 8].some((i) => i == record.status)">
-          <el-text>
-            评价时间：{{ formatDate(record.pingjiatime) }}
-          </el-text>
-        </div>
-        <div v-if="[6, 7, 8].some((i) => i == record.status)">
-          <el-text>
-            评价：{{ record.isgood ? "好评" : "差评" }}
-          </el-text>
-        </div>
-        <div v-if="[7, 8].some((i) => i == record.status)">
-          <el-text>
-            退货登记时间：{{ formatDate(record.dengjituihuotime) }}
-          </el-text>
-        </div>
-        <div v-if="[7, 8].some((i) => i == record.status) && record.backkuaidi && record.backkuaidinum">
-          <el-text>
-            退货快递公司：{{ record.backkuaidi }}
-          </el-text>
-        </div>
-        <div v-if="[7, 8].some((i) => i == record.status) && record.backkuaidi && record.backkuaidinum">
-          <el-text>
-            退运单号：{{ record.backkuaidinum }}
-          </el-text>
-        </div>
-        <div v-if="[8].some((i) => i == record.status)">
-          <el-text>
-            退货到货时间：{{ formatDate(record.tuohuotime) }}
-          </el-text>
-        </div>
-      </el-card>
+      <Defaultbuyrecord :record="record"></Defaultbuyrecord>
     </div>
   </div>
 </template>

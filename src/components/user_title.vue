@@ -15,6 +15,18 @@ const toCenter = () => {
   })
 }
 
+const toOrderLst = () => {
+  router.push({
+    "path": "/center/orderrecordlst",
+  })
+}
+
+const toGowuche = () => {
+  router.push({
+    "path": "/center/shoppingbag",
+  })
+}
+
 </script>
 
 <template>
@@ -30,8 +42,9 @@ const toCenter = () => {
         </el-text>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item  @click="toCenter" ><el-text class="drop_item">我的中心</el-text></el-dropdown-item>
-            <el-dropdown-item><el-text class="drop_item">我的购物车</el-text></el-dropdown-item>
+            <el-dropdown-item @click="toCenter" ><el-text class="drop_item">我的中心</el-text></el-dropdown-item>
+            <el-dropdown-item @click="toOrderLst"><el-text class="drop_item">我的购物记录</el-text></el-dropdown-item>
+            <el-dropdown-item @click="toGowuche"><el-text class="drop_item">我的购物车</el-text></el-dropdown-item>
             <el-dropdown-item><el-text class="drop_item">我的客服</el-text></el-dropdown-item>
             <el-dropdown-item><el-text class="drop_item">关于猫猫商城</el-text></el-dropdown-item>
           </el-dropdown-menu>

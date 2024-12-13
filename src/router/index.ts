@@ -52,9 +52,26 @@ const routes: RouteRecordRaw[] = [
       title: '消费详情',
       xauth: true,
     }
+  },
+    {
+      path: '/center/orderrecordlst',
+      component: () => import('@/views/buyrecordlst.vue'),
+      meta: {
+        title: '订单列表',
+        xauth: true,
+        wechat: true,
+      }
+    },
+  {
+    path: '/center/shoppingbag',
+    component: () => import('@/views/shoppingbag.vue'),
+    meta: {
+      title: '购物车',
+      xauth: true,
+      wechat: true,
+    }
   }
 ]
-
 const router = createRouter({
   history: createWebHistory(''),
   routes,

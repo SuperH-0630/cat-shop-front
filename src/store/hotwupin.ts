@@ -1,5 +1,5 @@
-import wupinPic from "@/assets/images/logo.jpg";
-import useClassStore, {Class} from "@/store/class";
+import wupinPic from "@/assets/images/logo.jpg"
+import useClassStore, {Class} from "@/store/class"
 
 export interface Wupin {
     id: number
@@ -37,8 +37,8 @@ const useHotWupinStore = defineStore("hotWupinStore", () => {
         for (let i = 0; i < 50; i++) {
             const cl = classStore.classLst[Math.floor(Math.random() * classStore.classLst.length)]
             wupinLst.value.push({
-                name: "物品" + i,
-                id: i,
+                name: "物品" + i + 1,
+                id: i + 1,
                 pic: wupinPic,
                 classid: cl.id,
                 classOf: cl,

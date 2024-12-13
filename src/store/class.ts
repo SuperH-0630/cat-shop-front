@@ -21,8 +21,8 @@ const useClassStore = defineStore("classStore", () => {
 
         for (let i = 0; i < 60; i++) {
             classLst.value.push({
-                name: "分类" + i,
-                id: i,
+                name: "分类" + i + 1,
+                id: i + 1,
             })
         }
 
