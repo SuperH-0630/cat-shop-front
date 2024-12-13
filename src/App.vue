@@ -1,13 +1,14 @@
 <script setup lang="ts">
-  // import Rightwin from "@/components/rightwin.vue"
-  import logo from "@/assets/images/logo.jpg"
+  import useConfigStore from "@/store/config";
+
+  const configStore = useConfigStore()
 
   let s = document.querySelector('link[rel="icon"]')
   if (!s) {
     s = document.createElement('link')
     s.setAttribute('rel', "icon")
   }
-  s.setAttribute('href', logo)
+  s.setAttribute('href', configStore.cfg.value.logo)
 </script>
 
 <template>

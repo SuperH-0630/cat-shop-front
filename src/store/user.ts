@@ -1,5 +1,5 @@
-import defaultAvatar from "@/assets/images/avatar.jpg"
 import {isMobile} from "@/utils/str"
+import useConfigStore from "@/store/config"
 
 const useUserStore = defineStore("user", () => {
     const name = ref("")
@@ -27,8 +27,10 @@ const useUserStore = defineStore("user", () => {
             return Promise.reject("手机号格式错误")
         }
 
+        const configStore = useConfigStore()
+
         name.value = "测试用户"
-        avatar.value = defaultAvatar
+        avatar.value = configStore.cfg.value.avatar
         phone.value = phone1
         location.value = "暂无"
         xtoken.value = "123456"

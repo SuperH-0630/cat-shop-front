@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import AD from "@/assets/images/ad.jpeg"
+import useConfigStore from "@/store/config"
 
-const showAD = ref({} as { id: number, pic: string, text: string, header: string })
-showAD.value = {
-  id: 1,
-  pic: AD,
-  text: "比亚迪，智领未来，引领绿色出行！作为全球新能源技术的先锋，比亚迪凭借卓越的自主研发和创新实力，打造高性能电动汽车，成就绿色科技与卓越驾控的完美融合。从刀片电池到e平台技术，每一次突破都树立行业标杆。比亚迪汽车不仅续航无忧，动力强劲，更以智能、安全、环保，赢得全球消费者信赖。选择比亚迪，就是选择环保出行，拥抱科技未来！比亚迪，向新而行，驶向明天的辉煌！",
-  header: "这是一个广告"
-}
+const configStore = useConfigStore()
+const showAD = ref({
+  pic: configStore.cfg.value.adpic,
+  text: configStore.cfg.value.ad,
+  header: configStore.cfg.value.adtitle,
+  url: configStore.cfg.value.adurl
+})
 
 const adDiv = ref(null as HTMLElement | null)
 const height = ref(0)
@@ -28,16 +28,34 @@ defineExpose({
   height
 })
 
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+const onClick = () => {
+  if (showAD.value.url) {
+    window.open(showAD.value.url)
+  } else {
+    ElMessageBox.alert(showAD.value.text, showAD.value.header, {
+      confirmButtonText: 'OK',
+      callback: () => {
+        ElMessage({
+          type: 'success',
+          message: "感谢您的关注",
+        })
+      },
+    })
+  }
+}
+
 </script>
 
 <template>
-  <div v-if="showAD" id="ad_box">
+  <div v-if="showAD" id="ad_box" @click="onClick">
     <div id="ad_text">
       <el-card>
         <template #header>
           广告：{{ showAD.header }}
         </template>
-        <el-text>
+        <el-text class="ad_text">
           {{ showAD.text }}
         </el-text>
       </el-card>
@@ -61,6 +79,7 @@ defineExpose({
   display: flex;
   justify-content: center;
   min-width: 45vw;
+  cursor: pointer;
 }
 
 #ad_pic {
@@ -73,6 +92,11 @@ defineExpose({
   max-width: 15vw;
   flex-grow: 1;
   margin-left: 10px;
+}
+
+.ad_text {
+  font-size: 0.6vw;
+  line-height: 140%;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import logo from '@/assets/images/logo.jpg'
 import UserTitle from "@/components/user_title.vue"
+import useConfigStore from "@/store/config"
 
 const router = useRouter()
 const goHome = () => {
@@ -9,6 +9,8 @@ const goHome = () => {
   })
 }
 
+const configStore = useConfigStore()
+console.log("configStore.cfg.value", configStore.cfg.value)
 </script>
 
 <template>
@@ -16,16 +18,16 @@ const goHome = () => {
     <el-page-header icon="">
       <template #title>
         <div class="title_box" @click="goHome">
-          <el-avatar class="avatar_logo" :src="logo" fit="fill"></el-avatar>
+          <el-avatar class="avatar_logo" :src="configStore.cfg.value.logo" fit="fill"></el-avatar>
           <el-text class="title">
-            猫猫商城
+            {{ configStore.cfg.value.name }}
           </el-text>
         </div>
       </template>
 
       <template #content>
         <el-text class="subtitle">
-          让您有个温馨的体验
+          {{ configStore.cfg.value.subname }}
         </el-text>
       </template>
 
@@ -33,12 +35,12 @@ const goHome = () => {
         <div style="display: flex">
           <el-text class="extrainfo">
             <el-icon><Service /></el-icon>
-            24小时在线贴心服务
+            {{ configStore.cfg.value.service }}
           </el-text>
 
           <el-text class="extrainfo" style="margin-right: 40px">
             <el-icon><Microphone /></el-icon>
-            400-930-1318
+             {{ configStore.cfg.value.hotline }}
           </el-text>
 
           <UserTitle class="extrainfo"></UserTitle>

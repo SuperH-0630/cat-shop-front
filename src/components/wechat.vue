@@ -1,7 +1,9 @@
 <script setup lang="ts">
-  import WechatImg from "@/assets/images/wechat.jpg"
   import useWechatStore from "@/store/wechat"
+  import useConfigStore from "@/store/config"
+
   const wechatStore = useWechatStore()
+  const configStore = useConfigStore()
 
   const onClick = () => {
     wechatStore.close()
@@ -45,7 +47,7 @@
           </div>
         </template>
         <div class="wechat_img">
-          <el-image :src="WechatImg" fit="contain" :preview-src-list="[WechatImg]" :initial-index="0" @show="onShow" @close="onClose"> </el-image>
+          <el-image :src="configStore.cfg.value.wechat" fit="contain" :preview-src-list="[configStore.cfg.value.wechat]" :initial-index="0" @show="onShow" @close="onClose"> </el-image>
         </div>
         <template v-if="showWechat" #footer>
           <div style="display: flex; justify-content: center;">
