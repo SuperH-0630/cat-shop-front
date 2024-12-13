@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import useUserStore from "@/store/user"
+  import useUserStore, {isLogin} from "@/store/user"
   // import {Edit} from "@element-plus/icons-vue"
   import {BuyRecord, getUserBuyRecord} from "@/api/user"
   // import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
@@ -9,11 +9,11 @@
   const router = useRouter()
 
   const userStore = useUserStore()
-  if (!userStore.isLogin) {
+  if (!isLogin()) {
     router.push({
       path: "/login",
       query: {
-        redirect: route.fullPath
+        redirect: encodeURIComponent(route.fullPath)
       }
     })
   }
@@ -48,13 +48,13 @@
   updater()
 
   const kehutag = ref("普通客户")
-  if (userStore.goodPre >= 85) {
+  if (userStore.user.goodPre >= 85) {
     kehutag.value = "尊享III客户"
-  } else if (userStore.goodPre >= 50) {
+  } else if (userStore.user.goodPre >= 50) {
     kehutag.value = "星级II客户"
-  } else if (userStore.goodPre >= 35) {
+  } else if (userStore.user.goodPre >= 35) {
     kehutag.value = "贵宾I客户"
-  } else if (userStore.goodPre >= 5) {
+  } else if (userStore.user.goodPre >= 5) {
     kehutag.value = "高级客户"
   } else {
     kehutag.value = "普通客户"
@@ -78,7 +78,7 @@
       <div style="display: inline-block; width: 15vw; max-height: 75vh; min-height: 60vh; margin-right: 20px; margin-left: 20px">
         <el-scrollbar height="75vh">
           <div style="padding-right: 15px">
-            <el-image :src="userStore.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.avatar]"></el-image>
+            <el-image :src="userStore.user.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.avatar]"></el-image>
             <div style="margin-right: 15px">
               <div class="user_info_box">
                 <el-button-group>
@@ -96,14 +96,14 @@
                 <el-text class="user_info_text">
                   <el-icon><Iphone /></el-icon>
                   电话：
-                  {{ userStore.phone ? userStore.phone : "暂无" }}
+                  {{ userStore.user.phone ? userStore.user.phone : "暂无" }}
                 </el-text>
               </div>
               <div class="user_info_box">
                 <el-text class="user_info_text">
                   <el-icon><Location /></el-icon>
                   地址：
-                  {{ userStore.location ? userStore.location : "暂无" }}
+                  {{ userStore.user.location ? userStore.user.location : "暂无" }}
                 </el-text>
               </div>
 
@@ -113,44 +113,44 @@
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
-                  消费物品总件数：{{ userStore.totalJian >= 0 ? userStore.totalJian : 0 }} 件
+                  消费物品总件数：{{ userStore.user.totalJian >= 0 ? userStore.user.totalJian : 0 }} 件
                 </el-text>
               </div>
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
-                  消费总次数：{{ userStore.totalBuy >= 0 ? userStore.totalBuy : 0 }} 次
+                  消费总次数：{{ userStore.user.totalBuy >= 0 ? userStore.user.totalBuy : 0 }} 次
                 </el-text>
               </div>
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
                   消费总金额：
-                  ￥{{ userStore.totalPrice >= 0 ? (userStore.totalPrice / 100).toFixed(2) : "0.00" }}
+                  ￥{{ userStore.user.totalPrice >= 0 ? (userStore.user.totalPrice / 100).toFixed(2) : "0.00" }}
                 </el-text>
               </div>
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
-                  收获总次数：{{ userStore.totalShouHuo >= 0 ? userStore.totalShouHuo : 0 }} 次
+                  收获总次数：{{ userStore.user.totalShouHuo >= 0 ? userStore.user.totalShouHuo : 0 }} 次
                 </el-text>
               </div>
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
-                  消费好评次数：{{ userStore.totalGood >= 0 ? userStore.totalGood : 0 }} 次
+                  消费好评次数：{{ userStore.user.totalGood >= 0 ? userStore.user.totalGood : 0 }} 次
                 </el-text>
               </div>
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
-                  消费好评率：{{ userStore.goodPre.toFixed(2) }} %
+                  消费好评率：{{ userStore.user.goodPre.toFixed(2) }} %
                 </el-text>
               </div>
 
               <div class="user_info_box">
                 <el-text class="user_info_text">
-                  平均每笔交易金额：￥{{ (userStore.pricePre / 100).toFixed(2) }}
+                  平均每笔交易金额：￥{{ (userStore.user.pricePre / 100).toFixed(2) }}
                 </el-text>
               </div>
             </div>
@@ -159,7 +159,7 @@
       </div>
       <div style="display: inline-block; width: 35vw; max-height: 85vh; margin-right: 20px; margin-left: 20px">
         <el-badge :value="kehutag" style="margin-top: 10px; height: 5vh">
-          <el-text class="user_name"> {{ userStore.name }} </el-text>
+          <el-text class="user_name"> {{ userStore.user.name }} </el-text>
         </el-badge>
         <div v-if="buyRecord.length === 0" style="margin-top: 10px">
           <el-result icon="info" title="文学提示">

@@ -2,13 +2,22 @@
   import useClassStore from "@/store/class"
 
   const props = defineProps({
-    "type": String || null || undefined,
-    "select": Array || null || undefined,
-    "search": String || null || undefined,
+    "type": {
+      type: String,
+      required: false,
+    },
+    "select": {
+      type: Array<number>,
+      required: false,
+    },
+    "search": {
+      type: String,
+      required: false,
+    },
   })
 
-  const select = ref(props.select || [] as number[])
-  const search = ref(props.search || "" as string)
+  const select = computed(() => props.select || [] as number[])
+  const search = computed(() => props.search || "" as string)
 
   const router = useRouter()
   const route = useRoute()

@@ -4,6 +4,7 @@
   import WupinPic from "@/assets/images/logo.jpg"
   import useClassStore from "@/store/class"
   import { ElNotification } from 'element-plus'
+  import {Location} from "@element-plus/icons-vue";
 
   const route = useRoute()
   const router = useRouter()
@@ -60,6 +61,7 @@
         "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
         "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
         "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>",
+    ren: "小超",
     phone: "17322061610",
     email: "songzihuan@song-zh.com",
     location: "广东广州",
@@ -137,7 +139,13 @@
         <el-scrollbar height="70vh">
           <div style="padding-right: 5px">
             <el-image :src="wupin.pic" fit="contain" style="height: auto; width: 100%" :initial-index="0" :preview-src-list="[wupin.pic]"></el-image>
-
+            <div v-if="wupin.ren" class="wupin_info_box">
+              <el-text class="wupin_info_text">
+                <el-icon><Microphone /></el-icon>
+                客服专属称号
+                {{ wupin.ren }}
+              </el-text>
+            </div>
             <div v-if="wupin.phone" class="wupin_info_box">
               <el-text class="wupin_info_text">
                 <el-icon><Iphone /></el-icon>
@@ -157,6 +165,13 @@
                 <el-icon><Service /></el-icon>
                 客服专属微信
                 {{ wupin.wechat }}
+              </el-text>
+            </div>
+            <div v-if="wupin.wechat" class="wupin_info_box">
+              <el-text class="wupin_info_text">
+                <el-icon><Location /></el-icon>
+                客服专属地址
+                {{ wupin.location }}
               </el-text>
             </div>
 

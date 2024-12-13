@@ -2,9 +2,12 @@
   import { Wupin } from "@/store/hotwupin"
 
   const props = defineProps({
-    "wp": Object as PropType<Wupin>,
+    "wp": {
+      type: Object as PropType<Wupin>,
+      required: true,
+    }
   })
-  const item = ref(props.wp)
+  const item = computed(() => props.wp)
   const router = useRouter()
 
   const onClick = () => {

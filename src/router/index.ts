@@ -1,8 +1,9 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import { clearPlaceholderLoading } from '@/utils/placeholder-loading'
-import useUserStore from "@/store/user"
+import { isLogin } from "@/store/user"
 import usePathStore from "@/store/path"
 import useWechatStore from "@/store/wechat"
+import useConfigStore from "@/store/config"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -53,21 +54,48 @@ const routes: RouteRecordRaw[] = [
       xauth: true,
     }
   },
-    {
-      path: '/center/orderrecordlst',
-      component: () => import('@/views/buyrecordlst.vue'),
-      meta: {
-        title: '订单列表',
-        xauth: true,
-        wechat: true,
-      }
-    },
+  {
+    path: '/center/orderrecordlst',
+    component: () => import('@/views/buyrecordlst.vue'),
+    meta: {
+      title: '订单列表',
+      xauth: true,
+      wechat: true,
+    }
+  },
   {
     path: '/center/shoppingbag',
     component: () => import('@/views/shoppingbag.vue'),
     meta: {
       title: '购物车',
       xauth: true,
+      wechat: true,
+    }
+  },
+  {
+    path: '/kefu',
+    component: () => import('@/views/kefu.vue'),
+    meta: {
+      title: '我的客服',
+    }
+  },
+  {
+    path: '/center/kefu',
+    redirect: "/kefu",
+  },
+  {
+    path: '/aboutus',
+    component: () => import('@/views/aboutus.vue'),
+    meta: {
+      title: '关于我们',
+      wechat: true,
+    }
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login.vue'),
+    meta: {
+      title: '登录',
       wechat: true,
     }
   }
@@ -81,22 +109,23 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
-  if (to.meta.xauth && to.meta.xauth === true && !userStore.isLogin) {
+  if (to.meta.xauth && to.meta.xauth === true && !isLogin()) {
     next({
       path: "/login",
       query: {
-        redirect: to.fullPath
+        redirect: encodeURIComponent(to.fullPath)
       }
     })
     return
   }
+  console.log("to", to.query)
   next()
 })
 
 router.afterEach((to) => {
+  const configStore = useConfigStore()
   if (to.meta.title && typeof to.meta.title === 'string') {
-    document.title = "猫猫商城 - " + (to.meta.title || "首页")
+    document.title = configStore.cfg.value.name + " - " + (to.meta.title || "首页")
   }
   if (to.meta.wechat && to.meta.wechat === true) {
     useWechatStore().open()
@@ -105,6 +134,7 @@ router.afterEach((to) => {
   }
   usePathStore().pushPath()
   clearPlaceholderLoading()
+  console.log("to2", to.query)
 })
 
 export default router

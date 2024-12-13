@@ -17,9 +17,10 @@ export interface Config {
     "ad": string,
     "adurl": string,
     "avatar": string,
+    "aboutus": string,
 }
 
-const configStore = defineStore("configStore", () => {
+const useConfigStore = defineStore("configStore", () => {
     const config = ref({
         "name": "猫猫超市",
         "subname": "让您有个温馨的体验",
@@ -32,6 +33,7 @@ const configStore = defineStore("configStore", () => {
         "ad": "比亚迪，智领未来，引领绿色出行！作为全球新能源技术的先锋，比亚迪凭借卓越的自主研发和创新实力，打造高性能电动汽车，成就绿色科技与卓越驾控的完美融合。从刀片电池到e平台技术，每一次突破都树立行业标杆。比亚迪汽车不仅续航无忧，动力强劲，更以智能、安全、环保，赢得全球消费者信赖。选择比亚迪，就是选择环保出行，拥抱科技未来！比亚迪，向新而行，驶向明天的辉煌！",
         "adurl": "https://www.baidu.com",
         "avatar": defaultAvatar,
+        "aboutus": "猫猫超市是一个微商城测试项目，欢迎前来体验。",
     } as Config)
     const lastUpdateTime = ref(0 as number)
 
@@ -80,6 +82,10 @@ const configStore = defineStore("configStore", () => {
             config.value.avatar = defaultAvatar
         }
 
+        if (!config.value.aboutus) {
+            config.value.aboutus = "商家很懒...什么都没有留下"
+        }
+
         return config
     })
 
@@ -91,4 +97,4 @@ const configStore = defineStore("configStore", () => {
     }
 })
 
-export default configStore
+export default useConfigStore

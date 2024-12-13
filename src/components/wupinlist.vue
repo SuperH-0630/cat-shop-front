@@ -3,10 +3,13 @@
   import { Wupin } from "@/store/hotwupin"
 
   const props = defineProps({
-    "wp": Array as PropType<Wupin[]>,
+    "wp": {
+      type: Array<Wupin>,
+      required: true,
+    }
   })
 
-  const wupinLst = ref(props.wp as Wupin[])
+  const wupinLst = computed(() => props.wp as Wupin[])
 </script>
 
 <template>

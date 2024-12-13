@@ -1,25 +1,38 @@
 import {isMobile} from "@/utils/str"
 import useConfigStore from "@/store/config"
 
-const useUserStore = defineStore("user", () => {
-    const name = ref("")
-    const avatar = ref("")
-    const phone = ref("")
-    const location = ref("")
-    const xtoken = ref("")
-    const isLogin = computed(() => xtoken.value.length > 0)
-    const totalPrice = ref(0)
-    const totalBuy = ref(0)
-    const totalGood = ref(0)
-    const totalJian = ref(0)
-    const totalShouHuo = ref(0)
-    const goodPre = computed(() => (totalGood.value / totalShouHuo.value) * 100)
-    const pricePre = computed(() => (totalPrice.value / totalBuy.value))
+export interface User {
+    name: string
+    avatar: string
+    phone: string
+    location: string
+    xtoken: string
+    totalPrice: number
+    totalBuy: number
+    totalGood: number
+    totalJian: number
+    totalShouHuo: number
+    goodPre: number
+    pricePre: number
+}
+
+export const getXtoken = (): string => (localStorage.getItem("xtoken") || "")
+export const delXtoken = (): void => {
+    localStorage.removeItem("xtoken")
+}
+export const setXtoken = (token: string): string => {
+    localStorage.setItem("xtoken", token)
+    return getXtoken()
+}
+export const isLogin = () => getXtoken().length > 0
+
+const useUserStore = defineStore("userStore", () => {
+    const user = ref({} as User)
     const lastUpdateTime = ref(Date.now())
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const login = (phone1: string, password: string) => {
-        if (isLogin.value) {
+        if (isLogin()) {
             return Promise.reject("已登录")
         }
 
@@ -27,55 +40,50 @@ const useUserStore = defineStore("user", () => {
             return Promise.reject("手机号格式错误")
         }
 
-        const configStore = useConfigStore()
+        if (password.length < 8) {
+            return Promise.reject()
+        }
 
-        name.value = "测试用户"
-        avatar.value = configStore.cfg.value.avatar
-        phone.value = phone1
-        location.value = "暂无"
-        xtoken.value = "123456"
-        totalPrice.value = 100000
-        totalBuy.value = 30
-        totalGood.value = 20
-        totalJian.value = 40
-        totalShouHuo.value = 25
-        lastUpdateTime.value = Date.now()
-
+        setXtoken("123456")
+        updateInfo(true)
         return Promise.resolve()
     }
 
     const logout = () => {
-        if (!isLogin.value) {
+        if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
-        name.value = ""
-        avatar.value = ""
-        phone.value = ""
-        location.value = ""
-        xtoken.value = ""
-        totalPrice.value = 0
-        totalBuy.value = 0
-        totalGood.value = 0
-        totalJian.value = 0
-        totalShouHuo.value = 0
+        user.value.name = ""
+        user.value.avatar = ""
+        user.value.phone = ""
+        user.value.location = ""
+        user.value.totalPrice = 0
+        user.value.totalBuy = 0
+        user.value.totalGood = 0
+        user.value.totalJian = 0
+        user.value.totalShouHuo = 0
+        user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
+        user.value.pricePre = user.value.totalPrice / user.value.totalBuy
+
         lastUpdateTime.value = Date.now()
 
+        delXtoken()
         return Promise.resolve()
     }
 
     const setData = (name1: string, avatar1: string, location1: string) => {
-        if (!isLogin.value) {
+        if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
-        name.value = name1
-        avatar.value = avatar1
-        location.value = location1
+        user.value.name = name1
+        user.value.avatar = avatar1
+        user.value.location = location1
     }
 
     const deleteUser = () => {
-        if (!isLogin.value) {
+        if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
@@ -91,12 +99,34 @@ const useUserStore = defineStore("user", () => {
         return login(phone1, password)
     }
 
-    const updateInfo = () => {
-        if (!isLogin.value) {
+    const updateInfo = (must: boolean | undefined = false) => {
+        if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
-        if (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000)) {
+        if (must || Object.keys(user.value).length === 0 || (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000))) {
+            const configStore = useConfigStore()
+
+            user.value.name = ""
+            user.value.avatar = ""
+            user.value.phone = "17322061610"
+            user.value.location = "广东广州"
+            user.value.totalPrice = 100000
+            user.value.totalBuy = 30
+            user.value.totalGood = 20
+            user.value.totalJian = 40
+            user.value.totalShouHuo = 25
+            user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
+            user.value.pricePre = user.value.totalPrice / user.value.totalBuy
+
+            if (!user.value.name) {
+                user.value.name = "新用户"
+            }
+
+            if (!user.value.avatar) {
+                user.value.avatar = configStore.cfg.value.avatar
+            }
+
             lastUpdateTime.value = Date.now()
             return Promise.resolve()
         }
@@ -105,19 +135,7 @@ const useUserStore = defineStore("user", () => {
     }
 
     return {
-        name,
-        avatar,
-        phone,
-        location,
-        xtoken,
-        isLogin,
-        totalPrice,
-        totalBuy,
-        totalGood,
-        totalJian,
-        totalShouHuo,
-        goodPre,
-        pricePre,
+        user,
         lastUpdateTime,
         login,
         logout,

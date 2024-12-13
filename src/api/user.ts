@@ -7,11 +7,13 @@ export const BuyRecordStatus = {
     2: "已下单，支付失败",
     3: "待发货",
     4: "已发货",
-    5: "已收获",
+    5: "已收货",
     6: "已评价",
-    7: "已登记退货",
-    8: "已退货",
-    9: "已取消",
+    7: "申请退货",
+    8: "申请退货成功，等待寄回",
+    9: "申请退货失败",
+    10: "已退货",
+    11: "已取消",
 } as Object
 
 export interface BuyRecord {
@@ -27,6 +29,7 @@ export interface BuyRecord {
     shouhuotime: number
     pingjiatime: number
     dengjituihuotime: number
+    querentuihuotime: number
     tuohuotime: number
     status: number
     kuaidi: string
@@ -79,6 +82,7 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
             shouhuotime: 1734024269,
             pingjiatime: 1734024269,
             dengjituihuotime: 1734024269,
+            querentuihuotime: 1734024269,
             tuohuotime: 1734024269,
             status: 6,
             kuaidi: "顺丰",
@@ -99,6 +103,7 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
                 hotPrice: 9999,
                 realPrice: 19999,
                 info: "hhhhhh",
+                ren: "小超市",
                 phone: "17322061610",
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
@@ -141,6 +146,7 @@ export function getBuyRecordData(id: number): Result<BuyRecord> {
                 shouhuotime: 1734024269,
                 pingjiatime: 1734024269,
                 dengjituihuotime: 1734024269,
+                querentuihuotime: 1734024269,
                 tuohuotime: 1734024269,
                 status: 6,
                 kuaidi: "顺丰",
@@ -239,6 +245,7 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
             shouhuotime: 1734024269,
             pingjiatime: 1734024269,
             dengjituihuotime: 1734024269,
+            querentuihuotime: 1734024269,
             tuohuotime: 1734024269,
             status: status,
             kuaidi: "顺丰",
@@ -259,6 +266,7 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
                 hotPrice: 9999,
                 realPrice: 19999,
                 info: "hhhhhh",
+                ren: "小超市",
                 phone: "17322061610",
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
@@ -343,6 +351,7 @@ export function getUserShoppingRecord(offset: number, limit: number): Result<Sho
                 hotPrice: 9999,
                 realPrice: 19999,
                 info: "hhhhhh",
+                ren: "小超市",
                 phone: "17322061610",
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",

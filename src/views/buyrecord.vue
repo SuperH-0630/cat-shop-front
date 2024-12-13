@@ -14,7 +14,7 @@ const record = ref(null as BuyRecord | null)
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <div style="width: 65%;">
-      <Defaultbuyrecord :record="record"></Defaultbuyrecord>
+      <Defaultbuyrecord :record="record" :safe="true" :xiangqing="false"></Defaultbuyrecord>
     </div>
   </div>
 </template>

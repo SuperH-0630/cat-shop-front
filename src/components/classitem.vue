@@ -2,9 +2,12 @@
   import useClassStore, { Class } from "@/store/class"
 
   const props = defineProps({
-    "cl": Object as PropType<Class>,
+    "cl": {
+      type: Object as PropType<Class>,
+      required: true,
+    }
   })
-  const item = ref(props.cl)
+  const item = computed(() => props.cl)
   const router = useRouter()
   const classStore = useClassStore()
 

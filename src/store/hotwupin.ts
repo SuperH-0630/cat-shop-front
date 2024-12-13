@@ -11,10 +11,11 @@ export interface Wupin {
     hotPrice?: number
     realPrice: number
     info: string
-    phone?: string
-    email?: string
+    ren: string
+    phone: string
+    email: string
     wechat?: string
-    location?: string
+    location: string
     buytotal: number
     buygood: number
 }
@@ -46,6 +47,7 @@ const useHotWupinStore = defineStore("hotWupinStore", () => {
                 hotPrice: 9999,
                 realPrice: 19999,
                 info: "hhhhhh",
+                ren: "小超市",
                 phone: "17322061610",
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",

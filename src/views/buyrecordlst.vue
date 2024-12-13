@@ -63,7 +63,7 @@ const toHome = () => {
              <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-count="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>
            <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx">
-             <Defaultbuyrecord :record="record" style="margin-bottom: 10px"> </Defaultbuyrecord>
+             <Defaultbuyrecord :record="record" :safe="false" :xiangqing="true" style="margin-bottom: 10px"> </Defaultbuyrecord>
            </div>
            <div style="display: flex; justify-content: center">
              <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-count="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />

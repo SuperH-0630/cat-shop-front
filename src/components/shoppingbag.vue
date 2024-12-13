@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import {ShopRecord} from "@/api/user"
 import router from "@/router"
-import {formatDate} from "../utils/time";
+import {formatDate} from "@/utils/time";
 
 const props = defineProps({
-  "record": Object as PropType<ShopRecord>
+  "record": {
+    type: Object as PropType<ShopRecord>,
+    required: true,
+  }
 })
 
-const record = ref(props.record)
+const record = computed(() => props.record)
 
 const facePrice = computed(() => {
   if (!record.value) {
