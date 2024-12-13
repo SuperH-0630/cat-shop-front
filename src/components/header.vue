@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UserTitle from "@/components/user_title.vue"
 import useConfigStore from "@/store/config"
+import UserTitle from "@/components/user_title.vue"
 
 const router = useRouter()
 const goHome = () => {
@@ -8,9 +8,14 @@ const goHome = () => {
     path: "/home"
   })
 }
+const goKefu = () => {
+  router.push({
+    path: "/kefu"
+  })
+}
+
 
 const configStore = useConfigStore()
-console.log("configStore.cfg.value", configStore.cfg.value)
 </script>
 
 <template>
@@ -33,12 +38,12 @@ console.log("configStore.cfg.value", configStore.cfg.value)
 
       <template #extra>
         <div style="display: flex">
-          <el-text class="extrainfo">
+          <el-text class="extrainfo gokefu" @click="goKefu">
             <el-icon><Service /></el-icon>
             {{ configStore.cfg.value.service }}
           </el-text>
 
-          <el-text class="extrainfo" style="margin-right: 40px">
+          <el-text class="extrainfo gokefu" style="margin-right: 40px" @click="goKefu">
             <el-icon><Microphone /></el-icon>
              {{ configStore.cfg.value.hotline }}
           </el-text>
@@ -53,6 +58,20 @@ console.log("configStore.cfg.value", configStore.cfg.value)
 <style scoped lang="scss">
 #logo {
   float: left;
+}
+
+.gokefu {
+  color: black;
+  cursor: pointer;
+}
+
+.gokefu:hover {
+ text-decoration: underline;
+}
+
+.gokefu:active {
+  color: #2448aa;
+  text-decoration: underline;
 }
 
 .avatar_logo {

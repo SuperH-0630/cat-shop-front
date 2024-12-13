@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import useUserStore, { isLogin } from "@/store/user"
+import useUserStore, { isLogin, hasLoad } from "@/store/user"
 import useConfigStore from "@/store/config"
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {maskPhoneNumber} from "../utils/str"
+import {maskPhoneNumber} from "@/utils/str"
 
 const configStore = useConfigStore()
 const userStore = useUserStore()
@@ -52,6 +52,25 @@ const toLogin = () => {
   })
 }
 
+const toNewLogin = () => {
+  if (route.meta.xauth && route.meta.xauth === true && !isLogin()) {
+    router.push({
+      path: "/login",
+      query: {
+        redirect: encodeURIComponent(route.fullPath)
+      }
+    })
+    return
+  }
+
+  router.push({
+    "path": "/login",
+    "query": {
+      "redirect": encodeURIComponent(route.fullPath),
+    },
+  })
+}
+
 const toRegirster = () => {
   router.push({
     "path": "/regirster",
@@ -78,17 +97,21 @@ const logout = () => {
         type: 'success',
         message: '账号退出成功',
       })
-      toLogin()
+      toNewLogin()
     })
   }
 }
-
-console.log("userStore.customer", Object.entries(userStore.user))
-
 </script>
 
 <template>
-  <div v-if="isLogin()">
+  <div v-if="isLogin && !hasLoad()">
+    <div>
+      <el-text style="font-size: 0.8vw">
+      正在加载中...请稍后
+      </el-text>
+    </div>
+  </div>
+  <div v-else-if="isLogin() && hasLoad() ">
     <div class="user_name">
       <el-dropdown size="large">
         <el-text class="user_name_text">

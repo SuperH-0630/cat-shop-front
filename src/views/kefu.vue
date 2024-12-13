@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useConfigStore from "@/store/config"
 import {Service} from "@element-plus/icons-vue";
-import useUserStore, {isLogin} from "@/store/user";
+import useUserStore, {isLogin, hasLoad} from "@/store/user";
 
 const configStore = useConfigStore()
 const textarea = ref("")
@@ -61,7 +61,7 @@ if (isLogin()) {
                   :rows="10"
                   type="textarea"
                   placeholder="请输入你的留言"
-                  :disabled="!isLogin()"
+                  :disabled="!isLogin() && hasLoad()"
                   :maxlength="150"
                   show-word-limit
                   clearable
@@ -69,7 +69,7 @@ if (isLogin()) {
             </div>
             <div style="width: 100%; display: flex; justify-content: right; margin-top: 10px">
               <el-tooltip
-                  v-if="!isLogin()"
+                  v-if="!isLogin() && hasLoad()"
                   effect="dark"
                   content="请登陆后再操作"
                   placement="bottom-start"

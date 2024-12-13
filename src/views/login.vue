@@ -7,8 +7,6 @@ const userStore = useUserStore()
 const route = useRoute()
 const router = useRouter()
 
-console.log("TAG B")
-
 const goRedirect = () => {
   const redirectPath = route.query?.redirect
   if (typeof redirectPath === "string" && redirectPath.length > 0) {
@@ -27,13 +25,11 @@ const goRedirect = () => {
 
 watch(() => isLogin(), (value) => {
   if (value) {
-    console.log("Tag 1")
     goRedirect()
   }
 })
 
 if (isLogin()) {
-  console.log("Tag 2")
   goRedirect()
 }
 
@@ -61,7 +57,6 @@ const question = computed(() => `${a.value} + ${b.value}`)
 
 const codeCheck = computed(() => Number(form.value.code).valueOf() === answer.value)
 const phoneCheck = computed(() => isMobile(form.value.phone))
-// const passwordCheck = computed(() => form.value.password.length >= 8)
 const passwordCheck = ref(true)// 登录阶段不检查密码
 const allCheck = computed(() => codeCheck.value && phoneCheck.value && passwordCheck.value)
 
@@ -119,14 +114,12 @@ const login = () => {
       </div>
       <div style="width: 15vw; margin-top: 5px">
         <div class="tip_box" style="display: flex; justify-content: center">
-          <el-text v-if="!codeCheck">
-            请输入正确的验证码！
-          </el-text>
+          <el-alert v-if="!codeCheck" title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
+          </el-alert>
         </div>
         <div class="tip_box" style="display: flex; justify-content: center">
-          <el-text v-if="!phoneCheck">
-            请输入正确到手机号！
-          </el-text>
+          <el-alert v-if="!phoneCheck" title="请输入正确到手机号！" :closable="false" type="warning" center show-icon>
+          </el-alert>
         </div>
       </div>
     </el-card>

@@ -18,6 +18,7 @@ export interface Config {
     "adurl": string,
     "avatar": string,
     "aboutus": string,
+    "passwordfronthash": string,
 }
 
 const useConfigStore = defineStore("configStore", () => {
@@ -84,6 +85,10 @@ const useConfigStore = defineStore("configStore", () => {
 
         if (!config.value.aboutus) {
             config.value.aboutus = "商家很懒...什么都没有留下"
+        }
+
+        if (!config.value.passwordfronthash) {
+            config.value.passwordfronthash = config.value.name
         }
 
         return config

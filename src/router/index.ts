@@ -98,6 +98,22 @@ const routes: RouteRecordRaw[] = [
       title: '登录',
       wechat: true,
     }
+  },
+  {
+    path: '/regirster',
+    component: () => import('@/views/regirster.vue'),
+    meta: {
+      title: '注册',
+      wechat: true,
+    }
+  },
+  {
+    path: '/error',
+    component: () => import('@/views/error.vue'),
+    meta: {
+      title: '错误',
+      wechat: true,
+    }
   }
 ]
 const router = createRouter({

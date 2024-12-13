@@ -18,7 +18,20 @@
     })
   }
 
-  userStore.updateInfo()
+  userStore.updateInfo().then(() => {
+    const kehutag = ref("普通客户")
+    if (userStore.user.goodPre >= 85) {
+      kehutag.value = "尊享III客户"
+    } else if (userStore.user.goodPre >= 50) {
+      kehutag.value = "星级II客户"
+    } else if (userStore.user.goodPre >= 35) {
+      kehutag.value = "贵宾I客户"
+    } else if (userStore.user.goodPre >= 5) {
+      kehutag.value = "高级客户"
+    } else {
+      kehutag.value = "普通客户"
+    }
+  })
 
   // const goHome = () => {
   //   router.push({
@@ -47,19 +60,6 @@
   }
   updater()
 
-  const kehutag = ref("普通客户")
-  if (userStore.user.goodPre >= 85) {
-    kehutag.value = "尊享III客户"
-  } else if (userStore.user.goodPre >= 50) {
-    kehutag.value = "星级II客户"
-  } else if (userStore.user.goodPre >= 35) {
-    kehutag.value = "贵宾I客户"
-  } else if (userStore.user.goodPre >= 5) {
-    kehutag.value = "高级客户"
-  } else {
-    kehutag.value = "普通客户"
-  }
-
   if (buyRecord.value.some((item) => item.status === 2)) {
     ElNotification({
       title: '支付提示',
@@ -73,12 +73,12 @@
 </script>
 
 <template>
-  <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+  <div v-if="hasLoad()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
       <div style="display: inline-block; width: 15vw; max-height: 75vh; min-height: 60vh; margin-right: 20px; margin-left: 20px">
         <el-scrollbar height="75vh">
           <div style="padding-right: 15px">
-            <el-image :src="userStore.user.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.avatar]"></el-image>
+            <el-image :src="userStore.user.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.user.avatar]"></el-image>
             <div style="margin-right: 15px">
               <div class="user_info_box">
                 <el-button-group>
@@ -182,6 +182,7 @@
       </div>
     </el-card>
   </div>
+  <div v-else></div>
 </template>
 
 <style scoped lang="scss">

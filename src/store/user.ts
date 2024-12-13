@@ -1,8 +1,11 @@
 import {isMobile} from "@/utils/str"
 import useConfigStore from "@/store/config"
+import {sha512} from "@/utils/encrypt"
+import {getSelfInfo, loginGetXToken, registerGetXToken} from "@/api/user"
 
 export interface User {
     name: string
+    type: number
     avatar: string
     phone: string
     location: string
@@ -25,6 +28,10 @@ export const setXtoken = (token: string): string => {
     return getXtoken()
 }
 export const isLogin = () => getXtoken().length > 0
+export const hasLoad = () => {
+    const userStore = useUserStore()
+    return typeof userStore === "object" && Object.keys(userStore).length > 0
+}
 
 const useUserStore = defineStore("userStore", () => {
     const user = ref({} as User)
@@ -32,6 +39,8 @@ const useUserStore = defineStore("userStore", () => {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const login = (phone1: string, password: string) => {
+        const configStore = useConfigStore()
+
         if (isLogin()) {
             return Promise.reject("已登录")
         }
@@ -44,9 +53,18 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject()
         }
 
-        setXtoken("123456")
-        updateInfo(true)
-        return Promise.resolve()
+        return sha512((`${configStore.cfg.value.passwordfronthash}::${password}>>`)).then((password) => {
+            loginGetXToken(phone1, password).then((res) => {
+                if (!res.data.data.xtoken || !res.data.data.success) {
+                    return Promise.reject("登录失败")
+                }
+
+                setXtoken(res.data.data.xtoken)
+                return updateInfo(true)
+            }, () => {
+                return Promise.reject("登录失败")
+            })
+        })
     }
 
     const logout = () => {
@@ -54,18 +72,7 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject("未登录")
         }
 
-        user.value.name = ""
-        user.value.avatar = ""
-        user.value.phone = ""
-        user.value.location = ""
-        user.value.totalPrice = 0
-        user.value.totalBuy = 0
-        user.value.totalGood = 0
-        user.value.totalJian = 0
-        user.value.totalShouHuo = 0
-        user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
-        user.value.pricePre = user.value.totalPrice / user.value.totalBuy
-
+        user.value = {} as User
         lastUpdateTime.value = Date.now()
 
         delXtoken()
@@ -82,55 +89,62 @@ const useUserStore = defineStore("userStore", () => {
         user.value.location = location1
     }
 
-    const deleteUser = () => {
-        if (!isLogin()) {
-            return Promise.reject("未登录")
+    const register = (phone1: string, password: string) => {
+        const configStore = useConfigStore()
+
+        if (isLogin()) {
+            return Promise.reject("已登录")
         }
 
-        return logout()
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const register = (phone1: string, password: string) => {
         if (!isMobile(phone1)) {
             return Promise.reject("手机号格式错误")
         }
 
-        return login(phone1, password)
-    }
+        if (password.length < 8) {
+            return Promise.reject()
+        }
 
-    const updateInfo = (must: boolean | undefined = false) => {
+        return sha512((`${configStore.cfg.value.passwordfronthash}::${password}>>`)).then((password) => {
+            registerGetXToken(phone1, password).then((res) => {
+                if (!res.data.data.xtoken || !res.data.data.success) {
+                    return Promise.reject("登录失败")
+                }
+
+                setXtoken(res.data.data.xtoken)
+                return updateInfo(true)
+            }, () => {
+                return Promise.reject("登录失败")
+            })
+        })
+    }
+    async function updateInfo(must: boolean = false) {
         if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
         if (must || Object.keys(user.value).length === 0 || (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000))) {
             const configStore = useConfigStore()
+            return getSelfInfo().then((res) => {
+                user.value = res.data.data
+                user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
+                user.value.pricePre = user.value.totalPrice / user.value.totalBuy
+            }).then(() => {
+                if (!user.value.name) {
+                    user.value.name = "新用户"
+                }
 
-            user.value.name = ""
-            user.value.avatar = ""
-            user.value.phone = "17322061610"
-            user.value.location = "广东广州"
-            user.value.totalPrice = 100000
-            user.value.totalBuy = 30
-            user.value.totalGood = 20
-            user.value.totalJian = 40
-            user.value.totalShouHuo = 25
-            user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
-            user.value.pricePre = user.value.totalPrice / user.value.totalBuy
+                if (!user.value.avatar) {
+                    user.value.avatar = configStore.cfg.value.avatar
+                }
 
-            if (!user.value.name) {
-                user.value.name = "新用户"
-            }
+                if (![1, 2, 3].some((v) => v === user.value.type)) {
+                    user.value.type = 1
+                }
 
-            if (!user.value.avatar) {
-                user.value.avatar = configStore.cfg.value.avatar
-            }
-
-            lastUpdateTime.value = Date.now()
-            return Promise.resolve()
+                console.log("AAAASSS", Object.entries(user.value))
+                lastUpdateTime.value = Date.now()
+            })
         }
-
         return Promise.resolve()
     }
 
@@ -139,10 +153,9 @@ const useUserStore = defineStore("userStore", () => {
         lastUpdateTime,
         login,
         logout,
-        setData,
-        deleteUser,
         register,
         updateInfo,
+        setData,
     }
 })
 

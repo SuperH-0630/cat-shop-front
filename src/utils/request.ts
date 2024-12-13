@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios'
 import {getXtoken, setXtoken} from "@/store/user"
 import {ElMessage} from "element-plus"
 import useUserStore, {isLogin} from "@/store/user"
+import { ElMessageBox } from "element-plus"
 
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE || '/'
