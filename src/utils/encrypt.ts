@@ -44,8 +44,11 @@
 //   return encrypt.encrypt(content)
 // }
 
-export function sha512(str: string) {
-  return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then((buf) => {
-    return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('')
-  })
+export async function sha256(message: string) {
+  const msgUint8 = new TextEncoder().encode(message)// encode as (utf-8) Uint8Array
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8)// hash the message
+  const hashArray = Array.from(new Uint8Array(hashBuffer))// convert buffer to byte array
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')// convert bytes to hex string
 }
+
+

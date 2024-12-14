@@ -3,10 +3,10 @@ import useConfigStore from "@/store/config"
 
 const configStore = useConfigStore()
 const showAD = ref({
-  pic: configStore.cfg.value.adpic,
-  text: configStore.cfg.value.ad,
-  header: configStore.cfg.value.adtitle,
-  url: configStore.cfg.value.adurl
+  pic: configStore.config?.adpic,
+  text: configStore.config?.ad,
+  header: configStore.config?.adtitle,
+  url: configStore.config?.adurl
 })
 
 const adDiv = ref(null as HTMLElement | null)

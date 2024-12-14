@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ShopRecord} from "@/api/user"
+import {ShopRecord} from "@/api/shoppingbag"
 import router from "@/router"
-import {formatDate} from "@/utils/time";
+import {formatDate} from "@/utils/time"
 
 const props = defineProps({
   "record": {

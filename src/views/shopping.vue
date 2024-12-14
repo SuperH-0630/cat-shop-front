@@ -11,7 +11,7 @@
   const wupinId = ref(route.query.id as number | null | undefined)
   if (!wupinId.value || wupinId.value <= 0) {
     router.push({
-      name: "NotFound",
+      path: '/error',
       query: {
         msg: "找不到物品",
       }
@@ -26,7 +26,7 @@
 
   if (!classOf) {
     router.push({
-      name: "NotFound",
+      path: '/error',
       query: {
         msg: "找不到分类",
       }

@@ -45,17 +45,16 @@ service.interceptors.response.use(
                   ElMessageBox.alert('您的登录已经过期，请重新登录。', '提示', {
                       confirmButtonText: '好的',
                       callback: () => {
-                          userStore.logout().then(() => {
-                              ElMessage({
-                                  type: 'success',
-                                  message: '账号退出成功',
-                              })
-                              router.push({
-                                  "path": "/login",
-                                  "query": {
-                                      "redirect": encodeURIComponent(route.fullPath),
-                                  },
-                              })
+                          userStore.logout()
+                          ElMessage({
+                              type: 'success',
+                              message: '账号退出成功',
+                          })
+                          router.push({
+                              "path": "/login",
+                              "query": {
+                                  "redirect": encodeURIComponent(route.fullPath),
+                              },
                           })
                       },
                   })
@@ -83,7 +82,15 @@ service.interceptors.response.use(
   }
 )
 
-export type Result<T = unknown> = Promise<AxiosResponse<result<T>>> | any
+export type Success = Result<success>
+export type SuccessData = ResultData<success>
+
+export type Result<T = unknown> = Promise<ResultData<T>> | any
+export type ResultData<T = unknown> = AxiosResponse<result<T>> | any
+
+export interface success {
+    success: boolean
+}
 
 export interface result<T = unknown> {
   message: string

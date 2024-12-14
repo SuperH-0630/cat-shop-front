@@ -12,7 +12,7 @@
   const wupinId = ref(route.query.id as number | null | undefined)
   if (!wupinId.value || wupinId.value <= 0) {
     router.push({
-      name: "NotFound",
+      path: '/error',
       query: {
         msg: "找不到物品",
       }
@@ -23,15 +23,12 @@
   classStore.getLst()
 
   const classId = 2
-  const classOf = classStore.findClass(classId) as Class | undefined | null
-
-  if (!classOf) {
-    router.push({
-      name: "NotFound",
-      query: {
-        msg: "找不到分类",
-      }
-    })
+  const classOf = ref(classStore.findClass(classId) as Class)
+  if (!classOf.value) {
+    classOf.value = {
+      id: classId,
+      name: "分类" + classOf,
+    }
   }
 
   const wupin = ref({
@@ -39,7 +36,7 @@
     name: "物品" + wupinId.value,
     pic: WupinPic,
     classid: classId,
-    classOf: classOf,
+    classOf: classOf.value,
     tag: "爆卖！",
     hotPrice: 19999,
     realPrice: 19999,

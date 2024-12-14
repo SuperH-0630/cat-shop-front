@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import {BuyRecordStatus} from "@/api/user"
+import {BuyRecordStatus, BuyRecord} from "@/api/buyrecord"
 import {formatDate} from "@/utils/time"
-import {BuyRecord} from "@/api/user"
 import {ElNotification} from "element-plus"
 import router from "@/router"
 

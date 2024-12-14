@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {BuyRecordStatus, getUserBuyRecordByPage} from "@/api/user"
+import {BuyRecordStatus, getUserBuyRecordByPage} from "@/api/buyrecord"
 import {ElNotification} from "element-plus";
 
 const router = useRouter()
+const route = useRoute()
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
 const currentPage = ref({} as { [key: number]: number })
@@ -19,6 +20,15 @@ Object.entries(BuyRecordStatus).forEach(([_key]) => {
     }
 
     currentPage.value[key] = 1
+
+    if (route.query?.status && Number(route.query?.status).valueOf() === key) {
+      if (route.query?.page) {
+        currentPage.value[key] = Number(route.query?.page).valueOf()
+        if (currentPage.value[key] < 1) {
+          currentPage.value[key] = 1
+        }
+      }
+    }
   })
 })
 

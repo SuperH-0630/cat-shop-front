@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getBuyRecordData, BuyRecord} from "@/api/user"
+import {getBuyRecordData, BuyRecord} from "@/api/buyrecord"
 
 const route = useRoute()
 const recordId = ref((route.query?.id || 0) as number)

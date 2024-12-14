@@ -23,12 +23,12 @@ const goKefu = () => {
     <el-card style="max-width: 75%; min-width: 30%; margin-top: 10px">
       <template #header>
         <el-text class="title">
-          关于{{ configStore.cfg.value.name }}
+          关于{{ configStore.config?.name }}
         </el-text>
       </template>
 
       <el-text class="content">
-        {{ configStore.cfg.value.aboutus }}
+        {{ configStore.config?.aboutus }}
       </el-text>
 
       <template #footer>

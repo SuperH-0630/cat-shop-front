@@ -23,7 +23,7 @@ if (isLogin()) {
               <el-icon><Phone /></el-icon>
               400服务热线：
               <el-text>
-                {{ configStore.cfg.value.hotline }}
+                {{ configStore.config?.hotline }}
               </el-text>
             </el-text>
           </div>
@@ -31,7 +31,7 @@ if (isLogin()) {
           <div>
             <el-text>
               <el-icon><Service /></el-icon>
-              {{ configStore.cfg.value.service }}
+              {{ configStore.config?.service }}
             </el-text>
           </div>
 
@@ -43,7 +43,7 @@ if (isLogin()) {
               </el-text>
             </div>
             <div style="display: flex; justify-content: center">
-              <el-image style="width: 15vw; max-height: 55vh" :src="configStore.cfg.value.wechat" fit="contain" :preview-src-list="[configStore.cfg.value.wechat]" :initial-index="0"></el-image>
+              <el-image style="width: 15vw; max-height: 55vh" :src="configStore.config?.wechat" fit="contain" :preview-src-list="[configStore.config?.wechat]" :initial-index="0"></el-image>
             </div>
           </div>
         </div>

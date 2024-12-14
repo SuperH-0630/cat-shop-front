@@ -6,9 +6,6 @@ import {maskPhoneNumber} from "@/utils/str"
 
 const configStore = useConfigStore()
 const userStore = useUserStore()
-if (isLogin()) {
-  userStore.updateInfo()
-}
 
 const router = useRouter()
 const route = useRoute()
@@ -83,7 +80,7 @@ const toRegirster = () => {
 const logout = () => {
   if (isLogin()) {
     ElMessageBox.confirm(
-      `是否确认退出${configStore.cfg.value.name}账号？`,
+      `是否确认退出${configStore.config?.name}账号？`,
       '温馨提示',
       {
         confirmButtonText: '确认退出',
@@ -104,7 +101,7 @@ const logout = () => {
 </script>
 
 <template>
-  <div v-if="isLogin && !hasLoad()">
+  <div v-if="isLogin() && !hasLoad()">
     <div>
       <el-text style="font-size: 0.8vw">
       正在加载中...请稍后
@@ -116,7 +113,7 @@ const logout = () => {
       <el-dropdown size="large">
         <el-text class="user_name_text">
           <el-icon><Folder /></el-icon>
-          {{ userStore.user.name }} - {{ maskPhoneNumber(userStore.user.phone) }}
+          {{ userStore.user?.name }} - {{ maskPhoneNumber(userStore.user?.phone) }}
           <el-icon class="el-icon--right">
             <arrow-down />
           </el-icon>
@@ -127,13 +124,13 @@ const logout = () => {
             <el-dropdown-item @click="toOrderLst"><el-text class="drop_item">我的购物记录</el-text></el-dropdown-item>
             <el-dropdown-item @click="toGowuche"><el-text class="drop_item">我的购物车</el-text></el-dropdown-item>
             <el-dropdown-item @click="toKefu"><el-text class="drop_item">我的客服</el-text></el-dropdown-item>
-            <el-dropdown-item @click="toAboutUs"><el-text class="drop_item">关于{{ configStore.cfg.value.name }}</el-text></el-dropdown-item>
+            <el-dropdown-item @click="toAboutUs"><el-text class="drop_item">关于{{ configStore.config?.name }}</el-text></el-dropdown-item>
             <el-dropdown-item @click="logout" ><el-text class="drop_item">退出登录</el-text></el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
     </div>
-    <el-avatar class="user_avatar" shape="square" size="large" :src="userStore.user.avatar" @click="toCenter" />
+    <el-avatar class="user_avatar" shape="square" size="large" :src="userStore.user?.avatar" @click="toCenter" />
   </div>
   <div v-else>
     <el-button-group>

@@ -114,6 +114,14 @@ const routes: RouteRecordRaw[] = [
       title: '错误',
       wechat: true,
     }
+  },
+  {
+    path: '/center/user/edit',
+    component: () => import('@/views/edituser.vue'),
+    meta: {
+      title: '错误',
+      wechat: true,
+    }
   }
 ]
 const router = createRouter({
@@ -141,7 +149,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to) => {
   const configStore = useConfigStore()
   if (to.meta.title && typeof to.meta.title === 'string') {
-    document.title = configStore.cfg.value.name + " - " + (to.meta.title || "首页")
+    document.title = configStore.config?.name + " - " + (to.meta.title || "首页")
   }
   if (to.meta.wechat && to.meta.wechat === true) {
     useWechatStore().open()

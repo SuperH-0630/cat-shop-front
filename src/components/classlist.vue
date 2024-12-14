@@ -3,7 +3,6 @@
   import useClassStore from "@/store/class"
 
   const classStore = useClassStore()
-  classStore.getLst()
 </script>
 
 <template>

@@ -1,20 +1,38 @@
 <script setup lang="ts">
 import WupinLst from "@/components/wupinlist.vue"
-import wupinPic from "@/assets/images/logo.jpg"
 import Search from "@/components/search.vue"
+import {Wupin} from "@/store/hotwupin"
+import {searchWuPin} from "@/api/search"
 
-const wupinlst = ref([] as { name: string, id: number, pic: string, classname?: string, tag?: string, price?: number }[])
+const route = useRoute()
 
-for (let i = 0; i < 50; i++) {
-  wupinlst.value.push({
-    name: "物品" + i,
-    id: i,
-    pic: wupinPic,
-    classname: "测试",
-    tag: "火爆",
-    price: 9999,
+const wupinlst = ref([] as Wupin[])
+const currentPage = ref((route.query?.page || 1) as number)
+const pagemax = ref(0)
+const pagesize = ref(20)
+
+if (typeof currentPage.value !== "number" || currentPage.value <= 0) {
+  currentPage.value = 1
+}
+
+const data = ref({
+  select: [],
+  search: "",
+} as { select?: number[], search?: string })
+
+const changePage = async () => {
+  if (route.query?.info) {
+    data.value = JSON.parse(route.query?.info as string) as { select?: number[], search?: string }
+  }
+
+  await searchWuPin(data.value?.search || "", data.value?.select || [], currentPage.value, 20).then((res) => {
+    wupinlst.value = res.data.data.list
+    pagemax.value = res.data.data.pagemax
   })
 }
+
+watch(() => route.query?.info, changePage)
+changePage()
 
 </script>
 
@@ -28,6 +46,9 @@ for (let i = 0; i < 50; i++) {
     <div style="width: 90%; display: flex; justify-content: space-between; margin-top: 10px">
       <WupinLst :wp="wupinlst"></WupinLst>
     </div>
+  </div>
+  <div style="display: flex; justify-content: center">
+    <el-pagination v-model:current-page="currentPage" class="pager" background layout="prev, pager, next" :total="pagemax" :page-size="pagesize" @change="changePage" />
   </div>
 </template>
 

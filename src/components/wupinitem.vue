@@ -60,16 +60,16 @@
           免费抢购
         </el-text>
         <el-text v-if="facePrice < realPrice" class="hotprice">
-          促销：￥{{ (itfacePrice / 100).toFixed(2) }}
+          促销：￥{{ (facePrice / 100).toFixed(2) }}
         </el-text>
         <el-text v-else-if="facePrice > realPrice" class="hotprice">
-          冤种：￥{{ (itfacePrice / 100).toFixed(2) }}
+          冤种：￥{{ (facePrice / 100).toFixed(2) }}
         </el-text>
         <el-text v-else-if="facePrice == realPrice" class="baseprice">
-          售价：￥{{ (item.price / 100).toFixed(2) }}
+          售价：￥{{ (realPrice / 100).toFixed(2) }}
         </el-text>
         <el-text v-else-if="realPrice == 0" class="hotprice">
-          冤种：￥{{ (itfacePrice / 100).toFixed(2) }}
+          冤种：￥{{ (facePrice / 100).toFixed(2) }}
         </el-text>
         <el-tag v-if="item.tag" type="primary" class="hottag">
           {{ item.tag }}

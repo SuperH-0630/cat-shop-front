@@ -13,8 +13,6 @@ const goKefu = () => {
     path: "/kefu"
   })
 }
-
-
 const configStore = useConfigStore()
 </script>
 
@@ -23,16 +21,16 @@ const configStore = useConfigStore()
     <el-page-header icon="">
       <template #title>
         <div class="title_box" @click="goHome">
-          <el-avatar class="avatar_logo" :src="configStore.cfg.value.logo" fit="fill"></el-avatar>
+          <el-avatar class="avatar_logo" :src="configStore.config?.logo" fit="fill"></el-avatar>
           <el-text class="title">
-            {{ configStore.cfg.value.name }}
+            {{ configStore.config?.name }}
           </el-text>
         </div>
       </template>
 
       <template #content>
         <el-text class="subtitle">
-          {{ configStore.cfg.value.subname }}
+          {{ configStore.config?.subname }}
         </el-text>
       </template>
 
@@ -40,12 +38,12 @@ const configStore = useConfigStore()
         <div style="display: flex">
           <el-text class="extrainfo gokefu" @click="goKefu">
             <el-icon><Service /></el-icon>
-            {{ configStore.cfg.value.service }}
+            {{ configStore.config?.service }}
           </el-text>
 
           <el-text class="extrainfo gokefu" style="margin-right: 40px" @click="goKefu">
             <el-icon><Microphone /></el-icon>
-             {{ configStore.cfg.value.hotline }}
+             {{ configStore.config?.hotline }}
           </el-text>
 
           <UserTitle class="extrainfo"></UserTitle>

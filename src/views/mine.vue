@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import useUserStore, {isLogin} from "@/store/user"
-  // import {Edit} from "@element-plus/icons-vue"
-  import {BuyRecord, getUserBuyRecord} from "@/api/user"
-  // import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
+  import useUserStore, {isLogin, hasLoad} from "@/store/user"
+  import {Edit} from "@element-plus/icons-vue"
+  import {BuyRecord, getUserBuyRecord} from "@/api/buyrecord"
+  import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
   import {ElNotification} from "element-plus"
 
   const route = useRoute()
@@ -33,11 +33,11 @@
     }
   })
 
-  // const goHome = () => {
-  //   router.push({
-  //     path: "/home"
-  //   })
-  // }
+  const goHome = () => {
+    router.push({
+      path: "/home"
+    })
+  }
 
   let offset = 0
   const limit = 20
@@ -70,19 +70,25 @@
     })
   }
 
+  const goEdit = () => {
+    router.push({
+      path: "/center/user/edit"
+    })
+  }
+
 </script>
 
 <template>
   <div v-if="hasLoad()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
-      <div style="display: inline-block; width: 15vw; max-height: 75vh; min-height: 60vh; margin-right: 20px; margin-left: 20px">
-        <el-scrollbar height="75vh">
+      <div style="display: inline-block; width: 15vw; max-height: 60vh; min-height: 60vh; margin-right: 20px; margin-left: 20px">
+        <el-scrollbar height="60vh">
           <div style="padding-right: 15px">
             <el-image :src="userStore.user.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.user.avatar]"></el-image>
             <div style="margin-right: 15px">
               <div class="user_info_box">
                 <el-button-group>
-                  <el-button class="user_info_text" type="success">
+                  <el-button class="user_info_text" type="success" @click="goEdit">
                     <el-icon><Edit /></el-icon>
                     更改个人信息
                   </el-button>
@@ -157,7 +163,7 @@
           </div>
         </el-scrollbar>
       </div>
-      <div style="display: inline-block; width: 35vw; max-height: 85vh; margin-right: 20px; margin-left: 20px">
+      <div style="display: inline-block; width: 35vw; max-height: 60vh; margin-right: 20px; margin-left: 20px">
         <el-badge :value="kehutag" style="margin-top: 10px; height: 5vh">
           <el-text class="user_name"> {{ userStore.user.name }} </el-text>
         </el-badge>
@@ -173,7 +179,7 @@
           </el-result>
         </div>
         <div v-else style="margin-top: 10px">
-          <div v-infinite-scroll="updater" style="overflow: auto; height: 70vh">
+          <div v-infinite-scroll="updater" style="overflow: auto; height: 53vh">
             <div v-for="(item, index) in buyRecord" :key="index">
                 <Defaultbuyrecord :record="item" class="buy_record_box"></Defaultbuyrecord>
             </div>

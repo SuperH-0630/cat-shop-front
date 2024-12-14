@@ -1,14 +1,20 @@
 import {isMobile} from "@/utils/str"
 import useConfigStore from "@/store/config"
-import {sha512} from "@/utils/encrypt"
-import {getSelfInfo, loginGetXToken, registerGetXToken} from "@/api/user"
+import {sha256} from "@/utils/encrypt"
+import {getSelfInfo, loginGetXToken, registerGetXToken, updateData} from "@/api/user"
 
-export interface User {
+export interface UserBase {
     name: string
-    type: number
-    avatar: string
-    phone: string
     location: string
+}
+
+export interface UserAvatar {
+    avatar: string
+}
+
+export interface User extends UserBase, UserAvatar{
+    type: number
+    phone: string
     xtoken: string
     totalPrice: number
     totalBuy: number
@@ -30,15 +36,14 @@ export const setXtoken = (token: string): string => {
 export const isLogin = () => getXtoken().length > 0
 export const hasLoad = () => {
     const userStore = useUserStore()
-    return typeof userStore === "object" && Object.keys(userStore).length > 0
+    return typeof userStore.user === "object" && Object.keys(userStore.user).length > 0
 }
 
 const useUserStore = defineStore("userStore", () => {
     const user = ref({} as User)
-    const lastUpdateTime = ref(Date.now())
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const login = (phone1: string, password: string) => {
+    const login = async (phone1: string, password: string) => {
         const configStore = useConfigStore()
 
         if (isLogin()) {
@@ -53,43 +58,36 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject()
         }
 
-        return sha512((`${configStore.cfg.value.passwordfronthash}::${password}>>`)).then((password) => {
-            loginGetXToken(phone1, password).then((res) => {
-                if (!res.data.data.xtoken || !res.data.data.success) {
-                    return Promise.reject("登录失败")
-                }
+        const passwordHash = await sha256((`${configStore.config?.passwordfronthash}::${password}>>`))
 
-                setXtoken(res.data.data.xtoken)
-                return updateInfo(true)
-            }, () => {
+        loginGetXToken(phone1, passwordHash).then((res) => {
+            if (!res.data.data.xtoken || !res.data.data.success) {
                 return Promise.reject("登录失败")
-            })
+            }
+
+            setXtoken(res.data.data.xtoken)
+            return updateInfo()
+        }).catch(() => {
+            return Promise.reject("登录失败")
         })
     }
 
     const logout = () => {
-        if (!isLogin()) {
-            return Promise.reject("未登录")
-        }
-
         user.value = {} as User
-        lastUpdateTime.value = Date.now()
-
         delXtoken()
-        return Promise.resolve()
     }
 
-    const setData = (name1: string, avatar1: string, location1: string) => {
+    const setData = async (data: UserBase) => {
         if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
-        user.value.name = name1
-        user.value.avatar = avatar1
-        user.value.location = location1
+        return updateData(data).then(() => {
+            return updateInfo()
+        })
     }
 
-    const register = (phone1: string, password: string) => {
+    const register = async (phone1: string, password: string) => {
         const configStore = useConfigStore()
 
         if (isLogin()) {
@@ -104,53 +102,49 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject()
         }
 
-        return sha512((`${configStore.cfg.value.passwordfronthash}::${password}>>`)).then((password) => {
-            registerGetXToken(phone1, password).then((res) => {
-                if (!res.data.data.xtoken || !res.data.data.success) {
-                    return Promise.reject("登录失败")
-                }
+        const passwordHash = await sha256((`${configStore.config?.passwordfronthash}::${password}>>`))
 
-                setXtoken(res.data.data.xtoken)
-                return updateInfo(true)
-            }, () => {
-                return Promise.reject("登录失败")
-            })
+        registerGetXToken(phone1, passwordHash).then((res) => {
+            if (!res.data.data.xtoken || !res.data.data.success) {
+                return Promise.reject("注册失败")
+            }
+
+            setXtoken(res.data.data.xtoken)
+            return updateInfo()
+        }).catch(() => {
+            return Promise.reject("注册失败")
         })
     }
-    async function updateInfo(must: boolean = false) {
+
+    async function updateInfo() {
         if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
-        if (must || Object.keys(user.value).length === 0 || (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000))) {
-            const configStore = useConfigStore()
-            return getSelfInfo().then((res) => {
-                user.value = res.data.data
-                user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
-                user.value.pricePre = user.value.totalPrice / user.value.totalBuy
-            }).then(() => {
-                if (!user.value.name) {
-                    user.value.name = "新用户"
-                }
+        const configStore = useConfigStore()
+        return getSelfInfo().then((res) => {
+            user.value = res.data.data
+            user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
+            user.value.pricePre = user.value.totalPrice / user.value.totalBuy
+        }).then(() => {
+            if (!user.value.name) {
+                user.value.name = "新用户"
+            }
 
-                if (!user.value.avatar) {
-                    user.value.avatar = configStore.cfg.value.avatar
-                }
+            if (!user.value.avatar) {
+                user.value.avatar = configStore.config?.avatar
+            }
 
-                if (![1, 2, 3].some((v) => v === user.value.type)) {
-                    user.value.type = 1
-                }
+            if (![1, 2, 3].some((v) => v === user.value.type)) {
+                user.value.type = 1
+            }
 
-                console.log("AAAASSS", Object.entries(user.value))
-                lastUpdateTime.value = Date.now()
-            })
-        }
-        return Promise.resolve()
+            return user.value
+        })
     }
 
     return {
         user,
-        lastUpdateTime,
         login,
         logout,
         register,

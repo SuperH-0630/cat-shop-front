@@ -99,19 +99,19 @@ const register = () => {
           </template>
           <el-input v-model="form.phone" />
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item>
           <template #label>
             <el-text>密码</el-text>
           </template>
           <el-input v-model="form.password" type="password" show-password />
         </el-form-item>
-        <el-form-item label="再次密码">
+        <el-form-item>
           <template #label>
             <el-text>再次密码</el-text>
           </template>
           <el-input v-model="form.passwordDouble" type="password" show-password />
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item>
           <template #label>
             <el-text>验证码</el-text>
           </template>

@@ -47,7 +47,7 @@
           </div>
         </template>
         <div class="wechat_img">
-          <el-image :src="configStore.cfg.value.wechat" fit="contain" :preview-src-list="[configStore.cfg.value.wechat]" :initial-index="0" @show="onShow" @close="onClose"> </el-image>
+          <el-image :src="configStore.config?.wechat" fit="contain" :preview-src-list="[configStore.config?.wechat]" :initial-index="0" @show="onShow" @close="onClose"> </el-image>
         </div>
         <template v-if="showWechat" #footer>
           <div style="display: flex; justify-content: center;">

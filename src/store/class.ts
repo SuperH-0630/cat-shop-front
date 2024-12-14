@@ -1,3 +1,5 @@
+import {getClassLstInfo} from "@/api/class";
+
 export interface Class {
     id: number
     name: string
@@ -9,46 +11,31 @@ const useClassStore = defineStore("classStore", () => {
         id: -1,
         name: "全部",
     } as Class)
-    const lastUpdateTime = ref(Date.now())
 
     const deleteAll = () => {
         classLst.value = []
-        return Promise.resolve()
     }
 
-    const getLstMust = () => {
-        deleteAll()
-
-        for (let i = 0; i < 60; i++) {
-            classLst.value.push({
-                name: "分类" + i + 1,
-                id: i + 1,
-            })
-        }
-
-        lastUpdateTime.value = Date.now()
-        return Promise.resolve()
+    const updateInfo = () => {
+        return getClassLstInfo().then((res) => {
+            classLst.value = res.data.data.list
+            return classLst.value
+        })
     }
 
     const getLst = () => {
         if (classLst.value.length === 0) {
-            return getLstMust()
+            return updateInfo()
         }
 
-        if (lastUpdateTime.value && (Date.now() - lastUpdateTime.value > 5 * 60 * 1000)) {
-            return getLstMust()
-        }
-
-        return Promise.resolve()
+        return Promise.resolve(classLst.value)
     }
 
     const classLstWithAll = computed(() => {
-        getLst()
         return ([allClass.value] as Class[]).concat(classLst.value as Class[])
     })
 
     const findClass = (id: number) => {
-        getLst()
         return classLst.value.find((item) => item.id === id)
     }
 
@@ -56,7 +43,7 @@ const useClassStore = defineStore("classStore", () => {
         classLst,
         allClass,
         deleteAll,
-        getLstMust,
+        updateInfo,
         getLst,
         classLstWithAll,
         findClass,

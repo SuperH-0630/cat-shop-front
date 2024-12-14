@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import useClassStore from "@/store/class"
 
+  const router = useRouter()
+  const route = useRoute()
+
   const props = defineProps({
     "type": {
       type: String,
@@ -16,33 +19,26 @@
     },
   })
 
-  const select = computed(() => props.select || [] as number[])
-  const search = computed(() => props.search || "" as string)
+  const data = ref({
+        select: [],
+        search: "",
+  } as { select?: number[], search?: string })
 
-  const router = useRouter()
-  const route = useRoute()
-
-  const infoController = (info) => {
+  const infoController = (info?: any) => {
     if (!info) {
       return
     }
 
-    const data = JSON.parse(info as string) as { select?: number[], search?: string }
-
-    if (data && data.select) {
-      select.value = data.select
-    }
-
-    if (data && data.search) {
-      search.value = data.search
-    }
+    data.value = JSON.parse(info as string) as { select?: number[], search?: string }
   }
 
   infoController(route.query?.info)
   watch(() => route.query?.info, infoController)
 
+  const select = ref(data.value.select || props.select || [] as number[])
+  const search = ref(data.value.search || props.search || "" as string)
+
   const classStore = useClassStore()
-  classStore.getLst()
 
   const onSearch = () => {
     router.push({
@@ -57,7 +53,6 @@
   }
 
   const onChange = (ids: number[]) => {
-    console.log("select change", select, ids)
     if (ids[ids.length - 1] === classStore.allClass.id) {
       select.value = [classStore.allClass.id]
     } else {
