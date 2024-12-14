@@ -47,7 +47,7 @@ const update = () => {
     cancelButtonText: '取消更新',
     type: 'warning',
   }).then(() => {
-    return userStore.setData(ub.value).then(() => {
+    return userStore.editData(ub.value).then(() => {
       ElMessage({
         type: 'success',
         message: "更新成功",

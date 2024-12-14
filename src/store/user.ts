@@ -1,7 +1,7 @@
 import {isMobile} from "@/utils/str"
 import useConfigStore from "@/store/config"
 import {sha256} from "@/utils/encrypt"
-import {getSelfInfo, loginGetXToken, registerGetXToken, updateData} from "@/api/user"
+import {getSelfInfo, loginGetXToken, registerGetXToken, updateAvatarData, updateData} from "@/api/user"
 
 export interface UserBase {
     name: string
@@ -77,12 +77,22 @@ const useUserStore = defineStore("userStore", () => {
         delXtoken()
     }
 
-    const setData = async (data: UserBase) => {
+    const editData = async (data: UserBase) => {
         if (!isLogin()) {
             return Promise.reject("未登录")
         }
 
         return updateData(data).then(() => {
+            return updateInfo()
+        })
+    }
+
+    const editAvatar = async (avatar: Blob) => {
+        if (!isLogin()) {
+            return Promise.reject("未登录")
+        }
+
+        return updateAvatarData(avatar).then(() => {
             return updateInfo()
         })
     }
@@ -149,7 +159,8 @@ const useUserStore = defineStore("userStore", () => {
         logout,
         register,
         updateInfo,
-        setData,
+        editData,
+        editAvatar,
     }
 })
 

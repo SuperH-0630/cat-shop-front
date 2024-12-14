@@ -4,6 +4,8 @@
   import {BuyRecord, getUserBuyRecord} from "@/api/buyrecord"
   import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
   import {ElNotification} from "element-plus"
+  import { genFileId } from 'element-plus'
+  import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 
   const route = useRoute()
   const router = useRouter()
@@ -76,6 +78,44 @@
     })
   }
 
+  const avatar = ref([])
+  const avatarUpload = ref<UploadInstance>()
+
+  const handleExceed: UploadProps['onExceed'] = (files) => {
+    avatarUpload.value!.clearFiles()
+    const file = files[0] as UploadRawFile
+    file.uid = genFileId()
+    avatarUpload.value!.handleStart(file)
+  }
+
+  const updateAvatar = (avatar: UploadRawFile) => {
+    if (!avatar) {
+      ElMessage({
+        type: 'warning',
+        message: "请上传头像"
+      })
+    }
+
+    if (avatar.size > 500000) {// 500KB
+      ElMessage({
+        type: 'warning',
+        message: "文件过大"
+      })
+      return
+    }
+
+    userStore.editAvatar(avatar).then(() => {
+      ElMessage({
+        type: 'success',
+        message: "头像更新成功"
+      })
+    }, () => {
+      ElMessage({
+        type: 'error',
+        message: "头像更新失败"
+      })
+    })
+  }
 </script>
 
 <template>
@@ -87,16 +127,41 @@
             <el-image :src="userStore.user.avatar" fit="contain" style="margin-right: 15px; height: auto; width: 100%; border-radius: 20px" :initial-index="0" :preview-src-list="[userStore.user.avatar]"></el-image>
             <div style="margin-right: 15px">
               <div class="user_info_box">
-                <el-button-group>
-                  <el-button class="user_info_text" type="success" @click="goEdit">
+                <div class="user_info_btn">
+                  <el-button type="success" @click="goEdit">
                     <el-icon><Edit /></el-icon>
                     更改个人信息
                   </el-button>
-                  <el-button class="user_info_text" type="primary">
-                    <el-icon><Edit /></el-icon>
-                    更换头像
-                  </el-button>
-                </el-button-group>
+                </div>
+                <div class="user_info_btn">
+                  <el-upload
+                      ref="avatarUpload"
+                      v-model:file-list="avatar"
+                      action="#"
+                      accept=".jpg,.jpeg,.png"
+                      :auto-upload="false"
+                      :multiple="false"
+                      :limit="1"
+                      :on-exceed="handleExceed"
+                      :show-file-list="false"
+                      :on-change="updateAvatar"
+                  >
+                    <el-tooltip
+                        effect="dark"
+                        placement="bottom-end"
+                    >
+                      <el-button type="primary">
+                        <el-icon><Edit /></el-icon>
+                        更换头像
+                      </el-button>
+                      <template #content>
+                        <el-text style="color: white">
+                          仅限jpg/png文件，不超过500KB
+                        </el-text>
+                      </template>
+                    </el-tooltip>
+                  </el-upload>
+                </div>
               </div>
               <div class="user_info_box">
                 <el-text class="user_info_text">
@@ -203,5 +268,9 @@
   .buy_record_box {
     margin-top: 5px;
     margin-bottom: 5px;
+  }
+
+  .user_info_btn {
+    margin-bottom: 2px;
   }
 </style>

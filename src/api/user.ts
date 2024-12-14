@@ -96,3 +96,16 @@ export function updateData(data: UserBase): Success {
         status: 200,
     })
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function updateAvatarData(avatar: Blob): Success {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
