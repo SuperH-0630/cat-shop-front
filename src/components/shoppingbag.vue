@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import {ShopRecord} from "@/api/shoppingbag"
+import {addToShoppingBag, ShopRecord} from "@/api/shoppingbag"
 import router from "@/router"
 import {formatDate} from "@/utils/time"
+import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
+import {ElNotification} from "element-plus";
 
 const props = defineProps({
   "record": {
@@ -10,25 +12,20 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(["reload"])
+
 const record = computed(() => props.record)
 
-const facePrice = computed(() => {
-  if (!record.value) {
-    return 0
-  }
-
-  if (typeof record.value.wupin.hotPrice === "number" && record.value.wupin.hotPrice < record.value.wupin.realPrice) {
-    return record.value.wupin.hotPrice >= 0 ? record.value.wupin.hotPrice : 0
-  }
-
-  if (typeof record.value.wupin.realPrice === "number") {
-    return record.value.wupin.realPrice >= 0 ? record.value.wupin.realPrice : 0
-  }
-
-  return 0
+const realPrice = computed(() => {
+  return getRealPrice(record.value.wupin?.realPrice)
 })
 
-const realPrice = ref(record.value && (record.value.wupin.realPrice >= 0 ? record.value.wupin.realPrice : 0))
+const facePrice = computed(() => {
+  return getFacePrice(record.value.wupin?.hotPrice, record.value.wupin?.realPrice)
+})
+const totalPrice = computed(() => {
+  return getTotalPrice(record.value.wupin?.hotPrice, record.value.wupin?.realPrice, num.value)
+})
 
 const onClassClick = () => {
   record.value && router.push({
@@ -37,6 +34,45 @@ const onClassClick = () => {
       "info": JSON.stringify({
         select: [record.value.wupin.classid],
         search: "",
+      })
+    }
+  })
+}
+
+const onWupinClick = () => {
+  record.value && router.push({
+    path: "/wupin",
+    query: {
+      id: record.value.wupin.id,
+    }
+  })
+}
+
+const onClickBag = () => {
+  record.value && addToShoppingBag(record.value.wupin.id, num.value).then((res) => {
+    if (res.data.data.success) {
+      if (num.value <= 0) {
+        ElNotification({
+          title: '已经移出购物车',
+          message: `尊敬的用户您好，我们已经将 ${record.value.wupin.name} 从您的购物车移出。请您进行接下来的操作。`,
+          duration: 5000,
+          type: "success",
+          position: 'top-left',
+        })
+      } else {
+        ElNotification({
+          title: '已经加入购物车',
+          message: `尊敬的用户您好，我们已经将 ${num.value}件 ${record.value.wupin.name} 添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
+          duration: 5000,
+          type: "success",
+          position: 'top-left',
+        })
+      }
+      emits("reload")
+    } else {
+      ElMessage({
+        type: 'error',
+        message: "加入购物车失败",
       })
     }
   })
@@ -54,11 +90,26 @@ const onSameClick = () => {
   })
 }
 
-const totalPrice = computed(() => ((facePrice.value as number / 100) * num.value))
-
 const num = ref(record.value && record.value.num || 0)
 if (num.value < 0) {
   num.value = 0
+}
+
+const byn = ref(null as any)
+const buy = () => {
+  if (!byn.value) {
+    ElMessage({
+      type: 'warning',
+      message: "系统出现了问题，请重试。"
+    })
+    return
+  }
+
+  if (num.value <= 0) {
+    return
+  }
+
+  byn.value.openWithShop(record.value)
 }
 
 </script>
@@ -70,7 +121,7 @@ if (num.value < 0) {
         <div class="header">
           <div style="display: flow-root">
             <div style="display:block; float: left">
-              <el-badge  class="title" :value="record.wupin.tag" style="margin-top: 10px">
+              <el-badge  class="title" :value="record.wupin.tag" style="margin-top: 10px" @click="onWupinClick">
                 <el-text class="wupin_name" @click="onGoWupin"> {{ record.wupin.name }} </el-text>
               </el-badge>
               <el-text class="title wupin_class_name">
@@ -194,14 +245,17 @@ if (num.value < 0) {
                 <el-icon style="margin-right: 3px"><Handbag /></el-icon> 重新加入加入购物车
               </el-button>
             </div>
-            <el-button class="buy_item" size="large">
-              <el-icon style="margin-right: 3px"><Money /></el-icon> 立即购买（实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }}）
+            <el-button class="buy_item" size="large" :disabled="num <= 0" @click="buy">
+              <el-icon style="margin-right: 3px"><Money /></el-icon>
+              立即购买
+              <el-text v-if="num >= 1"> （ 实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }} ） </el-text>
             </el-button>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <Buynew ref="byn"></Buynew>
 </template>
 
 <style scoped lang="scss">

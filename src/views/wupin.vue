@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import {Wupin} from "@/store/hotwupin"
-  import {Class} from "@/store/class"
-  import WupinPic from "@/assets/images/logo.jpg"
-  import useClassStore from "@/store/class"
   import { ElNotification } from 'element-plus'
   import {Location} from "@element-plus/icons-vue";
+  import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
+  import {addToShoppingBag} from "@/api/shoppingbag";
+  import {getWupin} from "@/api/wupin";
 
   const route = useRoute()
   const router = useRouter()
@@ -19,61 +19,24 @@
     })
   }
 
-  const classStore = useClassStore()
-  classStore.getLst()
-
-  const classId = 2
-  const classOf = ref(classStore.findClass(classId) as Class)
-  if (!classOf.value) {
-    classOf.value = {
-      id: classId,
-      name: "分类" + classOf,
-    }
-  }
-
-  const wupin = ref({
-    id: wupinId.value,
-    name: "物品" + wupinId.value,
-    pic: WupinPic,
-    classid: classId,
-    classOf: classOf.value,
-    tag: "爆卖！",
-    hotPrice: 19999,
-    realPrice: 19999,
-    info: "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>" +
-        "<p style='font-size: 20px;'> 贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪，贵在坚持，成在创新：满满充满本事的比亚迪 </p>",
-    ren: "小超",
-    phone: "17322061610",
-    email: "songzihuan@song-zh.com",
-    location: "广东广州",
-    wechat: "12345",
-    buytotal: 100,
-    buygood: 90,
-  } as Wupin)
-
+  const wupin = ref(null as Wupin | null)
+  getWupin(wupinId.value as number).then((res) => {
+    wupin.value = res.data.data
+  }).catch(() => {
+    router.push({
+      path: '/error',
+      query: {
+        msg: "找不到物品",
+      }
+    })
+  })
 
   const onClassClick = () => {
-    router.push({
+    wupin.value && router.push({
       path: "/search",
       query: {
         "info": JSON.stringify({
-          select: [classId],
+          select: [wupin.value && wupin.value.classid],
           search: "",
         })
       }
@@ -81,30 +44,24 @@
   }
 
   const num = ref(1)
-  const facePrice = computed(() => {
-    if (!wupin.value) {
-      return 0
-    }
-
-    if (typeof wupin.value.hotPrice === "number" && wupin.value.hotPrice < wupin.value.realPrice) {
-      return wupin.value.hotPrice >= 0 ? wupin.value.hotPrice : 0
-    }
-
-    if (typeof wupin.value.realPrice === "number") {
-      return wupin.value.realPrice >= 0 ? wupin.value.realPrice : 0
-    }
-
-    return 0
+  const realPrice = computed(() => {
+    return getRealPrice(wupin.value?.realPrice)
   })
-  const realPrice = ref(wupin.value.realPrice >= 0 ? wupin.value.realPrice : 0)
-  const totalPrice = computed(() => ((facePrice.value as number / 100) * num.value))
+  const facePrice = computed(() => {
+    return getFacePrice(wupin.value?.hotPrice, wupin.value?.realPrice)
+  })
+  const totalPrice = computed(() => {
+    return getTotalPrice(wupin.value?.hotPrice, wupin.value?.realPrice, num.value)
+  })
 
-  const totalBuy = ref(wupin.value.buytotal >= 0 ? wupin.value.buytotal : 0)
-  const totalBuyGood = ref(wupin.value.buygood >= 0 ? wupin.value.buygood : 0)
-
-  if (totalBuyGood.value > totalBuy.value) {
-    totalBuyGood.value = totalBuy.value
-  }
+  const totalBuy = computed(() => (wupin.value && wupin.value.buytotal >= 0) ? wupin.value.buytotal : 0)
+  const totalBuyGood = computed(() => {
+    const g = (wupin.value && wupin.value.buygood >= 0) ? wupin.value.buygood : 0
+    if (g > totalBuy.value) {
+      return totalBuy.value
+    }
+    return g
+  })
 
   const goodBuyPre = computed(() => (totalBuyGood.value / totalBuy.value) * 100)
   const goodBuyMsg = ref("好评如潮")
@@ -119,18 +76,44 @@
   }
 
   const onClickBag = () => {
-    ElNotification({
-      title: '已经加入购物车',
-      message: `尊敬的用户您好，我们已经将 ${num.value}件 ${wupin.value.name} 添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
-      duration: 0,
-      type: "success",
-      position: 'top-left',
+    wupin.value && addToShoppingBag(wupin.value.id, num.value).then((res) => {
+      if (res.data.data.success) {
+        wupin.value && ElNotification({
+          title: '已经加入购物车',
+          message: `尊敬的用户您好，我们已经将 ${num.value}件 ${wupin.value.name} 添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
+          duration: 5000,
+          type: "success",
+          position: 'top-left',
+        })
+      } else {
+        ElMessage({
+          type: 'error',
+          message: "加入购物车失败",
+        })
+      }
     })
+  }
+
+  const byn = ref(null as any)
+  const buy = () => {
+    if (!byn.value) {
+      ElMessage({
+        type: 'warning',
+        message: "系统出现了问题，请重试。"
+      })
+      return
+    }
+
+    if (num.value <= 0) {
+      return
+    }
+
+    byn.value.open(wupin.value, num.value)
   }
 </script>
 
 <template>
-  <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+  <div v-if="wupin" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
       <div style="display: inline-block; width: 15vw; max-height: 60vh; min-height: 70vh; margin-right: 20px; margin-left: 20px">
         <el-scrollbar height="70vh">
@@ -283,8 +266,8 @@
               <el-button class="buy_item" size="large" @click="onClickBag">
                 <el-icon style="margin-right: 3px"><Handbag /></el-icon> 加入购物车
               </el-button>
-              <el-button class="buy_item" size="large">
-                <el-icon style="margin-right: 3px"><Money /></el-icon> 立即购买（实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }}）
+              <el-button class="buy_item" size="large" :disabled="num <= 0" @click="buy">
+                <el-icon style="margin-right: 3px"><Money /></el-icon> 立即购买 <span v-if="num >= 1"> （实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }}） </span>
               </el-button>
             </div>
             <div class="info_box">
@@ -295,6 +278,8 @@
       </div>
     </el-card>
   </div>
+  <div v-else></div>
+  <Buynew ref="byn"></Buynew>
 </template>
 
 <style scoped lang="scss">

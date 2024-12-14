@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Ad: typeof import('./src/components/ad.vue')['default']
     Back: typeof import('./src/components/back.vue')['default']
+    Buynew: typeof import('./src/components/buynew.vue')['default']
     Classitem: typeof import('./src/components/classitem.vue')['default']
     Classlist: typeof import('./src/components/classlist.vue')['default']
     Defaultbuyrecord: typeof import('./src/components/defaultbuyrecord.vue')['default']

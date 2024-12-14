@@ -25,6 +25,7 @@ export interface BuyRecord {
     classid: number
     num: number
     price: number
+    totalPrice: number
     time: number
     fukuantime: number
     fahuotime: number
@@ -78,7 +79,8 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
             wupinid: 1,
             classid: 1,
             num: 2,
-            price: 9999,
+            price: 5000,
+            totalPrice: 9999,
             time: 1734024269,
             fukuantime: 1734024269,
             fahuotime: 1734024269,
@@ -207,21 +209,6 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
     //     method: 'get',
     // })
 
-    if (status == 12) {
-        return Promise.resolve({
-            data: {
-                code: 0,
-                data: {
-                    maxpage: 0,
-                    pageize: 0,
-                    total: 0,
-                    list: [],
-                },
-            },
-            status: 200,
-        })
-    }
-
     if (page > 10) {
         return Promise.resolve({
             data: {
@@ -245,7 +232,8 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
             wupinid: 1,
             classid: 1,
             num: 2,
-            price: 9999,
+            price: 5000,
+            totalPrice: 9999,
             time: 1734024269,
             fukuantime: 1734024269,
             fahuotime: 1734024269,

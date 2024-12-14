@@ -20,8 +20,8 @@
     })
   }
 
+  const kehutag = ref("普通客户")
   userStore.updateInfo().then(() => {
-    const kehutag = ref("普通客户")
     if (userStore.user.goodPre >= 85) {
       kehutag.value = "尊享III客户"
     } else if (userStore.user.goodPre >= 50) {
@@ -245,8 +245,8 @@
         </div>
         <div v-else style="margin-top: 10px">
           <div v-infinite-scroll="updater" style="overflow: auto; height: 53vh">
-            <div v-for="(item, index) in buyRecord" :key="index">
-                <Defaultbuyrecord :record="item" class="buy_record_box"></Defaultbuyrecord>
+            <div v-for="(item, index) in buyRecord" :key="index" class="buy_record_box">
+                <Defaultbuyrecord :record="item"></Defaultbuyrecord>
             </div>
           </div>
         </div>

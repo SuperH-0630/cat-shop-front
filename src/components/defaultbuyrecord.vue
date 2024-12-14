@@ -123,6 +123,7 @@ const doAliRepay = () => {
       })
       emits("reload")
     } else {
+      repayModel.value = false
       window.location.href = res.data.data.url
     }
   })
@@ -141,6 +142,7 @@ const doWeChatRepay = () => {
       })
       emits("reload")
     } else {
+      repayModel.value = false
       window.location.href = res.data.data.url
     }
   })
@@ -245,7 +247,7 @@ const giveNotGood = () => {
   }
 
   ElMessageBox.confirm(
-      '你确定不予评价吗？',
+      '你确定不予置评吗？',
       '好评提示',
       {
         confirmButtonText: '确定',
@@ -431,7 +433,7 @@ const tuiHuoDengji = () => {
                 给个好评
               </el-button>
               <el-button v-if="safe && record.status === 5" type="info" @click="giveNotGood">
-                不予评价
+                不予置评
               </el-button>
               <el-button v-if="safe && ([5, 6].some((i) => i == record.status))" type="danger" @click="startTuiHuo">
                 申请退货
@@ -462,12 +464,12 @@ const tuiHuoDengji = () => {
           </div>
           <div>
             <el-text>
-              付款金额：￥{{ ((record.price / 100).toFixed(2)) }}
+              付款金额：￥{{ ((record.totalPrice / 100).toFixed(2)) }}
             </el-text>
           </div>
           <div>
             <el-text>
-              平均金额：￥{{ (((record.price / record.num) / 100).toFixed(2)) }}
+              商品单价：￥{{ ((record.price / 100).toFixed(2)) }}
             </el-text>
           </div>
           <div>
@@ -507,7 +509,7 @@ const tuiHuoDengji = () => {
           </div>
           <div v-if="[6, 7, 8, 9, 10, 11].some((i) => i == record.status)">
             <el-text>
-              评价：{{ record.isgood ? "好评" : "差评" }}
+              评价：{{ record.isgood ? "好评" : "不予置评" }}
             </el-text>
           </div>
           <div v-if="[7, 8, 9, 10, 11].some((i) => i == record.status)">
@@ -589,12 +591,12 @@ const tuiHuoDengji = () => {
           </div>
           <div class="repay_info">
             <el-text>
-              平均金额：￥{{ (((record.price / record.num) / 100).toFixed(2)) }}
+              商品单价：￥{{ ((record.price / 100).toFixed(2)) }}
             </el-text>
           </div>
           <div class="repay_info">
             <el-text class="pay_price">
-              付款金额：￥{{ ((record.price / 100).toFixed(2)) }}
+              付款金额：￥{{ ((record.totalPrice / 100).toFixed(2)) }}
             </el-text>
           </div>
         </div>
@@ -778,12 +780,12 @@ const tuiHuoDengji = () => {
           </div>
           <div class="repay_info">
             <el-text>
-              平均金额：￥{{ (((record.price / record.num) / 100).toFixed(2)) }}
+              商品单价：￥{{ ((record.price / 100).toFixed(2)) }}
             </el-text>
           </div>
           <div class="repay_info">
             <el-text class="pay_price">
-              付款金额：￥{{ ((record.price / 100).toFixed(2)) }}
+              付款金额：￥{{ ((record.totalPrice / 100).toFixed(2)) }}
             </el-text>
           </div>
         </div>

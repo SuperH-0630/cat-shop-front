@@ -65,15 +65,19 @@ const toHome = () => {
 
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <el-card  style="display: flex; min-width: 50%; justify-content: center; margin-top: 10px">
+    <el-card style="display: flex; min-width: 50%; justify-content: center; margin-top: 10px">
       <el-tabs v-model="activeModel">
-        <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index" style="width: 50vw">
+        <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
          <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
            <div style="display: flex; justify-content: center">
              <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-count="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>
-           <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx">
-             <Defaultbuyrecord :record="record" :safe="false" :xiangqing="true" style="margin-bottom: 10px"> </Defaultbuyrecord>
+           <div style="width: 100%; display: flex; justify-content: center">
+             <div style="width: 100%;">
+               <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx" style="margin-top: 10px; width: 100%;">
+                 <Defaultbuyrecord :record="record" :safe="false" :xiangqing="true"> </Defaultbuyrecord>
+               </div>
+             </div>
            </div>
            <div style="display: flex; justify-content: center">
              <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-count="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />

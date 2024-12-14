@@ -1,14 +1,32 @@
 <script setup lang="ts">
 import useConfigStore from "@/store/config"
 import {Service} from "@element-plus/icons-vue";
-import useUserStore, {isLogin, hasLoad} from "@/store/user";
+import {isLogin, hasLoad} from "@/store/user";
+import {sendMsg} from "@/api/kefu";
 
 const configStore = useConfigStore()
-const textarea = ref("")
+configStore.updateConfig()
 
-const userStore = useUserStore()
-if (isLogin()) {
-  userStore.updateInfo()
+const textarea = ref("")
+const sendok = computed(() => textarea.value.length >= 10 && textarea.value.length <= 150)
+
+const onSendMsg = () => {
+  if (!sendok.value) {
+    return
+  }
+  sendMsg(textarea.value).then((res) => {
+    if (res.data.data.success) {
+      ElMessage({
+        type: 'success',
+        message: "留言成功",
+      })
+    } else {
+      ElMessage({
+        type: 'error',
+        message: "留言失败",
+      })
+    }
+  })
 }
 
 </script>
@@ -18,7 +36,7 @@ if (isLogin()) {
     <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
       <div style="display: flow-root">
         <div style="float: left">
-          <div>
+          <div v-if="configStore.config?.hotline">
             <el-text>
               <el-icon><Phone /></el-icon>
               400服务热线：
@@ -28,20 +46,14 @@ if (isLogin()) {
             </el-text>
           </div>
 
-          <div>
+          <div v-if="configStore.config?.service">
             <el-text>
               <el-icon><Service /></el-icon>
               {{ configStore.config?.service }}
             </el-text>
           </div>
 
-          <div>
-            <div>
-              <el-text>
-                <el-icon><Promotion /></el-icon>
-                微信
-              </el-text>
-            </div>
+          <div v-if="configStore.config?.wechat">
             <div style="display: flex; justify-content: center">
               <el-image style="width: 15vw; max-height: 55vh" :src="configStore.config?.wechat" fit="contain" :preview-src-list="[configStore.config?.wechat]" :initial-index="0"></el-image>
             </div>
@@ -63,6 +75,7 @@ if (isLogin()) {
                   placeholder="请输入你的留言"
                   :disabled="!isLogin() && hasLoad()"
                   :maxlength="150"
+                  :minlength="10"
                   show-word-limit
                   clearable
               />
@@ -78,14 +91,26 @@ if (isLogin()) {
                   提交
                 </el-button>
               </el-tooltip>
-              <el-button v-else type="primary">
+              <el-button v-else type="primary" @click="onSendMsg" :disabled="!sendok">
                 提交
               </el-button>
             </div>
-            <div>
-              <el-text>
-                我们将会仔细阅读你的留言，非常感谢。
-              </el-text>
+            <div style="text-align: center">
+              <div>
+                <el-text>
+                  我们将会仔细阅读你的留言，非常感谢。
+                </el-text>
+              </div>
+              <div>
+                <el-text>
+                  留言字数限制：10字以上，150字以下。
+                </el-text>
+              </div>
+              <div>
+                <el-text>
+                  请登陆后再进行留言。
+                </el-text>
+              </div>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Wupin } from "@/store/hotwupin"
+  import {getFacePrice, getRealPrice} from "@/utils/price";
 
   const props = defineProps({
     "wp": {
@@ -19,24 +20,13 @@
     })
   }
 
-  const facePrice = computed(() => {
-    if (!item.value) {
-      return 0
-    }
-
-    if (typeof item.value.hotPrice === "number" && item.value.hotPrice < item.value.realPrice) {
-      return item.value.hotPrice >= 0 ? item.value.hotPrice : 0
-    }
-
-    if (typeof item.value.realPrice === "number") {
-      return item.value.realPrice >= 0 ? item.value.realPrice : 0
-    }
-
-    return 0
+  const realPrice = computed(() => {
+    return getRealPrice(item.value?.realPrice)
   })
-
-  const realPrice = ref(item.value && (item.value.realPrice >= 0 ? item.value.realPrice : 0))
-
+  const facePrice = computed(() => {
+    return getFacePrice(item.value?.hotPrice, item.value?.realPrice)
+  })
+  
 </script>
 
 <template>

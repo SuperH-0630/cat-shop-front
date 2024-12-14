@@ -57,15 +57,7 @@ const toNewLogin = () => {
         redirect: encodeURIComponent(route.fullPath)
       }
     })
-    return
   }
-
-  router.push({
-    "path": "/login",
-    "query": {
-      "redirect": encodeURIComponent(route.fullPath),
-    },
-  })
 }
 
 const toRegirster = () => {

@@ -1,5 +1,5 @@
 import {Wupin} from "@/store/hotwupin";
-import {Result} from "@/utils/request";
+import {Result, Success} from "@/utils/request";
 import wupinPic from "@/assets/images/logo.jpg";
 
 export interface ShopRecord {
@@ -80,6 +80,19 @@ export function getUserShoppingRecord(offset: number, limit: number): Result<Sho
                 total: limit,
                 list: shopRecordLst,
             },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const addToShoppingBag = (wupinId: number, num: number): Success => {
+    return Promise.resolve({
+        data: {
+            data: {
+                success: true,
+            },
+            code: 0,
         },
         status: 200,
     })
