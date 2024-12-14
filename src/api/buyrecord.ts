@@ -11,9 +11,11 @@ export const BuyRecordStatus = {
     6: "已评价",
     7: "申请退货",
     8: "申请退货成功，等待寄回",
-    9: "申请退货失败",
-    10: "已退货",
-    11: "已取消",
+    9: "申请退货成功，待收货",
+    10: "申请退货失败",
+    11: "已退货",
+    12: "申请取消",
+    13: "已取消",
 } as Object
 
 export interface BuyRecord {
@@ -31,6 +33,7 @@ export interface BuyRecord {
     dengjituihuotime: number
     querentuihuotime: number
     tuohuotime: number
+    quxiaotime: number
     status: number
     kuaidi: string
     kuaidinum: string
@@ -84,11 +87,12 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
             dengjituihuotime: 1734024269,
             querentuihuotime: 1734024269,
             tuohuotime: 1734024269,
+            quxiaotime: 1734024269,
             status: 6,
             kuaidi: "顺丰",
             kuaidinum: "SF1234",
-            backkuaidi: "",
-            backkuaidinum: "",
+            backkuaidi: "中通",
+            backkuaidinum: "ZT1234",
             isgood: true,
             wupin: {
                 id: 1,
@@ -148,11 +152,12 @@ export function getBuyRecordData(id: number): Result<BuyRecord> {
                 dengjituihuotime: 1734024269,
                 querentuihuotime: 1734024269,
                 tuohuotime: 1734024269,
+                quxiaotime: 1734024269,
                 status: 6,
                 kuaidi: "顺丰",
                 kuaidinum: "SF1234",
-                backkuaidi: "",
-                backkuaidinum: "",
+                backkuaidi: "中通",
+                backkuaidinum: "ZT1234",
                 isgood: true,
                 wupin: {
                     id: 1,
@@ -167,13 +172,15 @@ export function getBuyRecordData(id: number): Result<BuyRecord> {
                     hotPrice: 9999,
                     realPrice: 19999,
                     info: "hhhhhh",
+                    ren: "宋子桓",
                     phone: "17322061610",
+                    wechat: "abcd",
                     email: "songzihuan@song-zh.com",
                     location: "广东广州",
                     buytotal: 100,
                     buygood: 90,
-                },
-            },
+                } as Wupin,
+            } as BuyRecord,
         },
         status: 200,
     })
@@ -200,7 +207,7 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
     //     method: 'get',
     // })
 
-    if (status == 11) {
+    if (status == 12) {
         return Promise.resolve({
             data: {
                 code: 0,
@@ -247,6 +254,7 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
             dengjituihuotime: 1734024269,
             querentuihuotime: 1734024269,
             tuohuotime: 1734024269,
+            quxiaotime: 1734024269,
             status: status,
             kuaidi: "顺丰",
             kuaidinum: "SF1234",

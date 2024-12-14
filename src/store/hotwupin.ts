@@ -13,7 +13,7 @@ export interface Wupin {
     info: string
     ren: string
     phone: string
-    email: string
+    email?: string
     wechat?: string
     location: string
     buytotal: number

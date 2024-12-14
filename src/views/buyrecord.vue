@@ -6,17 +6,19 @@ const recordId = ref((route.query?.id || 0) as number)
 
 const record = ref(null as BuyRecord | null)
 
-getBuyRecordData(recordId.value as number).then((res) => {
-  record.value = res.data.data as BuyRecord
-  record.value.status = 2
-})
+const reload = () => {
+  getBuyRecordData(recordId.value as number).then((res) => {
+    record.value = res.data.data as BuyRecord
+  })
+}
+reload()
 
 </script>
 
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <div style="width: 65%;">
-      <Defaultbuyrecord :record="record" :safe="true" :xiangqing="false"></Defaultbuyrecord>
+    <div style="width: 50%;">
+      <Defaultbuyrecord :record="record" :safe="true" :xiangqing="false" @reload="reload"></Defaultbuyrecord>
     </div>
   </div>
 </template>

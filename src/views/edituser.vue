@@ -36,7 +36,7 @@ const resetCode = () => {
   code.value = ""
 }
 const codeCheck = computed(() => Number(code.value).valueOf() === answer.value)
-const checkName = computed(() => ub.value.name.length > 0 && ub.value.name.length <= 10)
+const checkName = computed(() => ub.value.name && ub.value.name.length > 0 && ub.value.name.length <= 10)
 const allCheck = computed(() => codeCheck.value && checkName.value)
 
 const update = () => {
@@ -73,19 +73,25 @@ const update = () => {
           <template #label>
             <el-text>昵称</el-text>
           </template>
-          <el-input v-model="ub.name" />
+          <el-input
+              v-model="ub.name"
+              maxlength="10"
+              minlength="1"
+              show-word-limit
+              clearable
+          />
         </el-form-item>
         <el-form-item>
           <template #label>
             <el-text>地址</el-text>
           </template>
-          <el-input v-model="ub.location" />
+          <el-input v-model="ub.location" minlength="0" maxlength="150" show-word-limit/>
         </el-form-item>
         <el-form-item>
           <template #label>
             <el-text>验证码</el-text>
           </template>
-          <el-input v-model="code">
+          <el-input v-model="code" clearable>
             <template #append>
               <el-text>
                 {{ question }}
@@ -100,12 +106,12 @@ const update = () => {
         </el-button>
       </div>
       <div style="width: 15vw; margin-top: 5px">
-        <div class="tip_box" style="display: flex; justify-content: center">
-          <el-alert v-if="!codeCheck" title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
+        <div v-if="!codeCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
-        <div class="tip_box" style="display: flex; justify-content: center">
-          <el-alert v-if="!checkName" title="名字需要在1-10位！" :closable="false" type="warning" center show-icon>
+        <div v-if="!checkName" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="名字需要在1-10位！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
       </div>

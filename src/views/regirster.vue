@@ -98,7 +98,13 @@ const register = () => {
           <template #label>
             <el-text>手机号</el-text>
           </template>
-          <el-input v-model="form.phone" />
+          <el-input
+              v-model="form.phone"
+              maxlength="20"
+              minlength="1"
+              show-word-limit
+              clearable
+          />
         </el-form-item>
         <el-form-item>
           <template #label>
@@ -116,7 +122,7 @@ const register = () => {
           <template #label>
             <el-text>验证码</el-text>
           </template>
-          <el-input v-model="form.code">
+          <el-input v-model="form.code" clearable>
             <template #append>
               <el-text>
                 {{ question }}
@@ -131,20 +137,20 @@ const register = () => {
         </el-button>
       </div>
       <div style="width: 15vw; margin-top: 5px">
-        <div class="tip_box" style="display: flex; justify-content: center">
-          <el-alert v-if="!codeCheck" title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
+        <div v-if="!codeCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
-        <div class="tip_box" style="display: flex; justify-content: center">
-          <el-alert v-if="!phoneCheck" title="请输入正确到手机号！" :closable="false" type="warning" center show-icon>
+        <div v-if="!phoneCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确到手机号！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
-        <div class="tip_box" style="display: flex; justify-content: center">
-          <el-alert v-if="!passwordCheck" title="密码必须长度大于8！" :closable="false" type="warning" center show-icon>
+        <div v-if="!passwordCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="密码必须长度大于8！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
-        <div class="tip_box" style="display: flex; justify-content: center">
-          <el-alert v-if="!doublePasswordCheck" title="两次输入密码不正确！" :closable="false" type="warning" center show-icon>
+        <div v-if="!doublePasswordCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="两次输入密码不正确！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
       </div>

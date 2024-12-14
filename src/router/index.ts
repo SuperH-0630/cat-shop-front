@@ -54,6 +54,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: '消费详情',
       xauth: true,
+      wechat: true,
     }
   },
   {
