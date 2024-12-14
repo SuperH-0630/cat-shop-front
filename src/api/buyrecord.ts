@@ -200,7 +200,7 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
     //     method: 'get',
     // })
 
-    if (status == 9) {
+    if (status == 11) {
         return Promise.resolve({
             data: {
                 code: 0,

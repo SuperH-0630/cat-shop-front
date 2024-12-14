@@ -82,7 +82,10 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject("未登录")
         }
 
-        return updateData(data).then(() => {
+        return updateData(data).then((res) => {
+            if (!res.data.data.success) {
+                return Promise.reject("更新失败")
+            }
             return updateInfo()
         })
     }
@@ -92,7 +95,10 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject("未登录")
         }
 
-        return updateAvatarData(avatar).then(() => {
+        return updateAvatarData(avatar).then((res) => {
+            if (!res.data.data.success) {
+                return Promise.reject("更新失败")
+            }
             return updateInfo()
         })
     }

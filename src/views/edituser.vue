@@ -35,8 +35,6 @@ const resetCode = () => {
   b.value = getRandomInt(10)
   code.value = ""
 }
-
-
 const codeCheck = computed(() => Number(code.value).valueOf() === answer.value)
 const checkName = computed(() => ub.value.name.length > 0 && ub.value.name.length <= 10)
 const allCheck = computed(() => codeCheck.value && checkName.value)

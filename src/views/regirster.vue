@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useUserStore, {isLogin} from "@/store/user"
 import {isMobile} from "@/utils/str"
+import {redirect} from "@/router"
 
 const userStore = useUserStore()
 
@@ -8,13 +9,13 @@ const route = useRoute()
 const router = useRouter()
 
 const goRedirect = () => {
-  const redirectPath = route.query?.redirect
+  const redirectPath = route.query?.[redirect]
   if (typeof redirectPath === "string" && redirectPath.length > 0) {
     const p = decodeURIComponent(redirectPath)
     if (p.startsWith("http")) {
       window.open(p)
     } else {
-      window.location.href = p
+      window.location.href = window.location.origin + p
     }
   } else {
     router.push({

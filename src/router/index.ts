@@ -5,6 +5,8 @@ import usePathStore from "@/store/path"
 import useWechatStore from "@/store/wechat"
 import useConfigStore from "@/store/config"
 
+export const redirect = "redirect"
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -119,11 +121,23 @@ const routes: RouteRecordRaw[] = [
     path: '/center/user/edit',
     component: () => import('@/views/edituser.vue'),
     meta: {
-      title: '错误',
+      title: '编辑信息',
+      xauth: true,
       wechat: true,
+    }
+  },
+  {
+    path: '/test/pay',
+    component: () => import('@/views/testpay.vue'),
+    meta: {
+      title: '支付测试',
+      xauth: true,
+      wechat: true,
+      test: true,
     }
   }
 ]
+
 const router = createRouter({
   history: createWebHistory(''),
   routes,
@@ -137,7 +151,7 @@ router.beforeEach((to, from, next) => {
     next({
       path: "/login",
       query: {
-        redirect: encodeURIComponent(to.fullPath)
+        [redirect]: encodeURIComponent(to.fullPath)
       }
     })
     return

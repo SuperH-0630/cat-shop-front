@@ -4,11 +4,13 @@ import {getBuyRecordData, BuyRecord} from "@/api/buyrecord"
 const route = useRoute()
 const recordId = ref((route.query?.id || 0) as number)
 
+const record = ref(null as BuyRecord | null)
+
 getBuyRecordData(recordId.value as number).then((res) => {
   record.value = res.data.data as BuyRecord
+  record.value.status = 2
 })
 
-const record = ref(null as BuyRecord | null)
 </script>
 
 <template>

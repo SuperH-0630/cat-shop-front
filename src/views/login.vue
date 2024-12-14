@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useUserStore, {isLogin} from "@/store/user"
 import {isMobile} from "@/utils/str"
+import {redirect} from "@/router"
 
 const userStore = useUserStore()
 
@@ -8,13 +9,13 @@ const route = useRoute()
 const router = useRouter()
 
 const goRedirect = () => {
-  const redirectPath = route.query?.redirect
+  const redirectPath = route.query?.[redirect]
   if (typeof redirectPath === "string" && redirectPath.length > 0) {
     const p = decodeURIComponent(redirectPath)
     if (p.startsWith("http")) {
       window.open(p)
     } else {
-      window.location.href = p
+      window.location.href = window.location.origin + p
     }
   } else {
     router.push({
@@ -57,7 +58,7 @@ const question = computed(() => `${a.value} + ${b.value}`)
 
 const codeCheck = computed(() => Number(form.value.code).valueOf() === answer.value)
 const phoneCheck = computed(() => isMobile(form.value.phone))
-const passwordCheck = ref(true)// 登录阶段不检查密码
+const passwordCheck = computed(() => form.value.password && form.value.password.length > 0)// 登录阶段不检查密码
 const allCheck = computed(() => codeCheck.value && phoneCheck.value && passwordCheck.value)
 
 const login = () => {
@@ -119,6 +120,10 @@ const login = () => {
         </div>
         <div class="tip_box" style="display: flex; justify-content: center">
           <el-alert v-if="!phoneCheck" title="请输入正确到手机号！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
+        <div class="tip_box" style="display: flex; justify-content: center">
+          <el-alert v-if="!passwordCheck" title="请输入密码！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
       </div>
