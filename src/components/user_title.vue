@@ -16,6 +16,20 @@ const toCenter = () => {
   })
 }
 
+const toAdmin = () => {
+  if (userStore.user.type === 1) {
+    ElMessage({
+      type: 'error',
+      message: '您没有权限访问管理后台',
+    })
+    return
+  }
+
+  router.push({
+    "path": "/admin/home",
+  })
+}
+
 const toOrderLst = () => {
   router.push({
     "path": "/center/orderrecordlst",
@@ -104,7 +118,8 @@ const logout = () => {
     <div class="user_name">
       <el-dropdown size="large">
         <el-text class="user_name_text">
-          <el-icon><Folder /></el-icon>
+          <el-icon v-if="userStore.user.type === 1"><User /></el-icon>
+          <el-icon v-else><HomeFilled /></el-icon>
           {{ userStore.user?.name }} - {{ maskPhoneNumber(userStore.user?.phone) }}
           <el-icon class="el-icon--right">
             <arrow-down />
@@ -113,6 +128,7 @@ const logout = () => {
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="toCenter" ><el-text class="drop_item">我的中心</el-text></el-dropdown-item>
+            <el-dropdown-item v-if="userStore.user.type !== 1" @click="toAdmin"><el-text class="drop_item">管理后台</el-text></el-dropdown-item>
             <el-dropdown-item @click="toOrderLst"><el-text class="drop_item">我的购物记录</el-text></el-dropdown-item>
             <el-dropdown-item @click="toGowuche"><el-text class="drop_item">我的购物车</el-text></el-dropdown-item>
             <el-dropdown-item @click="toKefu"><el-text class="drop_item">我的客服</el-text></el-dropdown-item>

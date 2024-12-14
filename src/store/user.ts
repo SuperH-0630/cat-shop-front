@@ -3,6 +3,12 @@ import useConfigStore from "@/store/config"
 import {sha256} from "@/utils/encrypt"
 import {getSelfInfo, loginGetXToken, registerGetXToken, updateAvatarData, updateData} from "@/api/user"
 
+export const UserType = {
+    1: "用户",
+    2: "普通管理员",
+    3: "根管理员",
+}
+
 export interface UserBase {
     name: string
     location: string
@@ -151,10 +157,9 @@ const useUserStore = defineStore("userStore", () => {
                 user.value.avatar = configStore.config?.avatar
             }
 
-            if (![1, 2, 3].some((v) => v === user.value.type)) {
+            if (!Object.keys(UserType).some((v) => Number(v).valueOf() === user.value.type)) {
                 user.value.type = 1
             }
-
             return user.value
         })
     }

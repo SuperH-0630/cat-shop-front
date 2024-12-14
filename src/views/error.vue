@@ -8,7 +8,7 @@ const goHome = () => {
   })
 }
 
-const msg = ref(route.query?.mag || "")
+const msg = ref(route.query?.msg || "")
 if (!msg.value || msg.value.length > 20) {
   msg.value = "遇到系统未能捕获的错误，请稍后臭重试，"
 }

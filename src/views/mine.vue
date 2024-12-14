@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import useUserStore, {isLogin, hasLoad} from "@/store/user"
+import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
   import {Edit} from "@element-plus/icons-vue"
   import {BuyRecord, getUserBuyRecord} from "@/api/buyrecord"
   import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
@@ -22,16 +22,20 @@
 
   const kehutag = ref("普通客户")
   userStore.updateInfo().then(() => {
-    if (userStore.user.goodPre >= 85) {
-      kehutag.value = "尊享III客户"
-    } else if (userStore.user.goodPre >= 50) {
-      kehutag.value = "星级II客户"
-    } else if (userStore.user.goodPre >= 35) {
-      kehutag.value = "贵宾I客户"
-    } else if (userStore.user.goodPre >= 5) {
-      kehutag.value = "高级客户"
+    if (userStore.user.type === 1) {
+      if (userStore.user.goodPre >= 85) {
+        kehutag.value = "尊享III客户"
+      } else if (userStore.user.goodPre >= 50) {
+        kehutag.value = "星级II客户"
+      } else if (userStore.user.goodPre >= 35) {
+        kehutag.value = "贵宾I客户"
+      } else if (userStore.user.goodPre >= 5) {
+        kehutag.value = "高级客户"
+      } else {
+        kehutag.value = "普通客户"
+      }
     } else {
-      kehutag.value = "普通客户"
+      kehutag.value = UserType[userStore.user.type] || "普通客户"
     }
   })
 
@@ -230,7 +234,7 @@
       </div>
       <div style="display: inline-block; width: 35vw; max-height: 60vh; margin-right: 20px; margin-left: 20px">
         <el-badge :value="kehutag" style="margin-top: 10px; height: 5vh">
-          <el-text class="user_name"> {{ userStore.user.name }} </el-text>
+          <el-text class="user_name">{{ userStore.user.name }} </el-text>
         </el-badge>
         <div v-if="buyRecord.length === 0" style="margin-top: 10px">
           <el-result icon="info" title="文学提示">
