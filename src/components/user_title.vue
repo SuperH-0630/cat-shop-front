@@ -132,6 +132,12 @@ const logout = () => {
       <el-button size="large" type="success" @click="toRegirster">
         注册
       </el-button>
+      <el-button size="large" type="warning" @click="toKefu">
+        客服
+      </el-button>
+      <el-button size="large" type="info" @click="toAboutUs">
+        关于{{ configStore.config?.name }}
+      </el-button>
     </el-button-group>
   </div>
 </template>

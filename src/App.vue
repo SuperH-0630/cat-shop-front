@@ -11,12 +11,18 @@
   const hotWupinStore = useHotWupinStore()
 
   configStore.updateConfig()
+  configStore.updateXieyi()
   isLogin() && userStore.updateInfo()
   classStore.updateInfo()
   hotWupinStore.updateInfo()
 
   const fn1 = (t: number) => {
-    configStore.updateConfig().finally(() => {
+    Promise.all(
+        [
+          configStore.updateConfig(),
+          configStore.updateXieyi(),
+        ]
+    ).finally(() => {
       setTimeout(() => fn1(t), t)
     })
   }

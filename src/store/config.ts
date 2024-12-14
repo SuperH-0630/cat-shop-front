@@ -4,6 +4,7 @@ import AD from "@/assets/images/ad.jpeg"
 import defaultAvatar from "@/assets/images/avatar.jpg"
 
 import {getConfig} from "@/api/config"
+import {getXieyi} from "@/api/xieyi";
 
 export interface Config {
     "name": string,
@@ -39,8 +40,10 @@ const useConfigStore = defineStore("configStore", () => {
         "footer": "2024年-宋子桓开发！"
     } as Config)
 
+    const xieyi = ref("")
+
     const updateConfig = async () => {
-        getConfig().then((res) => {
+        return getConfig().then((res) => {
             config.value = res.data.data
             if (!config.value.name) {
                 config.value.name = "猫猫超市"
@@ -86,12 +89,19 @@ const useConfigStore = defineStore("configStore", () => {
                 config.value.footer = "从现在开始吧"
             }
         })
-        return Promise.resolve()
+    }
+
+    const updateXieyi = async () => {
+        return getXieyi().then((res) => {
+            xieyi.value = res.data.data.xieyi
+        })
     }
 
     return {
         config,
+        xieyi,
         updateConfig,
+        updateXieyi,
     }
 })
 

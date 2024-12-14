@@ -9,23 +9,8 @@
     wechatStore.close()
   }
 
-  const img_width = ref("8vw")
-  const img_height = ref("auto")
-  const showWechat = ref(true)
-
-  const onShow = () => {
-    img_width.value = "auto"
-    img_height.value = "70vh"
-    showWechat.value = false
-  }
-
-  const onClose = () => {
-    img_width.value = "8vw"
-    img_height.value = "auto"
-    showWechat.value = true
-  }
-
   const deleayShow = ref(false)
+  const show = ref(false)
 
   onMounted(() => {
     setTimeout(() => {
@@ -33,23 +18,27 @@
     }, 1500)
   })
 
+  const onShow = () => {
+    show.value = true
+  }
+
 </script>
 
 <template>
-  <div v-if="wechatStore.show && deleayShow" class="wechat">
+  <div v-if="wechatStore.show && deleayShow && configStore.config?.wechat" class="wechat">
     <div class="wechat_box">
       <el-card>
-        <template v-if="showWechat" #header>
+        <template #header>
           <div class="header">
             <el-text class="header_text">
               欢迎了解我！
             </el-text>
           </div>
         </template>
-        <div class="wechat_img">
-          <el-image :src="configStore.config?.wechat" fit="contain" :preview-src-list="[configStore.config?.wechat]" :initial-index="0" @show="onShow" @close="onClose"> </el-image>
+        <div class="wechat_img" @click="onShow">
+          <el-image :src="configStore.config?.wechat" fit="contain"> </el-image>
         </div>
-        <template v-if="showWechat" #footer>
+        <template #footer>
           <div style="display: flex; justify-content: center;">
             <el-button @click="onClick">
               关闭
@@ -60,6 +49,23 @@
     </div>
   </div>
   <div v-else></div>
+
+  <el-dialog
+      v-model="show"
+      style="height: 75vh; width: 30vw;"
+  >
+    <div style="height: 60vh; width: 100%; display: flex; justify-content: center">
+      <img alt="wechat" style="height: 100%; width: 100%; object-fit: contain;" :src="configStore.config?.wechat"/>
+    </div>
+
+    <template #footer>
+      <div class="dialog-footer" style="height: 10vh">
+        <el-button type="success" @click="show = false">
+          关闭
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">
@@ -79,8 +85,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: v-bind(img_width);
-  height: v-bind(img_height);
+  width: 8vw;
+  height: auto;
 }
 
 .header {
