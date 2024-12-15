@@ -3,7 +3,7 @@ import {Result} from "@/utils/request";
 import useClassStore, {Class} from "@/store/class";
 import WupinPic from "@/assets/images/logo.jpg";
 
-export const getWupin = (id: number): Result<Wupin> => {
+export const apiGetWupin = (id: number): Result<Wupin> => {
     const classStore = useClassStore()
     classStore.getLst()
 

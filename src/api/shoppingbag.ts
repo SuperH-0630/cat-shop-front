@@ -18,7 +18,7 @@ type ShopRecordLst = {
     list: ShopRecord[]
 }
 
-export function getUserShoppingRecord(offset: number, limit: number): Result<ShopRecordLst> {
+export function apiGetUserShoppingRecord(offset: number, limit: number): Result<ShopRecordLst> {
     if (limit > 100) {
         limit = 100
     }
@@ -86,7 +86,7 @@ export function getUserShoppingRecord(offset: number, limit: number): Result<Sho
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addToShoppingBag = (wupinId: number, num: number): Success => {
+export const apiPostAddToShoppingBag = (wupinId: number, num: number): Success => {
     return Promise.resolve({
         data: {
             data: {

@@ -26,7 +26,7 @@ const toAdmin = () => {
   }
 
   router.push({
-    "path": "/admin/home",
+    "path": "/admin/user",
   })
 }
 

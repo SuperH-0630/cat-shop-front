@@ -4,7 +4,7 @@ export interface XieyiData {
     xieyi: string
 }
 
-export const getXieyi = (): Result<XieyiData> => {
+export const apiGetXieyi = (): Result<XieyiData> => {
     return Promise.resolve({
         data: {
             code: 0,

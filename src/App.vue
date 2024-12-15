@@ -73,12 +73,9 @@
       <Footer></Footer>
     </div>
   </div>
-
-  <div>
-    <Rightwin></Rightwin>
-    <Back></Back>
-    <Wechat></Wechat>
-  </div>
+  <Rightwin></Rightwin>
+  <Back></Back>
+  <Wechat></Wechat>
 </template>
 
 <style scoped lang="scss">

@@ -1,4 +1,4 @@
-import {getHotWupinInfo} from "@/api/hotwupin";
+import {apiGetHotWupinLst} from "@/api/hotwupin";
 import { Class } from "@/store/class"
 
 export interface Wupin {
@@ -27,10 +27,12 @@ const useHotWupinStore = defineStore("hotWupinStore", () => {
         wupinLst.value = []
     }
 
-    const updateInfo = async () => {
-        return getHotWupinInfo().then((res) => {
+    const updateInfo = async (): Promise<null | Array<Wupin>> => {
+        return apiGetHotWupinLst().then((res) => {
             wupinLst.value = res.data.data.list
             return wupinLst.value
+        }).catch(() => {
+            return null
         })
     }
 

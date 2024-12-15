@@ -1,11 +1,18 @@
 import {isMobile} from "@/utils/str"
 import useConfigStore from "@/store/config"
 import {sha256} from "@/utils/encrypt"
-import {getSelfInfo, loginGetXToken, registerGetXToken, updateAvatarData, updateData} from "@/api/user"
+import {
+    apiGetSelfInfo,
+    apiPostLoginGetXToken,
+    apiPostRegisterGetXToken,
+    apiPostUpdateAvatarData,
+    apiPostUpdateSelfInfo,
+    apiPostUpdateSelfPassword
+} from "@/api/user"
 
 export const UserType = {
-    1: "用户",
-    2: "普通管理员",
+    1: "",//无显示
+    2: "管理员",
     3: "根管理员",
 }
 
@@ -18,7 +25,7 @@ export interface UserAvatar {
     avatar: string
 }
 
-export interface User extends UserBase, UserAvatar{
+export interface UserWithoutPre extends UserBase, UserAvatar{
     type: number
     phone: string
     xtoken: string
@@ -27,9 +34,14 @@ export interface User extends UserBase, UserAvatar{
     totalGood: number
     totalJian: number
     totalShouHuo: number
+}
+
+export interface UserPre {
     goodPre: number
     pricePre: number
 }
+
+export interface User extends UserWithoutPre, UserPre {}
 
 export const getXtoken = (): string => (localStorage.getItem("xtoken") || "")
 export const delXtoken = (): void => {
@@ -66,7 +78,7 @@ const useUserStore = defineStore("userStore", () => {
 
         const passwordHash = await sha256((`${configStore.config?.passwordfronthash}::${password}>>`))
 
-        loginGetXToken(phone1, passwordHash).then((res) => {
+        apiPostLoginGetXToken(phone1, passwordHash).then((res) => {
             if (!res.data.data.xtoken || !res.data.data.success) {
                 return Promise.reject("登录失败")
             }
@@ -88,11 +100,28 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject("未登录")
         }
 
-        return updateData(data).then((res) => {
+        return apiPostUpdateSelfInfo(data).then((res) => {
             if (!res.data.data.success) {
                 return Promise.reject("更新失败")
             }
             return updateInfo()
+        })
+    }
+
+    const editPassword = async (data: { oldPassword: string, newPassword: string; newPasswordDouble: string }) => {
+        if (!isLogin()) {
+            return Promise.reject("未登录")
+        }
+
+        const configStore = useConfigStore()
+        const oldP = await sha256((`${configStore.config?.passwordfronthash}::${data.oldPassword}>>`))
+        const newP = await sha256((`${configStore.config?.passwordfronthash}::${data.newPassword}>>`))
+
+        return apiPostUpdateSelfPassword(oldP, newP).then((res) => {
+            if (!res.data.data.success) {
+                return Promise.reject("更新失败")
+            }
+            return logout()
         })
     }
 
@@ -101,7 +130,7 @@ const useUserStore = defineStore("userStore", () => {
             return Promise.reject("未登录")
         }
 
-        return updateAvatarData(avatar).then((res) => {
+        return apiPostUpdateAvatarData(avatar).then((res) => {
             if (!res.data.data.success) {
                 return Promise.reject("更新失败")
             }
@@ -126,7 +155,7 @@ const useUserStore = defineStore("userStore", () => {
 
         const passwordHash = await sha256((`${configStore.config?.passwordfronthash}::${password}>>`))
 
-        registerGetXToken(phone1, passwordHash).then((res) => {
+        apiPostRegisterGetXToken(phone1, passwordHash).then((res) => {
             if (!res.data.data.xtoken || !res.data.data.success) {
                 return Promise.reject("注册失败")
             }
@@ -144,7 +173,7 @@ const useUserStore = defineStore("userStore", () => {
         }
 
         const configStore = useConfigStore()
-        return getSelfInfo().then((res) => {
+        return apiGetSelfInfo().then((res) => {
             user.value = res.data.data
             user.value.goodPre = (user.value.totalGood / user.value.totalShouHuo) * 100
             user.value.pricePre = user.value.totalPrice / user.value.totalBuy
@@ -172,6 +201,7 @@ const useUserStore = defineStore("userStore", () => {
         updateInfo,
         editData,
         editAvatar,
+        editPassword,
     }
 })
 

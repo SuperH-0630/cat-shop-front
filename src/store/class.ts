@@ -1,4 +1,4 @@
-import {getClassLstInfo} from "@/api/class";
+import {apiGetClassLst} from "@/api/class";
 
 export interface Class {
     id: number
@@ -17,7 +17,7 @@ const useClassStore = defineStore("classStore", () => {
     }
 
     const updateInfo = () => {
-        return getClassLstInfo().then((res) => {
+        return apiGetClassLst().then((res) => {
             classLst.value = res.data.data.list
             return classLst.value
         })

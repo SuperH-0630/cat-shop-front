@@ -4,7 +4,7 @@ import Logo from "@/assets/images/logo.jpg"
 import {Config} from "@/store/config"
 import AD from "@/assets/images/ad.jpeg"
 
-export function getConfig(): Result<Config> {
+export function apiGetConfig(): Result<Config> {
     return Promise.resolve({
         data: {
             code: 0,

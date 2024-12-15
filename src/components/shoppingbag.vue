@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {addToShoppingBag, ShopRecord} from "@/api/shoppingbag"
+import {apiPostAddToShoppingBag, ShopRecord} from "@/api/shoppingbag"
 import router from "@/router"
 import {formatDate} from "@/utils/time"
 import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
@@ -49,7 +49,7 @@ const onWupinClick = () => {
 }
 
 const onClickBag = () => {
-  record.value && addToShoppingBag(record.value.wupin.id, num.value).then((res) => {
+  record.value && apiPostAddToShoppingBag(record.value.wupin.id, num.value).then((res) => {
     if (res.data.data.success) {
       if (num.value <= 0) {
         ElNotification({

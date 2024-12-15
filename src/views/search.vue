@@ -2,18 +2,14 @@
 import WupinLst from "@/components/wupinlist.vue"
 import Search from "@/components/search.vue"
 import {Wupin} from "@/store/hotwupin"
-import {searchWuPin} from "@/api/search"
+import {apiGetSearchWupin} from "@/api/search"
 
 const route = useRoute()
 
 const wupinlst = ref([] as Wupin[])
-const currentPage = ref((route.query?.page || 1) as number)
+const currentPage = ref(Number(route.query?.page).valueOf() || 1)
 const pagemax = ref(0)
 const pagesize = ref(20)
-
-if (typeof currentPage.value !== "number" || currentPage.value <= 0) {
-  currentPage.value = 1
-}
 
 const data = ref({
   select: [],
@@ -25,7 +21,7 @@ const changePage = async () => {
     data.value = JSON.parse(route.query?.info as string) as { select?: number[], search?: string }
   }
 
-  await searchWuPin(data.value?.search || "", data.value?.select || [], currentPage.value, 20).then((res) => {
+  await apiGetSearchWupin(data.value?.search || "", data.value?.select || [], currentPage.value, 20).then((res) => {
     wupinlst.value = res.data.data.list
     pagemax.value = res.data.data.pagemax
   })

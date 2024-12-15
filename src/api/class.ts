@@ -6,7 +6,7 @@ export interface ClassLst {
     total: number,
 }
 
-export const getClassLstInfo = (): Result<ClassLst> => {
+export const apiGetClassLst = (): Result<ClassLst> => {
     const classLst = [] as Class[]
     const total = 60
 

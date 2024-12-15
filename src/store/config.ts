@@ -3,8 +3,8 @@ import Logo from "@/assets/images/logo.jpg"
 import AD from "@/assets/images/ad.jpeg"
 import defaultAvatar from "@/assets/images/avatar.jpg"
 
-import {getConfig} from "@/api/config"
-import {getXieyi} from "@/api/xieyi";
+import {apiGetConfig} from "@/api/config"
+import {apiGetXieyi} from "@/api/xieyi";
 
 export interface Config {
     "name": string,
@@ -43,7 +43,7 @@ const useConfigStore = defineStore("configStore", () => {
     const xieyi = ref("")
 
     const updateConfig = async () => {
-        return getConfig().then((res) => {
+        return apiGetConfig().then((res) => {
             config.value = res.data.data
             if (!config.value.name) {
                 config.value.name = "猫猫超市"
@@ -92,7 +92,7 @@ const useConfigStore = defineStore("configStore", () => {
     }
 
     const updateXieyi = async () => {
-        return getXieyi().then((res) => {
+        return apiGetXieyi().then((res) => {
             xieyi.value = res.data.data.xieyi
         })
     }

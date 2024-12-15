@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {aliNewPay, aliNewPayWithShop, LocationForUser, wechatNewPay, wechatNewPayWithShop} from "@/api/pay";
+import {apiPostAliNewPay, apiPostAliNewPayWithShop, LocationForUser, apiPostWechatNewPay, apiPostWechatNewPayWithShop} from "@/api/pay";
 import {Wupin} from "@/store/hotwupin";
 import useUserStore from "@/store/user";
 import {isMobile} from "@/utils/str";
@@ -57,7 +57,7 @@ const doAliPay = () => {
   } as LocationForUser
 
   if (shoprecord.value) {
-    return aliNewPayWithShop(window.location.href, shoprecord.value, location).then((res) => {
+    return apiPostAliNewPayWithShop(window.location.href, shoprecord.value, location).then((res) => {
       if (!res.data.data.url) {
         ElMessage({
           type: "error",
@@ -70,7 +70,7 @@ const doAliPay = () => {
     })
   }
 
-  return aliNewPay(window.location.href, wupin.value, num.value, location).then((res) => {
+  return apiPostAliNewPay(window.location.href, wupin.value, num.value, location).then((res) => {
     if (!res.data.data.url) {
       ElMessage({
         type: "error",
@@ -91,7 +91,7 @@ const doWeChatPay = () => {
   } as LocationForUser
 
   if (shoprecord.value) {
-    return wechatNewPayWithShop(window.location.href, shoprecord.value, location).then((res) => {
+    return apiPostWechatNewPayWithShop(window.location.href, shoprecord.value, location).then((res) => {
       if (!res.data.data.url) {
         ElMessage({
           type: "error",
@@ -104,7 +104,7 @@ const doWeChatPay = () => {
     })
   }
 
-  return wechatNewPay(window.location.href, wupin.value, num.value, location).then((res) => {
+  return apiPostWechatNewPay(window.location.href, wupin.value, num.value, location).then((res) => {
     if (!res.data.data.url) {
       ElMessage({
         type: "error",

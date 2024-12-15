@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
   import {Edit} from "@element-plus/icons-vue"
-  import {BuyRecord, getUserBuyRecord} from "@/api/buyrecord"
+  import {BuyRecord, apiGetUserBuyRecordLst} from "@/api/buyrecord"
   import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
   import {ElNotification} from "element-plus"
   import { genFileId } from 'element-plus'
@@ -55,13 +55,15 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
       return
     }
 
-    getUserBuyRecord(offset, limit).then((res) => {
+    apiGetUserBuyRecordLst(offset, limit).then((res) => {
       if (res.data.data.total < limit) {
         stop.value = true
       }
 
       offset += res.data.data.total
       buyRecord.value = buyRecord.value.concat(res.data.data.list)
+    }).catch(() => {
+      stop.value = true
     })
   }
   updater()
@@ -79,6 +81,12 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
   const goEdit = () => {
     router.push({
       path: "/center/user/edit"
+    })
+  }
+
+  const goPassword = () => {
+    router.push({
+      path: "/center/user/password"
     })
   }
 
@@ -132,10 +140,16 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
             <div style="margin-right: 15px">
               <div class="user_info_box">
                 <div class="user_info_btn">
-                  <el-button type="success" @click="goEdit">
-                    <el-icon><Edit /></el-icon>
-                    更改个人信息
-                  </el-button>
+                  <el-button-group>
+                    <el-button type="success" @click="goEdit">
+                      <el-icon><Edit /></el-icon>
+                      更改个人信息
+                    </el-button>
+                    <el-button type="danger" @click="goPassword">
+                      <el-icon><EditPen /></el-icon>
+                      修改账号密码
+                    </el-button>
+                  </el-button-group>
                 </div>
                 <div class="user_info_btn">
                   <el-upload

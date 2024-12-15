@@ -1,7 +1,7 @@
 import {Wupin} from "@/store/hotwupin";
 import WupinPic from "@/assets/images/logo.jpg";
 import useClassStore from "@/store/class";
-import { ResultData} from "@/utils/request";
+import { Result} from "@/utils/request";
 
 export interface WupinLst {
     list: Wupin[]
@@ -9,16 +9,20 @@ export interface WupinLst {
     pagemax: number
 }
 
-export const searchWuPin = async (search: string, select: Array<number>, page: number, pagesize: number): Promise<ResultData<WupinLst>> => {
+export const apiGetSearchWupin = (search: string, select: Array<number>, page: number, pagesize: number): Result<WupinLst> => {
     let classId = 1
     let classOf = {
         id: 1,
         name: "分类1",
     }
 
+    if (pagesize <= 0 || pagesize > 20) {
+        return Promise.reject()
+    }
+
     if (select.length !== 0) {
         const classStore = useClassStore()
-        const cl = await classStore.findClass(select[0])
+        const cl = classStore.findClass(select[0])
 
         if (cl) {
             classId = cl.id
@@ -28,7 +32,6 @@ export const searchWuPin = async (search: string, select: Array<number>, page: n
 
     const pagemax = 50
     const wupinlst = ref([] as Wupin[])
-    console.log("ASSS", page, (page - 1) * pagesize, pagesize, pagemax)
     for (let i = (page - 1) * pagesize; i < pagemax; i++) {
         if (wupinlst.value.length >= pagesize) {
             break

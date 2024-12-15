@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {BuyRecordStatus, getUserBuyRecordByPage} from "@/api/buyrecord"
+import {BuyRecordStatus, apiGetUserBuyRecordByPage} from "@/api/buyrecord"
 import {ElNotification} from "element-plus";
 
 const router = useRouter()
@@ -9,27 +9,25 @@ const dataInfo = ref({} as any)
 const currentPage = ref({} as { [key: number]: number })
 
 Object.entries(BuyRecordStatus).forEach(([_key]) => {
-  const key = Number(_key).valueOf()
-  getUserBuyRecordByPage(1, 20, Number(key).valueOf()).then((res) => {
+  const key = Number(_key).valueOf() || 0
+  apiGetUserBuyRecordByPage(1, 20, Number(key).valueOf()).then((res) => {
     dataInfo.value[key] = {
       data: res.data.data.list,
       pagesizze:20,
       total: res.data.data.total,
       maxpage: res.data.data.maxpage,
-      pagesize: res.data.data.pagesize,
+      pagesize: 20,
     }
 
     currentPage.value[key] = 1
 
-    if (route.query?.status && Number(route.query?.status).valueOf() === key) {
+    if ((Number(route.query?.status).valueOf() || -1) === key) {
       if (route.query?.page) {
-        currentPage.value[key] = Number(route.query?.page).valueOf()
-        if (currentPage.value[key] < 1) {
-          currentPage.value[key] = 1
-        }
+        currentPage.value[key] = Number(route.query?.page).valueOf() || 1
       }
     }
   })
+  // 不处理catch
 })
 
 if (dataInfo.value[2] && dataInfo.value[2].data && dataInfo.value[2].data.length > 0) {
@@ -44,15 +42,20 @@ if (dataInfo.value[2] && dataInfo.value[2].data && dataInfo.value[2].data.length
 
 const changePage = (status: number) => {
   const page = currentPage.value[status]
-  getUserBuyRecordByPage(page, 20, Number(status).valueOf()).then((res) => {
+  apiGetUserBuyRecordByPage(page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,
       pagesizze:20,
       total: res.data.data.total,
       maxpage: res.data.data.maxpage,
-      pagesize: res.data.data.pagesize,
+      pagesize: 20,
     }
     console.log(res.data.data.maxpage)
+  }).catch(() => {
+    ElMessage({
+      type: "error",
+      message: "获取数据失败",
+    })
   })
 }
 
@@ -70,7 +73,7 @@ const toHome = () => {
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
          <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
            <div style="display: flex; justify-content: center">
-             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-count="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>
            <div style="width: 100%; display: flex; justify-content: center">
              <div style="width: 100%;">
@@ -80,7 +83,7 @@ const toHome = () => {
              </div>
            </div>
            <div style="display: flex; justify-content: center">
-             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-count="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>
          </div>
           <div v-else>

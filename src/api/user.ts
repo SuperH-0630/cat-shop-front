@@ -1,5 +1,5 @@
 import {Result, Success} from "@/utils/request"
-import {UserBase} from "@/store/user";
+import {UserBase, UserWithoutPre} from "@/store/user";
 
 export interface LoginResult {
     autiregister?: boolean,
@@ -7,7 +7,7 @@ export interface LoginResult {
     success: boolean
 }
 
-export function loginGetXToken(phone: string, password: string): Result<LoginResult> {
+export function apiPostLoginGetXToken(phone: string, password: string): Result<LoginResult> {
     if (phone.startsWith("1732206") || password.length >= 10) {
         return Promise.resolve({
             data: {
@@ -34,7 +34,7 @@ export function loginGetXToken(phone: string, password: string): Result<LoginRes
     })
 }
 
-export function registerGetXToken(phone: string, password: string): Result<LoginResult> {
+export function apiPostRegisterGetXToken(phone: string, password: string): Result<LoginResult> {
     return Promise.resolve({
         data: {
             code: 0,
@@ -48,21 +48,7 @@ export function registerGetXToken(phone: string, password: string): Result<Login
     })
 }
 
-export interface UserData {
-    name: string
-    type: number
-    avatar: string
-    phone: string
-    location: string
-    xtoken: string
-    totalPrice: number
-    totalBuy: number
-    totalGood: number
-    totalJian: number
-    totalShouHuo: number
-}
-
-export function getSelfInfo(): Result<UserData> {
+export function apiGetSelfInfo(): Result<UserWithoutPre> {
     return Promise.resolve({
         data: {
             code: 0,
@@ -78,14 +64,14 @@ export function getSelfInfo(): Result<UserData> {
                 totalGood: 20,
                 totalJian: 45,
                 totalShouHuo: 25,
-            } as UserData
+            } as UserWithoutPre
         },
         status: 200,
     })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateData(data: UserBase): Success {
+export function apiPostUpdateSelfInfo(data: UserBase): Success {
     return Promise.resolve({
         data: {
             code: 0,
@@ -98,7 +84,20 @@ export function updateData(data: UserBase): Success {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateAvatarData(avatar: Blob): Success {
+export function apiPostUpdateSelfPassword(oldPasswordHash: string, newPasswordHash: string): Success {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function apiPostUpdateAvatarData(avatar: Blob): Success {
     return Promise.resolve({
         data: {
             code: 0,

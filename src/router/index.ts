@@ -1,9 +1,10 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import { clearPlaceholderLoading } from '@/utils/placeholder-loading'
-import useUserStore, {isLogin } from "@/store/user"
+import {isLogin } from "@/store/user"
 import usePathStore from "@/store/path"
 import useWechatStore from "@/store/wechat"
 import useConfigStore from "@/store/config"
+import {isAdmin, isRootAdmin} from "@/store/admin";
 
 export const redirect = "redirect"
 
@@ -67,14 +68,6 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/error',
-    component: () => import('@/views/error.vue'),
-    meta: {
-      title: '错误',
-      wechat: true,
-    }
-  },
-  {
     path: '/center',
     redirect: '/center/user',
   },
@@ -132,13 +125,12 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/test/pay',
-    component: () => import('@/views/testpay.vue'),
+    path: '/center/user/password',
+    component: () => import('@/views/editpassword.vue'),
     meta: {
-      title: '支付测试',
+      title: '重新设置密码',
       xauth: true,
       wechat: true,
-      test: true,
     }
   },
   {
@@ -151,17 +143,107 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        redirect: '/admin/home',
+        redirect: '/admin/user/lst',
       },
       {
         path: 'home',
+        redirect: '/admin/user/list',
+      },
+      {
+        path: 'user',
+        redirect: "/admin/user/list"
+      },
+      {
+        path: 'user/list',
+        component: () => import('@/views/admin/userlst.vue'),
+        meta: {
+          title: '用户列表',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/list/info',
+        component: () => import('@/views/admin/user.vue'),
+        meta: {
+          title: '用户详情',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/list/edit',
+        component: () => import('@/views/admin/edituser.vue'),
+        meta: {
+          title: '编辑用户',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/list/password',
+        component: () => import('@/views/admin/editpassword.vue'),
+        meta: {
+          title: '编辑密码',
+          rootAdmin: true
+        },
+      },
+      {
+        path: 'user/list/buyrecordlst',
         component: () => import('@/views/admin/home.vue'),
         meta: {
-          title: '后台',
+          title: '用户订单列表',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/list/shoppingbag',
+        component: () => import('@/views/admin/home.vue'),
+        meta: {
+          title: '用户购物车列表',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/list/msg',
+        component: () => import('@/views/admin/home.vue'),
+        meta: {
+          title: '用户留言',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/add',
+        component: () => import('@/views/admin/home.vue'),
+        meta: {
+          title: '添加用户',
+          admin: true,
+        },
+      },
+      {
+        path: 'user/msg',
+        component: () => import('@/views/admin/home.vue'),
+        meta: {
+          title: '用户留言列表',
+          admin: true,
+        },
+      },
+      {
+        path: 'class',
+        component: () => import('@/views/admin/home.vue'),
+        meta: {
+          title: '分类管理',
           admin: true,
         },
       }
     ]
+  },
+  {
+    path: '/test/pay',
+    component: () => import('@/views/testpay.vue'),
+    meta: {
+      title: '支付测试',
+      xauth: true,
+      wechat: true,
+      test: true,
+    }
   },
   {
     path: '/error',
@@ -191,8 +273,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
-
   if (to.meta.xauth && to.meta.xauth === true && !isLogin()) {
     next({
       path: "/login",
@@ -214,7 +294,29 @@ router.beforeEach((to, from, next) => {
       return
     }
 
-    if (userStore.user.type === 1) {
+    if (!isAdmin()) {
+      next({
+        path: "/error",
+        query: {
+          msg: "未知页面",
+        }
+      })
+      return
+    }
+  }
+
+  if (to.meta.rootAdmin && to.meta.rootAdmin === true) {
+    if (!isLogin()) {
+      next({
+        path: "/login",
+        query: {
+          [redirect]: encodeURIComponent(to.fullPath)
+        }
+      })
+      return
+    }
+
+    if (!isRootAdmin()) {
       next({
         path: "/error",
         query: {

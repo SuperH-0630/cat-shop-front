@@ -1,7 +1,7 @@
 import {Success} from "@/utils/request"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const sendMsg = (msg: string): Success => {
+export const apiSendKefuMsg = (msg: string): Success => {
     return Promise.resolve({
         data: {
             code: 0,

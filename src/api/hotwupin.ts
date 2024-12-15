@@ -8,7 +8,7 @@ export interface HotWupinLst {
     total: number,
 }
 
-export const getHotWupinInfo = (): Result<HotWupinLst> => {
+export const apiGetHotWupinLst = (): Result<HotWupinLst> => {
     const classStore = useClassStore()
     const wupinLst = [] as Wupin[]
 

@@ -35,7 +35,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.status === 200) {
-      if (response.data.code !== 0) {
+      if (response.data.code >= 1) {// 公共错误
           if (response.data.code === 1) {
               const userStore = useUserStore()
               const router = useRouter()
@@ -66,16 +66,23 @@ service.interceptors.response.use(
               }
           }
           return Promise.reject(response)
-      }
+      } else if (response.data.code <= 1) {// 针对性错误
+          ElMessageBox.alert(response.data.msg || "您遇到了错误", '提示', {
+              confirmButtonText: '好的',
+              callback: () => {},
+          })
+          return Promise.reject(response)
+      } else if (response.data.code === 0) {// 正常
+          const newToken = response.headers["X-Token"]
+          if (newToken && getXtoken()) {
+              setXtoken(newToken)
+          }
 
-      const newToken = response.headers["X-Token"]
-      if (newToken && getXtoken()) {
-          setXtoken(newToken)
+          return Promise.resolve(response)
       }
-
-      return response
+      return Promise.reject(response)
     }
-    return Promise.reject()
+    return Promise.reject(response)
   },
   (error: AxiosError) => {
     return Promise.reject(error)

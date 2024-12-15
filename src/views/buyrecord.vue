@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import {getBuyRecordData, BuyRecord} from "@/api/buyrecord"
+import {apiGetBuyRecordInfo, BuyRecord} from "@/api/buyrecord"
 
 const route = useRoute()
-const recordId = ref((route.query?.id || 0) as number)
+const router = useRouter()
+const recordId = ref(Number(route.query?.id).valueOf() || 0)
 
 const record = ref(null as BuyRecord | null)
 
 const reload = () => {
-  getBuyRecordData(recordId.value as number).then((res) => {
+  apiGetBuyRecordInfo(recordId.value as number).then((res) => {
     record.value = res.data.data as BuyRecord
+  }).catch(() => {
+    router.push({
+      path: "/error",
+      query: {
+        msg: "获取数据失败"
+      }
+    })
   })
 }
 reload()

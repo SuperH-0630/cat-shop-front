@@ -40,7 +40,7 @@ export interface LocationForUser {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const aliNewPay = (redirectTo: string, wupin: Wupin, num: number, location: LocationForUser): Result<AliPayData> => {
+export const apiPostAliNewPay = (redirectTo: string, wupin: Wupin, num: number, location: LocationForUser): Result<AliPayData> => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -53,7 +53,7 @@ export const aliNewPay = (redirectTo: string, wupin: Wupin, num: number, locatio
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const wechatNewPay = (redirectTo: string, wupin: Wupin, num: number, location: LocationForUser): Result<WechatPayData> => {
+export const apiPostWechatNewPay = (redirectTo: string, wupin: Wupin, num: number, location: LocationForUser): Result<WechatPayData> => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -66,7 +66,7 @@ export const wechatNewPay = (redirectTo: string, wupin: Wupin, num: number, loca
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const aliNewPayWithShop = (redirectTo: string, shoprecord: ShopRecord, location: LocationForUser): Result<AliPayData> => {
+export const apiPostAliNewPayWithShop = (redirectTo: string, shoprecord: ShopRecord, location: LocationForUser): Result<AliPayData> => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -79,7 +79,7 @@ export const aliNewPayWithShop = (redirectTo: string, shoprecord: ShopRecord, lo
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const wechatNewPayWithShop = (redirectTo: string, shoprecord: ShopRecord, location: LocationForUser): Result<WechatPayData> => {
+export const apiPostWechatNewPayWithShop = (redirectTo: string, shoprecord: ShopRecord, location: LocationForUser): Result<WechatPayData> => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -91,7 +91,7 @@ export const wechatNewPayWithShop = (redirectTo: string, shoprecord: ShopRecord,
     })
 }
 
-export const aliRepay = (id: number, redirectTo: string): Result<AliRepayData> => {
+export const apiPostAliRepay = (id: number, redirectTo: string): Result<AliRepayData> => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -103,7 +103,7 @@ export const aliRepay = (id: number, redirectTo: string): Result<AliRepayData> =
     })
 }
 
-export const wechatRepay = (id: number, redirectTo: string): Result<WechatRepayData> => {
+export const apiPostWechatRepay = (id: number, redirectTo: string): Result<WechatRepayData> => {
     return Promise.resolve({
         data: {
             code: 0,

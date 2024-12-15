@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getUserShoppingRecord, ShopRecord} from "@/api/shoppingbag"
+import {apiGetUserShoppingRecord, ShopRecord} from "@/api/shoppingbag"
 import Shoppingbag from "@/components/shoppingbag.vue"
 
 let offset = 0
@@ -13,13 +13,15 @@ const updater = () => {
     return
   }
 
-  getUserShoppingRecord(offset, limit).then((res) => {
+  return apiGetUserShoppingRecord(offset, limit).then((res) => {
     if (res.data.data.total < limit) {
       stop.value = true
     }
 
     offset += res.data.data.total
     shopRecord.value = shopRecord.value.concat(res.data.data.list)
+  }).catch(() => {
+    stop.value = true
   })
 }
 updater()

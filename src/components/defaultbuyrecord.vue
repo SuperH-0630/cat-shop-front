@@ -3,9 +3,9 @@ import {BuyRecordStatus, BuyRecord} from "@/api/buyrecord"
 import {formatDate} from "@/utils/time"
 import {ElNotification} from "element-plus"
 import router from "@/router"
-import {aliRepay, wechatRepay} from "@/api/pay"
+import {apiPostAliRepay, apiPostWechatRepay} from "@/api/pay"
 import { ElMessageBox } from 'element-plus'
-import {daohuoGiveGood, daohuoGiveNotGood, gouwuDaohuo, quxiaoDingDan, tuihuoDengji, tuihuoShenQing} from "@/api/huo"
+import {apiPostGouWuPingJia, apiPostGouWuDaoHuo, apiPostFaHuoQuXiaoDengJi, apiPostTuiHuoDengJi, apiPostTuiHuoShenQing} from "@/api/huo"
 import useUserStore from "@/store/user";
 import {isMobile} from "@/utils/str";
 
@@ -115,7 +115,7 @@ const doAliRepay = () => {
     return
   }
 
-  return aliRepay(record.value.id, window.location.href).then((res) => {
+  return apiPostAliRepay(record.value.id, window.location.href).then((res) => {
     if (!res.data.data.url) {
       ElMessage({
         type: "error",
@@ -134,7 +134,7 @@ const doWeChatRepay = () => {
     return
   }
 
-  return wechatRepay(record.value.id, window.location.href).then((res) => {
+  return apiPostWechatRepay(record.value.id, window.location.href).then((res) => {
     if (!res.data.data.url) {
       ElMessage({
         type: "error",
@@ -162,7 +162,7 @@ const confirmDaohuo = () => {
         type: 'warning',
       }
   ).then(() => {
-    gouwuDaohuo(record.value.id).then((res) => {
+    apiPostGouWuDaoHuo(record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -193,7 +193,7 @@ const quXiao = () => {
         type: 'warning',
       }
   ).then(() => {}, () => {
-    quxiaoDingDan(record.value.id).then((res) => {
+    apiPostFaHuoQuXiaoDengJi(record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -224,7 +224,7 @@ const giveGood = () => {
         type: 'warning',
       }
   ).then(() => {
-    daohuoGiveGood(record.value.id).then((res) => {
+    apiPostGouWuPingJia(record.value.id, true).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -255,7 +255,7 @@ const giveNotGood = () => {
         type: 'warning',
       }
   ).then(() => {
-    daohuoGiveNotGood(record.value.id).then((res) => {
+    apiPostGouWuPingJia(record.value.id, false).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -306,7 +306,7 @@ const tuiHuo = () => {
         type: 'warning',
       }
   ).then(() => {
-    tuihuoShenQing(record.value.id, tuihuoForm.value.name, tuihuoForm.value.phone, tuihuoForm.value.reason).then((res) => {
+    apiPostTuiHuoShenQing(record.value.id, tuihuoForm.value.name, tuihuoForm.value.phone, tuihuoForm.value.reason).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -382,7 +382,7 @@ const tuiHuoDengji = () => {
         type: 'warning',
       }
   ).then(() => {
-    tuihuoDengji(record.value.id, tuihuoDengjiForm.value.kuaidi, tuihuoDengjiForm.value.danhao).then((res) => {
+    apiPostTuiHuoDengJi(record.value.id, tuihuoDengjiForm.value.kuaidi, tuihuoDengjiForm.value.danhao).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',

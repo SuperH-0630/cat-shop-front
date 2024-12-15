@@ -3,8 +3,8 @@
   import { ElNotification } from 'element-plus'
   import {Location} from "@element-plus/icons-vue";
   import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-  import {addToShoppingBag} from "@/api/shoppingbag";
-  import {getWupin} from "@/api/wupin";
+  import {apiPostAddToShoppingBag} from "@/api/shoppingbag";
+  import {apiGetWupin} from "@/api/wupin";
 
   const route = useRoute()
   const router = useRouter()
@@ -20,7 +20,7 @@
   }
 
   const wupin = ref(null as Wupin | null)
-  getWupin(wupinId.value as number).then((res) => {
+  apiGetWupin(wupinId.value as number).then((res) => {
     wupin.value = res.data.data
   }).catch(() => {
     router.push({
@@ -76,7 +76,7 @@
   }
 
   const onClickBag = () => {
-    wupin.value && addToShoppingBag(wupin.value.id, num.value).then((res) => {
+    wupin.value && apiPostAddToShoppingBag(wupin.value.id, num.value).then((res) => {
       if (res.data.data.success) {
         wupin.value && ElNotification({
           title: '已经加入购物车',

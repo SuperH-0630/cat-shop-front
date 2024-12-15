@@ -2,7 +2,7 @@
 import useConfigStore from "@/store/config"
 import {Service} from "@element-plus/icons-vue";
 import {isLogin, hasLoad} from "@/store/user";
-import {sendMsg} from "@/api/kefu";
+import {apiSendKefuMsg} from "@/api/kefu";
 
 const configStore = useConfigStore()
 configStore.updateConfig()
@@ -14,7 +14,7 @@ const onSendMsg = () => {
   if (!sendok.value) {
     return
   }
-  sendMsg(textarea.value).then((res) => {
+  apiSendKefuMsg(textarea.value).then((res) => {
     if (res.data.data.success) {
       ElMessage({
         type: 'success',

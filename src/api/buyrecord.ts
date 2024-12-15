@@ -49,7 +49,7 @@ type BuyRecordLst = {
     list: BuyRecord[]
 }
 
-export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecordLst> {
+export function apiGetUserBuyRecordLst(offset: number, limit: number): Result<BuyRecordLst> {
     if (limit > 100) {
         limit = 100
     }
@@ -131,7 +131,7 @@ export function getUserBuyRecord(offset: number, limit: number): Result<BuyRecor
     })
 }
 
-export function getBuyRecordData(id: number): Result<BuyRecord> {
+export function apiGetBuyRecordInfo(id: number): Result<BuyRecord> {
     if (id <= 0) {
         return Promise.reject()
     }
@@ -190,17 +190,16 @@ export function getBuyRecordData(id: number): Result<BuyRecord> {
 
 type BuyRecordLstByPage = {
     maxpage: number
-    pagesize: number
     total: number
     list: BuyRecord[]
 }
 
-export function getUserBuyRecordByPage(page: number, pageize: number, status:number): Result<BuyRecordLstByPage> {
+export function apiGetUserBuyRecordByPage(page: number, pagesize: number, status: number): Result<BuyRecordLstByPage> {
     if (page <= 0) {
         return Promise.reject()
     }
 
-    if (pageize <= 0 || pageize > 20) {
+    if (pagesize <= 0 || pagesize > 20) {
         return Promise.reject()
     }
 
@@ -209,25 +208,15 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
     //     method: 'get',
     // })
 
-    if (page > 10) {
-        return Promise.resolve({
-            data: {
-                code: 0,
-                data: {
-                    maxpage: 0,
-                    pageize: 20,
-                    total: 0,
-                    list: [],
-                },
-            },
-            status: 200,
-        })
-    }
-
-    const buyRecordLst = [] as BuyRecord[]
-    for (let i = 0; i < pageize; i++) {
-        buyRecordLst.push({
-            id: page * pageize + i + 1,
+    const pagemax = 100
+    const buyRecordLst = ref([] as BuyRecord[])
+    for (let i = (page - 1) * pagesize; i < pagemax; i++) {
+        if (buyRecordLst.value.length >= pagesize) {
+            break
+        }
+        
+        buyRecordLst.value.push({
+            id: page * pagesize + i + 1,
             userid: 1,
             wupinid: 1,
             classid: 1,
@@ -276,10 +265,9 @@ export function getUserBuyRecordByPage(page: number, pageize: number, status:num
         data: {
             code: 0,
             data: {
-                maxpage: 20,
-                pagesize: pageize,
-                total: buyRecordLst.length,
-                list: buyRecordLst,
+                maxpage: pagemax,
+                total: buyRecordLst.value.length,
+                list: buyRecordLst.value,
             },
         },
         status: 200,
