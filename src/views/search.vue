@@ -10,6 +10,9 @@ const wupinlst = ref([] as Wupin[])
 const currentPage = ref(Number(route.query?.page).valueOf() || 1)
 const pagemax = ref(0)
 const pagesize = ref(20)
+if (currentPage.value < 1) {
+  currentPage.value = 1
+}
 
 const data = ref({
   select: [],

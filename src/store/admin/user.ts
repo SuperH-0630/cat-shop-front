@@ -2,9 +2,9 @@ import useConfigStore from "@/store/config";
 import {isAdmin, isRootAdmin} from "@/store/admin/index";
 import {
     apiAdminGetUserInfo,
-    apiAdminGetUserLst,
+    apiAdminGetUserLst, apiAdminPostNewUser,
     apiAdminPostUpdateAvatarData,
-    apiAdminPostUpdateSelfInfo, apiAdminPostUpdateSelfPassword
+    apiAdminPostUpdateInfo, apiAdminPostUpdatePassword, NewUserData
 } from "@/api/admin/user";
 import {sha256} from "@/utils/encrypt";
 
@@ -154,9 +154,22 @@ const useAdminUserStore = defineStore("useAdminUserStore", () => {
             return
         }
 
-        return apiAdminPostUpdateSelfInfo(userId, data).then((res) => {
+        return apiAdminPostUpdateInfo(userId, data).then((res) => {
             if (!res.data.data.success) {
                 return Promise.reject("更新失败")
+            }
+            return Promise.resolve()
+        })
+    }
+
+    const newUser = async (data: NewUserData) => {
+        if (!isAdmin()) {
+            return
+        }
+
+        return apiAdminPostNewUser(data).then((res) => {
+            if (!res.data.data.success) {
+                return Promise.reject("添加失败")
             }
             return Promise.resolve()
         })
@@ -183,7 +196,20 @@ const useAdminUserStore = defineStore("useAdminUserStore", () => {
         const configStore = useConfigStore()
         const newP = await sha256((`${configStore.config?.passwordfronthash}::${data.newPassword}>>`))
 
-        return apiAdminPostUpdateSelfPassword(userId, newP).then((res) => {
+        return apiAdminPostUpdatePassword(userId, newP).then((res) => {
+            if (!res.data.data.success) {
+                return Promise.reject("更新失败")
+            }
+            return Promise.resolve()
+        })
+    }
+
+    const editPhone = async (userId: number, data: { newPhone: string }) => {
+        if (!isAdmin()) {
+            return
+        }
+
+        return apiAdminPostUpdatePassword(userId, data.newPhone).then((res) => {
             if (!res.data.data.success) {
                 return Promise.reject("更新失败")
             }
@@ -197,6 +223,8 @@ const useAdminUserStore = defineStore("useAdminUserStore", () => {
         editUserAvatar,
         editData,
         editPassword,
+        editPhone,
+        newUser,
     }
 })
 

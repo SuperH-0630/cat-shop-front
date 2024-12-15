@@ -23,6 +23,9 @@ Object.entries(BuyRecordStatus).forEach(([_key]) => {
     if ((Number(route.query?.status).valueOf() || -1) === key) {
       if (route.query?.page) {
         currentPage.value[key] = Number(route.query?.page).valueOf() || 1
+        if (currentPage.value[key] < 1) {
+          currentPage.value[key] = 1
+        }
       }
     }
   })
@@ -72,7 +75,7 @@ const toHome = () => {
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
          <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
            <div style="display: flex; justify-content: center">
-             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>
            <div style="width: 100%; display: flex; justify-content: center">
              <div style="width: 100%;">
@@ -82,7 +85,7 @@ const toHome = () => {
              </div>
            </div>
            <div style="display: flex; justify-content: center">
-             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>
          </div>
           <div v-else>

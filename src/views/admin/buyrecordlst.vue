@@ -46,12 +46,14 @@ if (userId.value) {
         if ((Number(route.query?.status).valueOf() || -1) === key) {
           if (route.query?.page) {
             currentPage.value[key] = Number(route.query?.page).valueOf() || 1
+            if (currentPage.value[key] < 1) {
+              currentPage.value[key] = 1
+            }
           }
         }
       })
       // 不处理catch
     })
-
   }, () => {
     router.push({
       path: "/error",
@@ -104,28 +106,30 @@ const toHome = () => {
 </script>
 
 <template>
-  <div v-if="isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <el-card style="display: flex; min-height: 70vh; width: 80vw; justify-content: center; margin-top: 10px">
+  <div v-if="user && isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+    <el-card style="display: flex; height: 70vh; width: 80vw; justify-content: center; margin-top: 10px">
       <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true">
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
-         <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
-           <div style="display: flex; justify-content: center">
-             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
-           </div>
-           <div style="width: 100%; display: flex; justify-content: center">
-             <div style="width: 100%;">
-               <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx" style="margin-top: 10px; width: 100%;">
-                 <AdminBuyRecord :record="record" :safe="false" :xiangqing="true"> </AdminBuyRecord>
+         <div v-if="dataInfo[index]?.data && dataInfo[index].data.length > 0">
+           <el-scrollbar height="60vh">
+             <div style="display: flex; justify-content: center; margin-bottom: 10px; margin-top: 10px;">
+               <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+             </div>
+             <div style="width: 100%; display: flex; justify-content: center">
+               <div style="width: 100%;">
+                   <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx" style="margin-top: 10px; width: 100%;">
+                     <AdminBuyRecord :record="record" :safe="false" :xiangqing="true"> </AdminBuyRecord>
+                   </div>
                </div>
              </div>
-           </div>
-           <div style="display: flex; justify-content: center">
-             <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
-           </div>
+             <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+               <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+             </div>
+           </el-scrollbar>
          </div>
           <div v-else>
             <el-result
-                icon="success"
+                icon="info"
                 title="在此处您没有任何销售记录"
                 sub-title="欢迎到别处去看看吧"
             >

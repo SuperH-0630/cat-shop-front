@@ -108,7 +108,25 @@ export function apiAdminPostUpdateAvatarData(userId: number, avatar: Blob): Succ
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function apiAdminPostUpdateSelfInfo(userId: number, data: AdminUserBase): Success {
+export function apiAdminPostUpdateInfo(userId: number, data: AdminUserBase): Success {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
+
+export interface NewUserData extends AdminUserBase {
+    phone: string
+    password: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function apiAdminPostNewUser(data: NewUserData): Success {
     return Promise.resolve({
         data: {
             code: 0,
@@ -121,7 +139,20 @@ export function apiAdminPostUpdateSelfInfo(userId: number, data: AdminUserBase):
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function apiAdminPostUpdateSelfPassword(userId: number, newPasswordHash: string): Success {
+export function apiAdminPostUpdatePassword(userId: number, newPasswordHash: string): Success {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function apiAdminPostUpdatePhone(userId: number, newPhone: string): Success {
     return Promise.resolve({
         data: {
             code: 0,

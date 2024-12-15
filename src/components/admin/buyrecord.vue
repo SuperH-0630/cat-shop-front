@@ -4,7 +4,7 @@ import {formatDate} from "@/utils/time"
 import { ElMessageBox } from 'element-plus'
 import pushTo from "@/views/admin/router_push";
 import {
-  apiAdminPostRengGngPay,
+  apiAdminPostPeoplePay,
 } from "@/api/admin/pay";
 import {
   apiAdminPostGouWuDaoHuo,
@@ -84,7 +84,7 @@ const startRepay = () => {
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostRengGngPay(record.value.userid, record.value.id).then((res) => {
+    apiAdminPostPeoplePay(record.value.userid, record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',

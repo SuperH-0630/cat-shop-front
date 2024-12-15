@@ -66,16 +66,34 @@ const userAdminStore = useAdminUserStore()
 
 const userId = ref(0)
 const user = ref(null as AdminUser | null)
+const userPermissions = ref(false)
 
 const onChangeUser = () => {
   userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
+  userPermissions.value = false
+
   if (userId.value) {
     userAdminStore.getUser(userId.value).then((res) => {
-      console.log("res is ", res)
-      user.value = res
-    }).catch(() => {
+      user.value = res as AdminUser
+
+      if (user.value.type === 3 && !isRootAdmin()) {
+        userPermissions.value = false
+      } else {
+        userPermissions.value = true
+      }
+
+      if (user.value.status === 3 && !isRootAdmin()) {
+        user.value = null
+        userPermissions.value = false
+      }
+    }, () => {
       user.value = null
+      userPermissions.value = false
     })
+  } else {
+    user.value = null
+    userPermissions.value = false
   }
 }
 
@@ -108,8 +126,28 @@ const toUserPassword = () => {
   pushTo(router, route, "/admin/user/list/password")
 }
 
+const toUserPhone = () => {
+  pushTo(router, route, "/admin/user/list/phone")
+}
+
 const toBuyRecordLst = () => {
   pushTo(router, route, "/admin/user/list/buyrecordlst")
+}
+
+const toShoppingBag = () => {
+  pushTo(router, route, "/admin/user/list/shoppingbag")
+}
+
+const toOneUserMsg = () => {
+  pushTo(router, route, "/admin/user/list/msg")
+}
+
+const toAddUser = () => {
+  pushTo(router, route, "/admin/user/add")
+}
+
+const toMsg = () => {
+  pushTo(router, route, "/admin/user/msg")
 }
 
 </script>
@@ -134,14 +172,15 @@ const toBuyRecordLst = () => {
               </template>
               <el-menu-item index="user/list" @click="toUserList">用户列表</el-menu-item>
               <el-menu-item index="user/list/info" :disabled="!user" @click="toUserInfo">用户详情</el-menu-item>
-              <el-menu-item index="user/list/edit" :disabled="!user" @click="toUserEdit">编辑用户</el-menu-item>
-              <el-menu-item index="user/list/password" :disabled="!user && isRootAdmin()" @click="toUserPassword">编辑用户密码</el-menu-item>
+              <el-menu-item index="user/list/edit" :disabled="!user || !userPermissions" @click="toUserEdit">编辑用户</el-menu-item>
+              <el-menu-item index="user/list/password" :disabled="!user || !userPermissions" @click="toUserPassword">编辑用户密码</el-menu-item>
+              <el-menu-item index="user/list/phone" :disabled="!user || !userPermissions" @click="toUserPhone">编辑用户手机号</el-menu-item>
               <el-menu-item index="user/list/buyrecordlst" :disabled="!user" @click="toBuyRecordLst">用户订单列表</el-menu-item>
-              <el-menu-item index="user/list/shoppingbag" :disabled="!user">用户购物车列表</el-menu-item>
-              <el-menu-item index="user/list/msg" :disabled="!user">用户留言</el-menu-item>
+              <el-menu-item index="user/list/shoppingbag" :disabled="!user" @click="toShoppingBag">用户购物车列表</el-menu-item>
+              <el-menu-item index="user/list/msg" :disabled="!user" @click="toOneUserMsg">用户留言</el-menu-item>
             </el-sub-menu>
-            <el-menu-item index="user/add">添加用户</el-menu-item>
-            <el-menu-item index="user/msg">用户留言列表</el-menu-item>
+            <el-menu-item index="user/add" @click="toAddUser">添加用户</el-menu-item>
+            <el-menu-item index="user/msg" @click="toMsg">用户留言列表</el-menu-item>
           </el-sub-menu>
 
           <el-sub-menu

@@ -2,7 +2,8 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import useAdminUserStore, {AdminUser, AdminUserBase, GetAdminUserStatus} from "@/store/admin/user";
 import pushTo from "@/views/admin/router_push";
-import {isAdmin} from "@/store/admin";
+import {isAdmin, isRootAdmin} from "@/store/admin";
+import {isEmail} from "@/utils/str";
 
 const router = useRouter()
 const route = useRoute()
@@ -25,6 +26,8 @@ const ub = ref({
   name: "",
   location: "",
   status: 1,
+  wechat: "",
+  email: "",
 } as AdminUserBase)
 
 const toBack = () => {
@@ -49,8 +52,13 @@ if (userId.value) {
       name: res.name,
       location: res.location,
       status: res.status,
+      wechat: res.wechat,
+      email: res.email,
     }
     if (user.value.type === 3) {
+      if (!isRootAdmin()) {
+        backTimer()
+      }
       userStatusLst.value = {
         1: "正常",
       }
@@ -83,15 +91,22 @@ if (userId.value) {
 }
 
 const hasChange = computed(() => {
-  return ub.value.name !== user.value?.name || ub.value.location !== user.value?.location || ub.value.status !== user.value?.status
+  return ub.value.name !== user.value?.name || ub.value.location !== user.value?.location || ub.value.status !== user.value?.status || ub.value.wechat !== user.value?.wechat || ub.value.email !== user.value?.email
 })
 
 const userStatusLst = ref(GetAdminUserStatus() as { [key: number]: string })
 
+const deleteCheck = computed(() => !(user.value && user.value.status === 3 && ub.value.status !== 3))
 const rootAdminCheck = computed(() => !(user.value && user.value.type === 3 && ub.value.status !== 1))
 const checkName = computed(() => ub.value.name && ub.value.name.length > 0 && ub.value.name.length <= 10)
-const checkStatus = computed(() => Object.keys(userStatusLst).some((v) => Number(v).valueOf() === ub.value.status))
-const allCheck = computed(() => checkStatus.value && checkName.value && hasChange.value && rootAdminCheck.value)
+const checkStatus = computed(() => !Object.keys(userStatusLst).some((v) => Number(v).valueOf() === ub.value.status))
+const checkEmail = computed(() => {
+  if (!ub.value.email) {
+    return true
+  }
+  return isEmail(ub.value.email)
+})
+const allCheck = computed(() => checkEmail.value && checkStatus.value && checkName.value && hasChange.value && rootAdminCheck.value && deleteCheck.value)
 
 const update = () => {
   ElMessageBox.confirm('您是否确定更新你的用户信息', '提示', {
@@ -118,7 +133,29 @@ const update = () => {
 
 <template>
   <div v-if="user && isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <el-card v-if="user.status !== 3" style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
+    <el-card v-if="user.status === 3" style="margin-top: 10px">
+      <el-result
+          icon="error"
+          title="用户已被删除"
+          sub-title="用户已被删除，无法修改其信息。"
+      >
+        <template #extra>
+          <el-button type="primary" @click="toBack">返回（{{ backSec > 5 ? 5 : backSec }}s）</el-button>
+        </template>
+      </el-result>
+    </el-card>
+    <el-card v-else-if="user.type === 3 && !isRootAdmin()" style="margin-top: 10px">
+      <el-result
+          icon="error"
+          title="权限不足"
+          sub-title="您的权限不足以修改他的用户喜喜。"
+      >
+        <template #extra>
+          <el-button type="primary" @click="toBack">返回（{{ backSec > 5 ? 5 : backSec }}s）</el-button>
+        </template>
+      </el-result>
+    </el-card>
+    <el-card v-else style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
       <el-form :model="ub" label-width="auto" style="width: 15vw">
         <el-form-item>
           <template #label>
@@ -128,6 +165,28 @@ const update = () => {
               v-model="ub.name"
               maxlength="10"
               minlength="1"
+              show-word-limit
+              clearable
+          />
+        </el-form-item>
+        <el-form-item>
+          <template #label>
+            <el-text>微信</el-text>
+          </template>
+          <el-input
+              v-model="ub.wechat"
+              maxlength="30"
+              show-word-limit
+              clearable
+          />
+        </el-form-item>
+        <el-form-item>
+          <template #label>
+            <el-text>邮箱</el-text>
+          </template>
+          <el-input
+              v-model="ub.email"
+              maxlength="30"
               show-word-limit
               clearable
           />
@@ -178,18 +237,15 @@ const update = () => {
           <el-alert title="根管理员状态错误！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
+        <div v-if="!checkEmail" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确到邮箱！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
+        <div v-if="!deleteCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="已删除的用户不能恢复！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
       </div>
-    </el-card>
-    <el-card v-else style="margin-top: 10px">
-      <el-result
-          icon="error"
-          title="用户已被删除"
-          sub-title="用户已被删除，无法修改其信息。"
-      >
-        <template #extra>
-          <el-button type="primary" @click="toBack">返回（{{ backSec > 5 ? 5 : backSec }}s）</el-button>
-        </template>
-      </el-result>
     </el-card>
   </div>
   <div v-else></div>

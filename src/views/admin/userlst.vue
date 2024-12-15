@@ -16,10 +16,10 @@ if (!isAdmin()) {
 }
 
 const maxpage = ref(0)
-const page = ref(1)
+const page = ref(Number(route.query?.page).valueOf() || 1)
 const pagesize = ref(20)
-if (route.query?.page) {
-  page.value = Number(route.query?.page).valueOf() || 1
+if (page.value < 1) {
+  page.value = 1
 }
 
 const configStore = useConfigStore()

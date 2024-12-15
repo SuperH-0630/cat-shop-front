@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import useUserStore, {isLogin, UserBase} from "@/store/user"
+import {isEmail} from "@/utils/str";
 
 const router = useRouter()
 const route = useRoute()
@@ -18,6 +19,8 @@ if (!isLogin()) {
 const ub = ref({
   name: userStore.user.name,
   location: userStore.user.location,
+  wechat: userStore.user.wechat,
+  email: userStore.user.email,
 } as UserBase)
 
 function getRandomInt(max: number) {
@@ -35,9 +38,20 @@ const resetCode = () => {
   b.value = getRandomInt(10)
   code.value = ""
 }
+
+const hasChange = computed(() => {
+  return ub.value.name !== userStore.user.name || ub.value.location !== userStore.user.location || ub.value.wechat !== userStore.user.wechat || ub.value.email !== userStore.user.email
+})
+
 const codeCheck = computed(() => Number(code.value).valueOf() === answer.value)
 const checkName = computed(() => ub.value.name && ub.value.name.length > 0 && ub.value.name.length <= 10)
-const allCheck = computed(() => codeCheck.value && checkName.value)
+const checkEmail = computed(() => {
+  if (!ub.value.email) {
+    return true
+  }
+  return isEmail(ub.value.email)
+})
+const allCheck = computed(() => codeCheck.value && checkName.value && checkEmail.value && hasChange.value)
 
 const update = () => {
   ElMessageBox.confirm('您是否确定更新你的用户信息', '提示', {
@@ -83,6 +97,28 @@ const update = () => {
         </el-form-item>
         <el-form-item>
           <template #label>
+            <el-text>微信</el-text>
+          </template>
+          <el-input
+              v-model="ub.wechat"
+              maxlength="30"
+              show-word-limit
+              clearable
+          />
+        </el-form-item>
+        <el-form-item>
+          <template #label>
+            <el-text>邮箱</el-text>
+          </template>
+          <el-input
+              v-model="ub.email"
+              maxlength="30"
+              show-word-limit
+              clearable
+          />
+        </el-form-item>
+        <el-form-item>
+          <template #label>
             <el-text>地址</el-text>
           </template>
           <el-input v-model="ub.location" minlength="0" maxlength="150" show-word-limit/>
@@ -112,6 +148,14 @@ const update = () => {
         </div>
         <div v-if="!checkName" class="tip_box" style="display: flex; justify-content: center">
           <el-alert title="名字需要在1-10位！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
+        <div v-if="!checkEmail" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确到邮箱！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
+        <div v-if="!hasChange" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请编辑信息！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
       </div>

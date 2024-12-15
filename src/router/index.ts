@@ -182,7 +182,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/editpassword.vue'),
         meta: {
           title: '编辑密码',
-          rootAdmin: true
+          admin: true
+        },
+      },
+      {
+        path: 'user/list/phone',
+        component: () => import('@/views/admin/editphone.vue'),
+        meta: {
+          title: '编辑手机号',
+          admin: true
         },
       },
       {
@@ -204,7 +212,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'user/list/shoppingbag',
-        component: () => import('@/views/admin/home.vue'),
+        component: () => import('@/views/admin/shoppingbag.vue'),
         meta: {
           title: '用户购物车列表',
           admin: true,
@@ -212,7 +220,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'user/list/msg',
-        component: () => import('@/views/admin/home.vue'),
+        component: () => import('@/views/admin/usermsg.vue'),
         meta: {
           title: '用户留言',
           admin: true,
@@ -220,7 +228,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'user/add',
-        component: () => import('@/views/admin/home.vue'),
+        component: () => import('@/views/admin/adduser.vue'),
         meta: {
           title: '添加用户',
           admin: true,
@@ -228,7 +236,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'user/msg',
-        component: () => import('@/views/admin/home.vue'),
+        component: () => import('@/views/admin/msg.vue'),
         meta: {
           title: '用户留言列表',
           admin: true,
