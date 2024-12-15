@@ -2,7 +2,7 @@
 import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
   import {Edit} from "@element-plus/icons-vue"
   import {BuyRecord, apiGetUserBuyRecordLst} from "@/api/buyrecord"
-  import Defaultbuyrecord from "@/components/defaultbuyrecord.vue"
+  import Buyrecord from "@/components/buyrecord.vue"
   import {ElNotification} from "element-plus"
   import { genFileId } from 'element-plus'
   import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
@@ -264,7 +264,7 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
         <div v-else style="margin-top: 10px">
           <div v-infinite-scroll="updater" style="overflow: auto; height: 53vh">
             <div v-for="(item, index) in buyRecord" :key="index" class="buy_record_box">
-                <Defaultbuyrecord :record="item"></Defaultbuyrecord>
+                <Buyrecord :record="item"></Buyrecord>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ if (!isAdmin()) {
   router.push({
     path: "error",
     query: {
-      msg: "未知页面"
+      msg: "页面错误"
     }
   })
 }
@@ -29,7 +29,8 @@ const changePage = () => {
     })
   }
 
-  const pathLst = route.path.split("/")
+  const routePath = (route.meta.vpath || route.path || "/") as string
+  const pathLst = routePath.split("/")
   if (pathLst.length <= 2 || pathLst[0] !== "" || pathLst[1] !== "admin") {
     router.push({
       path: "/error",
@@ -107,6 +108,10 @@ const toUserPassword = () => {
   pushTo(router, route, "/admin/user/list/password")
 }
 
+const toBuyRecordLst = () => {
+  pushTo(router, route, "/admin/user/list/buyrecordlst")
+}
+
 </script>
 
 <template>
@@ -130,8 +135,8 @@ const toUserPassword = () => {
               <el-menu-item index="user/list" @click="toUserList">用户列表</el-menu-item>
               <el-menu-item index="user/list/info" :disabled="!user" @click="toUserInfo">用户详情</el-menu-item>
               <el-menu-item index="user/list/edit" :disabled="!user" @click="toUserEdit">编辑用户</el-menu-item>
-              <el-menu-item index="user/list/edit" :disabled="!user && isRootAdmin()" @click="toUserPassword">编辑用户密码</el-menu-item>
-              <el-menu-item index="user/list/buyrecordlst" :disabled="!user">用户订单列表</el-menu-item>
+              <el-menu-item index="user/list/password" :disabled="!user && isRootAdmin()" @click="toUserPassword">编辑用户密码</el-menu-item>
+              <el-menu-item index="user/list/buyrecordlst" :disabled="!user" @click="toBuyRecordLst">用户订单列表</el-menu-item>
               <el-menu-item index="user/list/shoppingbag" :disabled="!user">用户购物车列表</el-menu-item>
               <el-menu-item index="user/list/msg" :disabled="!user">用户留言</el-menu-item>
             </el-sub-menu>

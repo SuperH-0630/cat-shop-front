@@ -1,7 +1,21 @@
 import {Success} from "@/utils/request"
+import {LocationForUser} from "@/api/pay";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const apiPostGouWuDaoHuo = (buyRecordId: number): Success => {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const apiPostQuXiaoPay = (buyRecordId: number): Success => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -54,6 +68,19 @@ export const apiPostTuiHuoDengJi = (buyRecordId: number, kuaidi: string, danhao:
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const apiPostFaHuoQuXiaoDengJi = (buyRecordId: number): Success => {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const apiPostChangeUser = (buyRecordId: number, user: LocationForUser): Success => {
     return Promise.resolve({
         data: {
             code: 0,

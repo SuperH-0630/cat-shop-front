@@ -13,7 +13,7 @@ if (!isAdmin()) {
   router.push({
     path: "error",
     query: {
-      msg: "未知页面"
+      msg: "页面错误"
     }
   })
 }
@@ -25,7 +25,7 @@ const user = ref(null as AdminUser | null)
 
 if (userId.value) {
   userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res
+    user.value = res as AdminUser
   }, () => {
     router.push({
       path: "/error",

@@ -11,7 +11,7 @@ if (!isAdmin()) {
   router.push({
     path: "error",
     query: {
-      msg: "未知页面"
+      msg: "页面错误"
     }
   })
 }

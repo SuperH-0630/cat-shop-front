@@ -1,47 +1,87 @@
 <script setup lang="ts">
-import {BuyRecordStatus, apiGetUserBuyRecordByPage} from "@/api/buyrecord"
-import {ElNotification} from "element-plus";
-import BuyRecord from "@/components/buyrecord.vue"
+import {BuyRecordStatus} from "@/api/buyrecord"
+import AdminBuyRecord from "@/components/admin/buyrecord.vue";
+import {isAdmin} from "@/store/admin";
+import useAdminUserStore, {AdminUser} from "@/store/admin/user";
+import {apiAdminGetUserBuyRecordByPage} from "@/api/admin/buyrecord";
+import pushTo from "@/views/admin/router_push";
+
 const router = useRouter()
 const route = useRoute()
+
+if (!isAdmin()) {
+  router.push({
+    path: "error",
+    query: {
+      msg: "页面错误"
+    }
+  })
+}
+
+const userAdminStore = useAdminUserStore()
+
+const userId = ref(Number(route.query?.userId).valueOf() || 0)
+const user = ref(null as AdminUser | null)
+
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
 const currentPage = ref({} as { [key: number]: number })
 
-Object.entries(BuyRecordStatus).forEach(([_key]) => {
-  const key = Number(_key).valueOf() || 0
-  apiGetUserBuyRecordByPage(1, 20, Number(key).valueOf()).then((res) => {
-    dataInfo.value[key] = {
-      data: res.data.data.list,
-      pagesizze:20,
-      total: res.data.data.total,
-      maxpage: res.data.data.maxpage,
-    }
+if (userId.value) {
+  userAdminStore.getUser(userId.value).then((res) => {
+    user.value = res as AdminUser
 
-    currentPage.value[key] = 1
+    Object.entries(BuyRecordStatus).forEach(([_key]) => {
+      const key = Number(_key).valueOf() || 0
+      apiAdminGetUserBuyRecordByPage(userId.value, 1, 20, Number(key).valueOf()).then((res) => {
+        dataInfo.value[key] = {
+          data: res.data.data.list,
+          pagesizze: 20,
+          total: res.data.data.total,
+          maxpage: res.data.data.maxpage,
+        }
 
-    if ((Number(route.query?.status).valueOf() || -1) === key) {
-      if (route.query?.page) {
-        currentPage.value[key] = Number(route.query?.page).valueOf() || 1
+        currentPage.value[key] = 1
+
+        if ((Number(route.query?.status).valueOf() || -1) === key) {
+          if (route.query?.page) {
+            currentPage.value[key] = Number(route.query?.page).valueOf() || 1
+          }
+        }
+      })
+      // 不处理catch
+    })
+
+  }, () => {
+    router.push({
+      path: "/error",
+      query: {
+        msg: "页面错误"
       }
-    }
+    })
   })
-  // 不处理catch
-})
-
-if (dataInfo.value[2] && dataInfo.value[2].data && dataInfo.value[2].data.length > 0) {
-  ElNotification({
-    title: '支付提示',
-    message: '有订单支付失败哦，请尝试重新支付！',
-    type: 'warning',
-    duration: 0,
-    position: 'top-left',
+} else {
+  router.push({
+    path: "/error",
+    query: {
+      msg: "页面错误"
+    }
   })
 }
 
 const changePage = (status: number) => {
+  if (!user.value) {
+    router.push({
+      path: "/error",
+      query: {
+        msg: "页面错误"
+      }
+    })
+    return
+  }
+
   const page = currentPage.value[status]
-  apiGetUserBuyRecordByPage(page, 20, Number(status).valueOf()).then((res) => {
+  apiAdminGetUserBuyRecordByPage(userId.value, page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,
       pagesizze:20,
@@ -59,16 +99,14 @@ const changePage = (status: number) => {
 }
 
 const toHome = () => {
-  router.push({
-    path: "/home",
-  })
+  pushTo(router, route, "/admin/user/list/info")
 }
 </script>
 
 <template>
-  <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <el-card style="display: flex; min-width: 50%; justify-content: center; margin-top: 10px">
-      <el-tabs v-model="activeModel">
+  <div v-if="isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+    <el-card style="display: flex; min-height: 70vh; width: 80vw; justify-content: center; margin-top: 10px">
+      <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true">
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
          <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
            <div style="display: flex; justify-content: center">
@@ -77,7 +115,7 @@ const toHome = () => {
            <div style="width: 100%; display: flex; justify-content: center">
              <div style="width: 100%;">
                <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx" style="margin-top: 10px; width: 100%;">
-                 <BuyRecord :record="record" :safe="false" :xiangqing="true"> </BuyRecord>
+                 <AdminBuyRecord :record="record" :safe="false" :xiangqing="true"> </AdminBuyRecord>
                </div>
              </div>
            </div>
@@ -100,6 +138,7 @@ const toHome = () => {
       </el-tabs>
     </el-card>
   </div>
+  <div v-else></div>
 </template>
 
 <style scoped lang="scss">

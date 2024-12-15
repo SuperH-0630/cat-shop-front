@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {apiPostAddToShoppingBag, ShopRecord} from "@/api/shoppingbag"
-import router from "@/router"
 import {formatDate} from "@/utils/time"
 import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
 import {ElNotification} from "element-plus";
@@ -11,6 +10,8 @@ const props = defineProps({
     required: true,
   }
 })
+
+const router = useRouter()
 
 const emits = defineEmits(["reload"])
 

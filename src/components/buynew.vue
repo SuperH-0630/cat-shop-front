@@ -3,7 +3,7 @@
 import {apiPostAliNewPay, apiPostAliNewPayWithShop, LocationForUser, apiPostWechatNewPay, apiPostWechatNewPayWithShop} from "@/api/pay";
 import {Wupin} from "@/store/hotwupin";
 import useUserStore from "@/store/user";
-import {isMobile} from "@/utils/str";
+import {isEmail, isMobile} from "@/utils/str";
 import {getFacePrice, getTotalPrice} from "@/utils/price";
 import {ShopRecord} from "@/api/shoppingbag";
 
@@ -41,13 +41,21 @@ const form = ref({
   name: userStore.user.name,
   phone: userStore.user.phone,
   location: userStore.user.location,
+  wechat: userStore.user?.wechat,
+  email: userStore.user?.email,
 })
 
 const checkLocation = computed(() => form.value.location && form.value.location.length > 0)
 const checkName = computed(() => form.value.name && form.value.name.length > 0 && form.value.name.length <= 10)
 const passwordCheck = computed(() => form.value.password && form.value.password.length > 0)// 登录阶段不检查密码
 const phoneCheck = computed(() => isMobile(form.value.phone))
-const allCheck = computed(() => codeCheck.value && passwordCheck.value && checkName.value && checkLocation.value && phoneCheck)
+const emailCheck = computed(() => {
+  if (!form.value.email) {
+    return true
+  }
+  return isEmail(form.value.email)
+})
+const allCheck = computed(() => codeCheck.value && passwordCheck.value && checkName.value && checkLocation.value && phoneCheck.value && emailCheck.value)
 
 const doAliPay = () => {
   const location = {
@@ -233,6 +241,24 @@ defineExpose({
             </el-form-item>
             <el-form-item>
               <template #label>
+                <el-text>微信号</el-text>
+              </template>
+              <el-input v-model="form.wechat" minlength="0" maxlength="30" show-word-limit/>
+            </el-form-item>
+            <el-form-item>
+              <template #label>
+                <el-text>邮箱</el-text>
+              </template>
+              <el-input v-model="form.email" minlength="0" maxlength="30" show-word-limit/>
+            </el-form-item>
+            <el-form-item>
+              <template #label>
+                <el-text>备注</el-text>
+              </template>
+              <el-input v-model="form.remark"  minlength="0" maxlength="150" show-word-limit type="textarea" :rows="3"/>
+            </el-form-item>
+            <el-form-item>
+              <template #label>
                 <el-text>账号密码</el-text>
               </template>
               <el-input v-model="form.password" type="password" show-password clearable />
@@ -277,6 +303,10 @@ defineExpose({
           </div>
           <div v-if="!phoneCheck" class="tip_box" style="display: flex; justify-content: center">
             <el-alert title="请输入正确到手机号！" :closable="false" type="warning" center show-icon>
+            </el-alert>
+          </div>
+          <div v-if="!emailCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="请输入正确到邮箱！" :closable="false" type="warning" center show-icon>
             </el-alert>
           </div>
           <div v-if="!checkLocation" class="tip_box" style="display: flex; justify-content: center">

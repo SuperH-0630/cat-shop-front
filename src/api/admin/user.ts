@@ -7,6 +7,8 @@ export function apiAdminGetUserInfo(id: number): Result<AdminUserWithoutPre> {
             code: 0,
             data: {
                 id: id,
+                wechat: "xxx",
+                email: "hhh",
                 status: 1,
                 name: "",
                 type: 3,
@@ -62,6 +64,8 @@ export function apiAdminGetUserLst(page: number, pagesize: number, phone?: strin
 
         userLst.value.push({
             id: page * pagesize + i + 1,
+            wechat: "xxx",
+            email: "hhh",
             status: 1,
             name: "",
             type: 3,
@@ -74,7 +78,7 @@ export function apiAdminGetUserLst(page: number, pagesize: number, phone?: strin
             totalGood: 20,
             totalJian: 45,
             totalShouHuo: 25,
-        })
+        } as AdminUserWithoutPre)
     }
 
     return Promise.resolve({

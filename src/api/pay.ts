@@ -37,6 +37,9 @@ export interface LocationForUser {
     name: string
     phone: string
     location: string
+    wechat?: string
+    email?: string
+    remark?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

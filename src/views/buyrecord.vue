@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import {apiGetBuyRecordInfo, BuyRecord} from "@/api/buyrecord"
+import {apiGetBuyRecordInfo, BuyRecord as BuyRecordData} from "@/api/buyrecord"
+import BuyRecord from "@/components/buyrecord.vue"
 
 const route = useRoute()
 const router = useRouter()
 const recordId = ref(Number(route.query?.id).valueOf() || 0)
 
-const record = ref(null as BuyRecord | null)
+const record = ref(null as BuyRecordData | null)
 
 const reload = () => {
   apiGetBuyRecordInfo(recordId.value as number).then((res) => {
-    record.value = res.data.data as BuyRecord
+    record.value = res.data.data as BuyRecordData
   }).catch(() => {
     router.push({
       path: "/error",
@@ -26,7 +27,7 @@ reload()
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <div style="width: 50%;">
-      <Defaultbuyrecord :record="record" :safe="true" :xiangqing="false" @reload="reload"></Defaultbuyrecord>
+      <BuyRecord :zhifutishi="true" :record="record" :safe="true" :xiangqing="false" @reload="reload"></BuyRecord>
     </div>
   </div>
 </template>

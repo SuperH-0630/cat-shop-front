@@ -1,9 +1,9 @@
-import {Wupin} from "@/store/hotwupin"
-import {Result} from "@/utils/request"
-import wupinPic from "@/assets/images/logo.jpg"
+import {Result} from "@/utils/request";
+import wupinPic from "@/assets/images/logo.jpg";
+import {Wupin} from "@/store/hotwupin";
 import {LocationForUser} from "@/api/pay";
 
-export const BuyRecordStatus = {
+export const AdminBuyRecordStatus = {
     1: "已下单，支付代确认",
     2: "已下单，支付失败",
     3: "待发货",
@@ -19,7 +19,7 @@ export const BuyRecordStatus = {
     13: "已取消订单",
 } as Object
 
-export interface BuyRecord {
+export interface AdminBuyRecord {
     id: number
     userid: number
     wupinid: number
@@ -47,190 +47,13 @@ export interface BuyRecord {
     wupin: Wupin
 }
 
-type BuyRecordLst = {
-    total: number
-    list: BuyRecord[]
-}
-
-export function apiGetUserBuyRecordLst(offset: number, limit: number): Result<BuyRecordLst> {
-    if (limit > 100) {
-        limit = 100
-    }
-    // return request({
-    //     url: '/user/buy/record',
-    //     method: 'get',
-    // })
-
-    if (offset > 10000) {
-        return Promise.resolve({
-            data: {
-                code: 0,
-                data: {
-                    total: 0,
-                    list: [],
-                },
-            },
-            status: 200,
-        })
-    }
-
-    const buyRecordLst = [] as BuyRecord[]
-    for (let i = 0; i < limit; i++) {
-        buyRecordLst.push({
-            id: offset + i + 1,
-            userid: 1,
-            wupinid: 1,
-            classid: 1,
-            num: 2,
-            price: 5000,
-            totalPrice: 9999,
-            time: 1734024269,
-            fukuantime: 1734024269,
-            fahuotime: 1734024269,
-            shouhuotime: 1734024269,
-            pingjiatime: 1734024269,
-            dengjituihuotime: 1734024269,
-            querentuihuotime: 1734024269,
-            tuohuotime: 1734024269,
-            quxiaotime: 1734024269,
-            status: 6,
-            kuaidi: "顺丰",
-            kuaidinum: "SF1234",
-            backkuaidi: "中通",
-            backkuaidinum: "ZT1234",
-            isgood: true,
-            wupin: {
-                id: 1,
-                name: "物品",
-                pic: wupinPic,
-                classid: 1,
-                classOf: {
-                    id: 1,
-                    name: "分类1",
-                },
-                tag: "火爆",
-                hotPrice: 9999,
-                realPrice: 19999,
-                info: "hhhhhh",
-                ren: "小超市",
-                phone: "17322061610",
-                email: "songzihuan@song-zh.com",
-                location: "广东广州",
-                buytotal: 100,
-                buygood: 90,
-            },
-            user: {
-                name: "用户",
-                phone: "17322061610",
-                location: "广东广州",
-                wechat: "1234",
-                email: "1234",
-                remark: "1234,"
-            },
-            shop: {
-                name: "用户",
-                phone: "17322061610",
-                location: "广东广州",
-                wechat: "1234",
-                email: "1234",
-                remark: "1234,"
-            },
-        })
-    }
-
-    return Promise.resolve({
-        data: {
-            code: 0,
-            data: {
-                total: buyRecordLst.length,
-                list: buyRecordLst,
-            },
-        },
-        status: 200,
-    })
-}
-
-export function apiGetBuyRecordInfo(id: number): Result<BuyRecord> {
-    if (id <= 0) {
-        return Promise.reject()
-    }
-
-    return Promise.resolve({
-        data: {
-            code: 0,
-            data: {
-                id: id,
-                userid: 1,
-                wupinid: 1,
-                classid: 1,
-                num: 2,
-                price: 500,
-                totalPrice: 9999,
-                time: 1734024269,
-                fukuantime: 1734024269,
-                fahuotime: 1734024269,
-                shouhuotime: 1734024269,
-                pingjiatime: 1734024269,
-                dengjituihuotime: 1734024269,
-                querentuihuotime: 1734024269,
-                tuohuotime: 1734024269,
-                quxiaotime: 1734024269,
-                status: 6,
-                kuaidi: "顺丰",
-                kuaidinum: "SF1234",
-                backkuaidi: "中通",
-                backkuaidinum: "ZT1234",
-                isgood: true,
-                wupin: {
-                    id: 1,
-                    name: "物品",
-                    pic: wupinPic,
-                    classid: 1,
-                    classOf: {
-                        id: 1,
-                        name: "分类1",
-                    },
-                    tag: "火爆",
-                    hotPrice: 9999,
-                    realPrice: 19999,
-                    info: "hhhhhh",
-                    ren: "宋子桓",
-                    phone: "17322061610",
-                    wechat: "abcd",
-                    email: "songzihuan@song-zh.com",
-                    location: "广东广州",
-                    buytotal: 100,
-                    buygood: 90,
-                } as Wupin,
-                user: {
-                    name: "用户",
-                    phone: "17322061610",
-                    location: "广东广州",
-                    wechat: "1234",
-                    email: "1234",
-                    remark: "1234,"
-                } as LocationForUser,
-                shop: {
-                    name: "用户",
-                    phone: "17322061610",
-                    location: "广东广州",
-                    wechat: "1234",
-                    email: "1234",
-                    remark: "1234,"
-                } as LocationForUser,
-            } as BuyRecord,
-        },
-        status: 200,
-    })
-}
-
-type BuyRecordLstByPage = {
+type AdminBuyRecordLstByPage = {
     maxpage: number
     total: number
-    list: BuyRecord[]
+    list: AdminBuyRecord[]
 }
 
-export function apiGetUserBuyRecordByPage(page: number, pagesize: number, status: number): Result<BuyRecordLstByPage> {
+export function apiAdminGetUserBuyRecordByPage(userId: number, page: number, pagesize: number, status: number): Result<AdminBuyRecordLstByPage> {
     if (page <= 0) {
         return Promise.reject()
     }
@@ -245,15 +68,15 @@ export function apiGetUserBuyRecordByPage(page: number, pagesize: number, status
     // })
 
     const pagemax = 100
-    const buyRecordLst = ref([] as BuyRecord[])
+    const buyRecordLst = ref([] as AdminBuyRecord[])
     for (let i = (page - 1) * pagesize; i < pagemax; i++) {
         if (buyRecordLst.value.length >= pagesize) {
             break
         }
-        
+
         buyRecordLst.value.push({
             id: page * pagesize + i + 1,
-            userid: 1,
+            userid: userId,
             wupinid: 1,
             classid: 1,
             num: 2,
@@ -321,6 +144,80 @@ export function apiGetUserBuyRecordByPage(page: number, pagesize: number, status
                 total: buyRecordLst.value.length,
                 list: buyRecordLst.value,
             },
+        },
+        status: 200,
+    })
+}
+
+export function apiAdminGetBuyRecordInfo(id: number, userId: number): Result<AdminBuyRecord> {
+    if (id <= 0 || userId <= 0) {
+        return Promise.reject()
+    }
+
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                id: id,
+                userid: userId,
+                wupinid: 1,
+                classid: 1,
+                num: 2,
+                price: 500,
+                totalPrice: 9999,
+                time: 1734024269,
+                fukuantime: 1734024269,
+                fahuotime: 1734024269,
+                shouhuotime: 1734024269,
+                pingjiatime: 1734024269,
+                dengjituihuotime: 1734024269,
+                querentuihuotime: 1734024269,
+                tuohuotime: 1734024269,
+                quxiaotime: 1734024269,
+                status: 6,
+                kuaidi: "顺丰",
+                kuaidinum: "SF1234",
+                backkuaidi: "中通",
+                backkuaidinum: "ZT1234",
+                isgood: true,
+                wupin: {
+                    id: 1,
+                    name: "物品",
+                    pic: wupinPic,
+                    classid: 1,
+                    classOf: {
+                        id: 1,
+                        name: "分类1",
+                    },
+                    tag: "火爆",
+                    hotPrice: 9999,
+                    realPrice: 19999,
+                    info: "hhhhhh",
+                    ren: "宋子桓",
+                    phone: "17322061610",
+                    wechat: "abcd",
+                    email: "songzihuan@song-zh.com",
+                    location: "广东广州",
+                    buytotal: 100,
+                    buygood: 90,
+                } as Wupin,
+                user: {
+                    name: "用户",
+                    phone: "17322061610",
+                    location: "广东广州",
+                    wechat: "1234",
+                    email: "1234",
+                    remark: "1234,"
+                } as LocationForUser,
+                shop: {
+                    name: "用户",
+                    phone: "17322061610",
+                    location: "广东广州",
+                    wechat: "1234",
+                    email: "1234",
+                    remark: "1234,"
+                } as LocationForUser,
+            } as AdminBuyRecord,
         },
         status: 200,
     })

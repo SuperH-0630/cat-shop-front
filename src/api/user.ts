@@ -54,6 +54,8 @@ export function apiGetSelfInfo(): Result<UserWithoutPre> {
             code: 0,
             data: {
                 name: "",
+                wechat: "xxx",
+                email: "hhh",
                 type: 3,
                 avatar: "",
                 phone: "17322061610",

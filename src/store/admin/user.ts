@@ -39,6 +39,8 @@ export interface AdminUserId {
 
 export interface AdminUserBase {
     name: string
+    wechat: string,
+    email: string,
     location: string
     status: number
 }
@@ -50,7 +52,6 @@ export interface AdminUserAvatar {
 export interface AdminUserWithoutPre extends AdminUserId, AdminUserBase, AdminUserAvatar{
     type: number
     phone: string
-    xtoken: string
     totalPrice: number
     totalBuy: number
     totalGood: number

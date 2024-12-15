@@ -18,6 +18,8 @@ export const UserType = {
 
 export interface UserBase {
     name: string
+    wechat: string,
+    email: string,
     location: string
 }
 
@@ -28,7 +30,6 @@ export interface UserAvatar {
 export interface UserWithoutPre extends UserBase, UserAvatar{
     type: number
     phone: string
-    xtoken: string
     totalPrice: number
     totalBuy: number
     totalGood: number

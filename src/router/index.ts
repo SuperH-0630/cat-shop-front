@@ -187,10 +187,19 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'user/list/buyrecordlst',
-        component: () => import('@/views/admin/home.vue'),
+        component: () => import('@/views/admin/buyrecordlst.vue'),
         meta: {
           title: '用户订单列表',
           admin: true,
+        },
+      },
+      {
+        path: 'user/list/buyrecord',
+        component: () => import('@/views/admin/buyrecord.vue'),
+        meta: {
+          title: '用户订单列表',
+          admin: true,
+          vpath: "/admin/user/list/buyrecordlst"
         },
       },
       {
