@@ -36,55 +36,11 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/center',
-    redirect: '/center/user',
-  },
-  {
-    path: '/center/user',
-    component: () => import('@/views/mine.vue'),
-    meta: {
-      title: '个人中心',
-      xauth: true,
-      wechat: true,
-    }
-  },
-  {
-    path: '/center/buyrecord',
-    component: () => import('@/views/buyrecord.vue'),
-    meta: {
-      title: '消费详情',
-      xauth: true,
-      wechat: true,
-    }
-  },
-  {
-    path: '/center/orderrecordlst',
-    component: () => import('@/views/buyrecordlst.vue'),
-    meta: {
-      title: '订单列表',
-      xauth: true,
-      wechat: true,
-    }
-  },
-  {
-    path: '/center/shoppingbag',
-    component: () => import('@/views/shoppingbag.vue'),
-    meta: {
-      title: '购物车',
-      xauth: true,
-      wechat: true,
-    }
-  },
-  {
     path: '/kefu',
     component: () => import('@/views/kefu.vue'),
     meta: {
       title: '我的客服',
     }
-  },
-  {
-    path: '/center/kefu',
-    redirect: "/kefu",
   },
   {
     path: '/aboutus',
@@ -117,6 +73,54 @@ const routes: RouteRecordRaw[] = [
       title: '错误',
       wechat: true,
     }
+  },
+  {
+    path: '/center',
+    redirect: '/center/user',
+  },
+  {
+    path: '/center/user',
+    component: () => import('@/views/mine.vue'),
+    meta: {
+      title: '个人中心',
+      xauth: true,
+      wechat: true,
+    }
+  },
+  {
+    path: '/center/buyrecordlist',
+    component: () => import('@/views/buyrecordlst.vue'),
+    meta: {
+      title: '消费列表',
+      xauth: true,
+      wechat: true,
+    }
+  },
+  {
+    path: '/center/buyrecordlist/detial',
+    component: () => import('@/views/buyrecord.vue'),
+    meta: {
+      title: '消费详情',
+      xauth: true,
+      wechat: true,
+    }
+  },
+  {
+    path: '/center/shoppingbag',
+    component: () => import('@/views/shoppingbag.vue'),
+    meta: {
+      title: '购物车',
+      xauth: true,
+      wechat: true,
+    }
+  },
+  {
+    path: '/center/kefu',
+    redirect: "/kefu",
+  },
+  {
+    path: '/center/aboutus',
+    redirect: "/aboutus",
   },
   {
     path: '/center/user/edit',
@@ -158,7 +162,24 @@ const routes: RouteRecordRaw[] = [
         },
       }
     ]
-  }
+  },
+  {
+    path: '/error',
+    component: () => import('@/views/error.vue'),
+    meta: {
+      title: '错误',
+      wechat: true,
+    }
+  },
+  {
+    path: '/:catchAll(.*)',
+    component: () => import('@/views/notfound.vue'),
+    meta: {
+      title: '404-页面不存在',
+      wechat: true,
+      notfound: true,
+    }
+  },
 ]
 
 const router = createRouter({

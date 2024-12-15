@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-const route = useRoute()
 const router = useRouter()
 const goHome = () => {
   router.push({
@@ -8,10 +7,7 @@ const goHome = () => {
   })
 }
 
-const msg = ref(route.query?.msg || "")
-if (!msg.value || msg.value.length > 20) {
-  msg.value = "遇到系统未能捕获的错误，请稍后臭重试。"
-}
+const url = ref(window.location.href)
 
 const backSec = ref(6)
 const backTimer = () => {
@@ -33,9 +29,20 @@ backTimer()
       <el-result
           style="min-width: 10vw; min-height: 40vh"
           icon="error"
-          title="错误发生"
-          :sub-title="msg"
+          title="页面不存在"
       >
+        <template #sub-title>
+          <div>
+            <el-text>
+              您访问的页面不存在。
+            </el-text>
+          </div>
+          <div>
+            <el-text>
+              {{ url }}
+            </el-text>
+          </div>
+        </template>
         <template #extra>
           <el-button  type="primary" @click="goHome">回到主页（{{ backSec > 5 ? 5 : backSec }}s）</el-button>
         </template>

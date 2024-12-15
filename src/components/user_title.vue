@@ -32,7 +32,7 @@ const toAdmin = () => {
 
 const toOrderLst = () => {
   router.push({
-    "path": "/center/orderrecordlst",
+    "path": "/center/buyrecordlist",
   })
 }
 

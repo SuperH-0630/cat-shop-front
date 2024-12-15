@@ -70,7 +70,7 @@ const onGoWupin = () => {
 
 const onXiangQing = () => {
   record.value && router.push({
-    path: "/center/buyrecord",
+    path: "/center/buyrecordlist/detial",
     query: {
       "id": record.value.id,
     }
