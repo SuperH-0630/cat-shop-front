@@ -117,6 +117,7 @@ export function apiGetUserBuyRecordLst(offset: number, limit: number): Result<Bu
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
                 buytotal: 100,
+                buydaohuo: 95,
                 buygood: 90,
             },
             user: {
@@ -200,6 +201,7 @@ export function apiGetBuyRecordInfo(id: number): Result<BuyRecord> {
                     email: "songzihuan@song-zh.com",
                     location: "广东广州",
                     buytotal: 100,
+                    buydaohuo: 95,
                     buygood: 90,
                 } as Wupin,
                 user: {
@@ -292,6 +294,7 @@ export function apiGetUserBuyRecordByPage(page: number, pagesize: number, status
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
                 buytotal: 100,
+                buydaohuo: 95,
                 buygood: 90,
             },
             user: {

@@ -33,6 +33,7 @@ export interface AdminWupinBaseWithClass extends AdminWupinBase {
 
 export interface AdminWupinWithInfo extends AdminWupinBaseWithClass {
     buytotal: number
+    buydaohuo: number
     buygood: number
 }
 
@@ -86,6 +87,7 @@ export const apiAdminGetWupin = (id: number): Result<AdminWupin> => {
         location: "广东广州",
         wechat: "12345",
         buytotal: 100,
+        buydaohuo: 95,
         buygood: 90,
         isHot: true,
     } as AdminWupin
@@ -173,6 +175,7 @@ export function apiAdminGetWupinLst(page: number, pagesize: number): Result<Admi
             location: "广东广州",
             wechat: "12345",
             buytotal: 100,
+            buydaohuo: 95,
             buygood: 90,
             isHot: i % 2 == 0,
         } as AdminWupin)

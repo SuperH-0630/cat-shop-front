@@ -54,26 +54,27 @@
     return getTotalPrice(wupin.value?.hotPrice, wupin.value?.realPrice, num.value)
   })
 
-  const totalBuy = computed(() => (wupin.value && wupin.value.buytotal >= 0) ? wupin.value.buytotal : 0)
+  const totalDaoHuo = computed(() => (wupin.value && wupin.value.buydaohuo >= 0) ? wupin.value.buydaohuo : 0)
   const totalBuyGood = computed(() => {
     const g = (wupin.value && wupin.value.buygood >= 0) ? wupin.value.buygood : 0
-    if (g > totalBuy.value) {
-      return totalBuy.value
+    if (g > totalDaoHuo.value) {
+      return totalDaoHuo.value
     }
     return g
   })
 
-  const goodBuyPre = computed(() => (totalBuyGood.value / totalBuy.value) * 100)
-  const goodBuyMsg = ref("好评如潮")
-  if (goodBuyPre.value >= 85) {
-    goodBuyMsg.value = "好评如潮"
-  } else if (goodBuyPre.value >= 50) {
-    goodBuyMsg.value = "部分好评"
-  } else if (goodBuyPre.value >= 30) {
-    goodBuyMsg.value = "好评甚少"
-  } else {
-    goodBuyMsg.value = "谨慎购买"
-  }
+  const goodBuyPre = computed(() => (totalBuyGood.value / totalDaoHuo.value) * 100)
+  const goodBuyMsg = computed(() => {
+    if (goodBuyPre.value >= 85) {
+      return "好评如潮"
+    } else if (goodBuyPre.value >= 50) {
+      return "部分好评"
+    } else if (goodBuyPre.value >= 30) {
+      return "好评甚少"
+    } else {
+      return "谨慎购买"
+    }
+  })
 
   const onClickBag = () => {
     wupin.value && apiPostAddToShoppingBag(wupin.value.id, num.value).then((res) => {

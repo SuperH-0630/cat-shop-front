@@ -55,6 +55,7 @@ export const apiGetHotWupinLst = (): Result<HotWupinLst> => {
             location: "广东广州",
             wechat: "12345",
             buytotal: 100,
+            buydaohuo: 95,
             buygood: 90,
         } as Wupin)
     }

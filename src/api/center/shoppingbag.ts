@@ -68,6 +68,7 @@ export function apiGetUserShoppingRecord(offset: number, limit: number): Result<
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
                 buytotal: 100,
+                buydaohuo: 95,
                 buygood: 90,
             },
         })

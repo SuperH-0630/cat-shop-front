@@ -17,6 +17,7 @@ export interface Wupin {
     wechat?: string
     location: string
     buytotal: number
+    buydaohuo: number
     buygood: number
 }
 

@@ -70,6 +70,7 @@ export const apiGetSearchWupin = (search: string, select: Array<number>, page: n
             location: "广东广州",
             wechat: "12345",
             buytotal: 100,
+            buydaohuo: 95,
             buygood: 90,
         } as Wupin)
     }

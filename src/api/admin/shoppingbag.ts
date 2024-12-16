@@ -65,6 +65,7 @@ export function apiAdminGetUserShoppingRecord(userId: number, page: number, page
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
                 buytotal: 100,
+                buydaohuo: 95,
                 buygood: 90,
             },
         })

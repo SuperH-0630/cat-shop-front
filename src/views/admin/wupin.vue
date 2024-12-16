@@ -31,16 +31,16 @@
     return getFacePrice(wupin.value?.hotPrice, wupin.value?.realPrice)
   })
 
-  const totalBuy = computed(() => (wupin.value && wupin.value.buytotal >= 0) ? wupin.value.buytotal : 0)
+  const totalDaoHuo = computed(() => (wupin.value && wupin.value.buydaohuo >= 0) ? wupin.value.buydaohuo : 0)
   const totalBuyGood = computed(() => {
     const g = (wupin.value && wupin.value.buygood >= 0) ? wupin.value.buygood : 0
-    if (g > totalBuy.value) {
-      return totalBuy.value
+    if (g > totalDaoHuo.value) {
+      return totalDaoHuo.value
     }
     return g
   })
 
-  const goodBuyPre = computed(() => (totalBuyGood.value / totalBuy.value) * 100)
+  const goodBuyPre = computed(() => (totalBuyGood.value / totalDaoHuo.value) * 100)
   const goodBuyMsg = computed(() => {
     if (goodBuyPre.value >= 85) {
       return "好评如潮"

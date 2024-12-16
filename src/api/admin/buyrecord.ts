@@ -115,6 +115,7 @@ export function apiAdminGetBuyRecordByPage(page: number, pagesize: number, statu
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
                 buytotal: 100,
+                buydaohuo: 95,
                 buygood: 90,
             },
             user: {
@@ -211,6 +212,7 @@ export function apiAdminGetUserBuyRecordByPage(userId: number, page: number, pag
                 email: "songzihuan@song-zh.com",
                 location: "广东广州",
                 buytotal: 100,
+                buydaohuo: 95,
                 buygood: 90,
             },
             user: {
@@ -295,6 +297,7 @@ export function apiAdminGetBuyRecordInfo(id: number, userId: number = 0): Result
                     email: "songzihuan@song-zh.com",
                     location: "广东广州",
                     buytotal: 100,
+                    buydaohuo: 95,
                     buygood: 90,
                 } as Wupin,
                 user: {
