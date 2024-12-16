@@ -123,7 +123,7 @@ const logout = () => {
   <div v-else-if="isLogin() && hasLoad() ">
     <div class="user_name">
       <el-dropdown size="large" class="dropdown">
-        <el-text class="user_name_text">
+        <el-text class="user_name_text custom-dropdown">
           <el-icon v-if="userStore.user.type === 1"><User /></el-icon>
           <el-icon v-else><HomeFilled /></el-icon>
           {{ userStore.user?.name }} - {{ maskPhoneNumber(userStore.user?.phone) }}
@@ -183,5 +183,8 @@ const logout = () => {
 }
 .drop_item{
   font-size: 0.6vw;
+}
+.custom-dropdown:focus-visible {
+  outline: unset;
 }
 </style>

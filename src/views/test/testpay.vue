@@ -1,5 +1,16 @@
 <script setup lang="ts">
-  import {redirect, type, alipay, wechat, paytype, repay, shoppingbagpay, newpay} from "@/api/center/pay"
+import {
+  redirect,
+  type,
+  alipay,
+  wechat,
+  paytype,
+  repay,
+  shoppingbagpay,
+  newpay,
+  buyRecordId,
+  apiPostTestPay
+} from "@/api/center/pay"
 
   const route = useRoute()
   const router = useRouter()
@@ -38,6 +49,26 @@
     }
   }
 
+  const status = ref(1)
+  const paynow = () => {
+    const bid = ref(route.query?.[buyRecordId] || 0)
+    if (!bid.value) {
+      status.value = 2
+      return
+    }
+
+    apiPostTestPay(bid.value as number).then((res) => {
+      if (res.data.data.success) {
+        status.value = 3
+      } else {
+        status.value = 2
+      }
+    }, () => {
+      status.value = 2
+    })
+  }
+  setTimeout(() => paynow(), 3000)
+
   const backSec = ref(6)
   const backTimer = () => {
     if (backSec.value == 0) {
@@ -48,24 +79,67 @@
     backSec.value = backSec.value - 1
     setTimeout(backTimer, 1000)
   }
-  backTimer()
+
+  watch(() => status.value, () => {
+    if (status.value !== 1) {
+      backTimer()
+    }
+  })
+
 </script>
 
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-result
-        icon="success"
-        sub-title="Please follow the instructions"
+        v-if="status === 1"
+        icon="info"
     >
       <template #title>
         <el-text style="font-size: 1.2vw">
-          您已经使用{{payname}}提交支付请求。
+          您正在使用{{payname}}提交支付请求。
         </el-text>
       </template>
       <template #sub-title>
         <el-text style="font-size: 0.8vw">
           接下来请耐心等待支付的处理情况，一旦处理被支付成功，将会为您的商品尽快发货。<br>
-          若您的支付被处理失败，您的自己将由{{payname}}退回到你的账号中，并且你的商品需要重新下单发货。<br>
+          若您的支付被处理失败，您的资金将由{{payname}}退回到你的账号中，并且你的商品需要重新下单发货。<br>
+          你的资金被用于：{{ paytypename }}。
+        </el-text>
+      </template>
+    </el-result>
+    <el-result
+        v-else-if="status === 2"
+        icon="error"
+    >
+      <template #title>
+        <el-text style="font-size: 1.2vw">
+          您使用{{payname}}提交支付请求失败了。
+        </el-text>
+      </template>
+      <template #sub-title>
+        <el-text style="font-size: 0.8vw">
+          您的资金将由{{payname}}退回到你的账号中，并且你的商品需要重新下单发货。<br>
+        </el-text>
+      </template>
+      <template #extra>
+        <el-button type="danger" size="large" @click="goRedirect">
+          返回
+          （{{ backSec > 5 ? 5 : backSec }}s）
+        </el-button>
+      </template>
+    </el-result>
+    <el-result
+        v-else-if="status === 3"
+        icon="success"
+    >
+      <template #title>
+        <el-text style="font-size: 1.2vw">
+          您使用{{payname}}提交支付请求成功。
+        </el-text>
+      </template>
+      <template #sub-title>
+        <el-text style="font-size: 0.8vw">
+          接下来请耐心等待支付的处理情况，一旦处理被支付成功，将会为您的商品尽快发货。<br>
           你的资金被用于：{{ paytypename }}。
         </el-text>
       </template>

@@ -1,4 +1,4 @@
-import {Result} from "@/utils/request"
+import {Result, Success} from "@/utils/request"
 import {Wupin} from "@/store/hotwupin";
 import {ShopRecord} from "@/api/center/shoppingbag";
 
@@ -12,8 +12,8 @@ export const shoppingbagpay = "shoppingbagpay"
 
 export const type = "type"
 export const buyRecordId = "buyRecordId"
-export const wupinId = "wupinId"
-export const shoprecordId = "shoprecordId"
+export const wupinId = buyRecordId
+export const shoprecordId = buyRecordId
 export const redirect = "redirect"
 export const paytype = "paytype"
 
@@ -112,6 +112,19 @@ export const apiPostWechatRepay = (id: number, redirectTo: string): Result<Wecha
             code: 0,
             data: {
                 url: window.location.origin + testPayPath + `?${type}=` + encodeURIComponent(wechat) + `&${buyRecordId}=` + encodeURIComponent(id) + `&${redirect}=` + encodeURIComponent(redirectTo) + `&${paytype}=` + encodeURIComponent(repay),
+            }
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const apiPostTestPay = (id: number): Success => {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
             }
         },
         status: 200,
