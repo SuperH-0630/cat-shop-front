@@ -3,12 +3,9 @@ import App from './App.vue'
 import pinia from '@/store'
 import router from '@/router'
 import ElementPlus from 'element-plus'
+import "normalize.css"
 import 'element-plus/dist/index.css'
-
-import '@/assets/styles/reset.scss'
-import '@/assets/styles/scrollbar.scss'
-import '@/assets/styles/common.scss'
-import '@/assets/styles/background.css'
+import "@/assets/styles/background.css"
 
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 

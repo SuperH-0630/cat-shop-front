@@ -38,6 +38,9 @@ dependencies:
   jsencrypt:
     specifier: 3.2.1
     version: 3.2.1
+  normalize.css:
+    specifier: ^8.0.1
+    version: 8.0.1
   path:
     specifier: ^0.12.7
     version: 0.12.7
@@ -3243,6 +3246,10 @@ packages:
 
   /normalize-wheel-es@1.2.0:
     resolution: {integrity: sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw==}
+    dev: false
+
+  /normalize.css@8.0.1:
+    resolution: {integrity: sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==}
     dev: false
 
   /nth-check@2.1.1:

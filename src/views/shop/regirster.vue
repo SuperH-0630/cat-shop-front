@@ -196,7 +196,9 @@ const notAcceptXieyi = () => {
     </template>
 
     <el-scrollbar height="48vh">
-      <div v-html="configStore.xieyi"></div>
+      <div id="info_box" class="info_box">
+        <div v-html="configStore.xieyi"></div>
+      </div>
     </el-scrollbar>
 
     <template #footer>
@@ -230,5 +232,9 @@ const notAcceptXieyi = () => {
 }
 .xieyi_text:active{
   color: #2448aa;
+}
+#info_box * {
+  all: initial;
+  width: 100%;
 }
 </style>

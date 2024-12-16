@@ -226,6 +226,10 @@ const toWupinInfo = () => {
   pushTo(router, route, "/admin/wupin/list/info")
 }
 
+const toWupinEdit = () => {
+  pushTo(router, route, "/admin/wupin/list/edit")
+}
+
 const toAddWupin = () => {
   pushTo(router, route, "/admin/wupin/add")
 }
@@ -242,12 +246,21 @@ const toConfigLst = () => {
   pushTo(router, route, "/admin/config/list")
 }
 
+const toXieYiShow = () => {
+  pushTo(router, route, "/admin/xieyi/show")
+}
+
+const toXieYiEdit = () => {
+  pushTo(router, route, "/admin/xieyi/edit")
+}
+
 const defaultOpeneds = ref([
   "user", "user/list",
   "class", "class/list",
   "wupin", "wupin/list",
   "buyrecord", "buyrecord/list",
-  "config", "config/list"
+  "config", "config/list",
+  "xieyi",
 ])
 
 </script>
@@ -354,6 +367,17 @@ const defaultOpeneds = ref([
               </template>
               <el-menu-item index="config/list" :disabled="!isRootAdmin()" @click="toConfigLst">配置项列表编辑</el-menu-item>
             </el-sub-menu>
+          </el-sub-menu>
+
+          <el-sub-menu
+              index="xieyi"
+              :disabled="!isRootAdmin()"
+          >
+            <template #title>
+              <el-text>用户协议管理</el-text>
+            </template>
+            <el-menu-item index="xieyi/show" @click="toXieYiShow">查看用户协议</el-menu-item>
+            <el-menu-item index="xieyi/edit" @click="toXieYiEdit">编辑用户协议</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-scrollbar>

@@ -15,6 +15,7 @@ declare module '@vue/runtime-core' {
     Buyrecord: typeof import('./src/components/admin/buyrecord.vue')['default']
     Classitem: typeof import('./src/components/shop/classitem.vue')['default']
     Classlist: typeof import('./src/components/shop/classlist.vue')['default']
+    Clear: typeof import('./src/components/system/clear.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -73,6 +74,7 @@ declare module '@vue/runtime-core' {
     Wechat: typeof import('./src/components/system/wechat.vue')['default']
     Wupinitem: typeof import('./src/components/shop/wupinitem.vue')['default']
     Wupinlist: typeof import('./src/components/shop/wupinlist.vue')['default']
+    Xieyieditor: typeof import('@/components/admin/clear.vue')['default']
   }
   export interface ComponentCustomProperties {
     vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']

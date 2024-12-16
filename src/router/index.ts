@@ -334,6 +334,26 @@ const routes: RouteRecordRaw[] = [
           rootAdmin: true,
         },
       },
+      {
+        path: "xieyi",
+        redirect: "/admin/xieyi/show"
+      },
+      {
+        path: 'xieyi/show',
+        component: () => import('@/views/admin/xieyi.vue'),
+        meta: {
+          title: '查看用户协议',
+          rootAdmin: true,
+        },
+      },
+      {
+        path: 'xieyi/edit',
+        component: () => import('@/views/admin/editxieyi.vue'),
+        meta: {
+          title: '编辑用户协议',
+          rootAdmin: true,
+        },
+      },
     ]
   },
   {

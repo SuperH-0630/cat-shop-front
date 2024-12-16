@@ -17,13 +17,16 @@
   onMounted(() => {
     setTimeout(() => {
       delayShow.value = true
-    }, 1500)
+
+      setTimeout(() => {
+        wechatStore.close()
+      }, 10000)
+    }, 1000)
   })
 
   const onShow = () => {
     show.value = true
   }
-
 </script>
 
 <template>

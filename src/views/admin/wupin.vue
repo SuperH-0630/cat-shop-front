@@ -76,6 +76,10 @@
       classId: wupin.value?.classOf.id
     })
   }
+
+  const toEdit = () => {
+    wupin.value && pushTo(router, route, "/admin/wupin/list/edit")
+  }
 </script>
 
 <template>
@@ -222,7 +226,12 @@
                 </el-text>
               </div>
             </div>
-            <div class="info_box">
+            <div>
+              <el-button type="primary" size="large" plain @click="toEdit">
+                编辑商品
+              </el-button>
+            </div>
+            <div id="info_box" class="info_box">
               <div v-html="wupin.info"></div>
             </div>
           </div>
@@ -335,5 +344,10 @@
   .wupin_buy_total_box {
     margin-top: 1px;
     margin-bottom: 1px;
+  }
+
+  #info_box * {
+    all: initial;
+    width: 100%;
   }
 </style>

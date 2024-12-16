@@ -29,6 +29,7 @@ const toBack = () => {
   pushTo(router, route, "/admin/wupin/list")
 }
 
+const editorMode = ref("default")
 const editorRef = shallowRef()
 const toolbarConfig: Partial<IToolbarConfig> = {}
 const editorConfig: Partial<IEditorConfig> = {
@@ -41,6 +42,9 @@ const editorConfig: Partial<IEditorConfig> = {
       headers: {
         "X-Token": getXtoken(),
         "Accept": "application/json",
+      },
+      meta: {
+        type: "admin-wupin",
       }
     },
     uploadVideo: {
@@ -50,6 +54,9 @@ const editorConfig: Partial<IEditorConfig> = {
       headers: {
         "X-Token": getXtoken(),
         "Accept": "application/json",
+      },
+      meta: {
+        type: "admin-wupin",
       }
     }
   }
@@ -578,24 +585,25 @@ const selectMsg = computed(() => {
         </el-text>
       </div>
     </template>
-    <div style="width: 100%; display: flex; justify-content: center;">
-      <div style="border: 1px solid #ccc; height: 95%; width: 95%;">
-        <Toolbar
-            style="border-bottom: 1px solid #ccc"
-            :editor="editorRef"
-            :default-config="toolbarConfig"
-            :mode="mode"
-        />
-        <Editor
-            v-model="form.info"
-            style="height: 500px; overflow-y: hidden;"
-            :default-config="editorConfig"
-            :mode="mode"
-            @onCreated="handleEditCreated"
-        />
+    <Clear>
+      <div id="dialogBox" style="width: 100%; height: 50vh; display: flex; justify-content: center;">
+        <div id="editorBox">
+          <Toolbar
+              style="border-bottom: 1px solid #ccc"
+              :editor="editorRef"
+              :default-config="toolbarConfig"
+              :mode="editorMode"
+          />
+          <Editor
+              v-model="form.info"
+              style="height: 80%; overflow-y: hidden;"
+              :default-config="editorConfig"
+              :mode="editorMode"
+              @onCreated="handleEditCreated"
+          />
+        </div>
       </div>
-    </div>
-
+    </Clear>
     <template #footer>
       <div class="dialog-footer">
         <el-button type="success" @click="showEdit = false">
@@ -610,4 +618,13 @@ const selectMsg = computed(() => {
 .tip_box {
   margin-top: 5px;
 }
+
+#editorBox {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  height: 95%;
+  width: 95%;
+}
+
 </style>

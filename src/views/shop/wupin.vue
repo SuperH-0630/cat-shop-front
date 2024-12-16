@@ -270,7 +270,7 @@
                 <el-icon style="margin-right: 3px"><Money /></el-icon> 立即购买 <span v-if="num >= 1"> （实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }}） </span>
               </el-button>
             </div>
-            <div class="info_box">
+            <div id="info_box" class="info_box">
               <div v-html="wupin.info"></div>
             </div>
           </div>
@@ -384,5 +384,9 @@
   .wupin_buy_total_box {
     margin-top: 1px;
     margin-bottom: 1px;
+  }
+  #info_box * {
+    all: initial;
+    width: 100%;
   }
 </style>
