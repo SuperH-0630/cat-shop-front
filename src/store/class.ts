@@ -1,4 +1,4 @@
-import {apiGetClassLst} from "@/api/class";
+import {apiGetClassLst} from "@/api/center/class";
 
 export interface Class {
     id: number

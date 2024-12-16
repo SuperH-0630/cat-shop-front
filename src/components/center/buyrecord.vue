@@ -1,56 +1,60 @@
 <script setup lang="ts">
-import {AdminBuyRecordStatus, AdminBuyRecord} from "@/api/admin/buyrecord"
+import {BuyRecordStatus, BuyRecord} from "@/api/center/center/buyrecord"
 import {formatDate} from "@/utils/time"
+import {ElNotification} from "element-plus"
+import {apiPostAliRepay, apiPostWechatRepay, LocationForUser} from "@/api/center/pay"
 import { ElMessageBox } from 'element-plus'
-import pushTo from "@/views/admin/router_push";
 import {
-  apiAdminPostPeoplePay,
-} from "@/api/admin/pay";
-import {
-  apiAdminPostGouWuDaoHuo,
-  apiAdminPostFaHuoQuXiaoDengJi,
-  apiAdminPostTuiHuoDengJi,
-  apiAdminPostQuXiaoPay,
-  apiAdminPostFaHuoDengJi,
-  apiAdminPostChangeUser,
-  apiAdminPostChangeShop,
-  apiAdminPostTuiHuoAccept,
-  apiAdminPostTuiHuoShenQingAccept,
-  apiAdminPostGouWuTuiHuo,
-  apiAdminPostAcceptFaHuoQuXiaoDengJi
-} from "@/api/admin/huo"
-import {LocationForUser} from "@/api/center/pay";
+  apiPostGouWuPingJia,
+  apiPostGouWuDaoHuo,
+  apiPostFaHuoQuXiaoDengJi,
+  apiPostTuiHuoDengJi,
+  apiPostTuiHuoShenQing,
+  apiPostQuXiaoPay, apiPostChangeUser
+} from "@/api/center/huo"
+import useUserStore from "@/store/user";
 import {isEmail, isMobile} from "@/utils/str";
 import useConfigStore from "@/store/config";
 
 const configStore = useConfigStore()
+const router = useRouter()
 const props = defineProps({
   "record": {
-    type: Object as PropType<AdminBuyRecord>,
+    type: Object as PropType<BuyRecord>,
     required: true
   },
   "safe":  {
     type: Boolean,
     default: false,
   },
-  "xiangqing": {
+  "zhifutishi":  {
     type: Boolean,
     default: false,
   },
-  "adminuser": {
+  "xiangqing": {
     type: Boolean,
-    default: true,
+    default: false,
   }
 })
 
 const emits = defineEmits(["reload"])
-const router = useRouter()
-const route = useRoute()
 
 const record = computed(() => props.record)
 const safe = computed(() => props.safe)
+const zhifutishi = computed(() => props.zhifutishi)
 const xiangqing = computed(() => props.xiangqing)
-const adminuser = computed(() => props.adminuser)
+
+onMounted(() => {
+  if (zhifutishi.value && record.value && record.value.status === 2) {
+    ElNotification({
+      title: '支付提示',
+      message: '支付失败，请尝试重新支付',
+      type: 'warning',
+      duration: 0,
+      position: 'top-left',
+    })
+  }
+})
 
 const onClassClick = () => {
   record.value && router.push({
@@ -74,47 +78,50 @@ const onGoWupin = () => {
 }
 
 const onXiangQing = () => {
-  if (adminuser.value) {
-    pushTo(router, route, "/admin/user/list/buyrecord", {
-      "recordId": record.value.id,
-    })
-    return
-  }
-  pushTo(router, route, "/admin/buyrecord/list/info", {
-    "recordId": record.value.id,
+  record.value && router.push({
+    path: "/center/buyrecord",
+    query: {
+      "id": record.value.id,
+    }
   })
 }
 
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max)
+}
+
+const a = ref(getRandomInt(10))
+const b = ref(getRandomInt(10))
+const resetCode = () => {
+  a.value = getRandomInt(10)
+  b.value = getRandomInt(10)
+  code.value = ""
+}
+const code = ref("")
+const answer = computed(() => a.value + b.value)
+const question = computed(() => `${a.value} + ${b.value}`)
+const codeCheck = computed(() => Number(code.value).valueOf() === answer.value)
+
+const repayModel = ref(false)
+const repayForm = ref({
+  password: "",
+})
+
+const repayPasswordCheck = computed(() => repayForm.value.password && repayForm.value.password.length > 0)// 登录阶段不检查密码
+const repayAllCheck = computed(() => codeCheck.value && repayPasswordCheck.value)
+
 const startRepay = () => {
-  ElMessageBox.confirm(
-      '是否确定对方在人工渠道支付成功？',
-      '支付提示',
-      {
-        confirmButtonText: '确定支付成功',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostPeoplePay(record.value.userid, record.value.id).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "取消支付成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "取消支付失败",
-        })
-      }
-    })
-  })
+  if (!record.value || record.value.status !== 2) {
+    return
+  }
+
+  resetCode()
+  repayModel.value = true
 }
 
 const stopRepay = () => {
   ElMessageBox.confirm(
-      '用户尚未支付成功，是否取消支付？',
+      '你尚未支付成功，是否取消支付？',
       '支付提示',
       {
         confirmButtonText: '取消支付',
@@ -122,7 +129,7 @@ const stopRepay = () => {
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostQuXiaoPay(record.value.userid, record.value.id).then((res) => {
+    apiPostQuXiaoPay(record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -136,6 +143,44 @@ const stopRepay = () => {
         })
       }
     })
+  })
+}
+
+const doAliRepay = () => {
+  if (!record.value || record.value.status !== 2) {
+    return
+  }
+
+  return apiPostAliRepay(record.value.id, window.location.href).then((res) => {
+    if (!res.data.data.url) {
+      ElMessage({
+        type: "error",
+        message: "支付失败，请重试",
+      })
+      emits("reload")
+    } else {
+      repayModel.value = false
+      window.location.href = res.data.data.url
+    }
+  })
+}
+
+const doWeChatRepay = () => {
+  if (!record.value || record.value.status !== 2) {
+    return
+  }
+
+  return apiPostWechatRepay(record.value.id, window.location.href).then((res) => {
+    if (!res.data.data.url) {
+      ElMessage({
+        type: "error",
+        message: "支付失败，请重试",
+      })
+      emits("reload")
+    } else {
+      repayModel.value = false
+      window.location.href = res.data.data.url
+    }
   })
 }
 
@@ -145,15 +190,15 @@ const confirmDaohuo = () => {
   }
 
   ElMessageBox.confirm(
-      '确认帮用户选择到货吗？',
+      '你是否已经确认收到货物？',
       '到货提示',
       {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+        confirmButtonText: '确认收到货',
+        cancelButtonText: '还未收到货',
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostGouWuDaoHuo(record.value.userid, record.value.id).then((res) => {
+    apiPostGouWuDaoHuo(record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -170,177 +215,173 @@ const confirmDaohuo = () => {
   })
 }
 
-const confirmTuiHuo = () => {
-  if (!record.value || record.value.status !== 9) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '确认用户退货已经到货吗？',
-      '到货提示',
-      {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostGouWuTuiHuo(record.value.userid, record.value.id).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "确认退货收货成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "确认退货收货失败",
-        })
-      }
-    })
-  })
-}
-
 const quXiao = () => {
   if (!record.value || record.value.status !== 3) {
     return
   }
 
   ElMessageBox.confirm(
-      '物品尚未发货，是否取消订单？',
+      '是否申请在发货前取消购买商品？若您的商品已经发货将可能会导致取消发货失败。你可以联系客服或选择收货后再退货。',
       '取消发货提示',
       {
         confirmButtonText: '取消发货',
-        cancelButtonText: '暂不觉得',
+        cancelButtonText: '正常发货',
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostFaHuoQuXiaoDengJi(record.value.userid, record.value.id).then((res) => {
+    apiPostFaHuoQuXiaoDengJi(record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
-          message: "取消发货成功",
+          message: "申请取消发货成功",
         })
         emits("reload")
       } else {
         ElMessage({
           type: 'error',
-          message: "取消发货失败",
+          message: "申请取消发货失败",
         })
       }
     })
   })
 }
 
-const acceptQuXiao = () => {
-  if (!record.value || record.value.status !== 12) {
+const giveGood = () => {
+  if (!record.value || record.value.status !== 5) {
     return
   }
 
   ElMessageBox.confirm(
-      '是否同意取消订单发货？',
-      '取消发货提示',
-      {
-        confirmButtonText: '取消发货',
-        cancelButtonText: '暂不决定',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostAcceptFaHuoQuXiaoDengJi(record.value.userid, record.value.id, true).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "取消发货成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "取消发货失败",
-        })
-      }
-    })
-  })
-}
-
-const notAcceptQuXiao = () => {
-  if (!record.value || record.value.status !== 12) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '是否拒绝取消订单发货？',
-      '取消发货提示',
-      {
-        confirmButtonText: '拒绝取消',
-        cancelButtonText: '暂不决定',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostAcceptFaHuoQuXiaoDengJi(record.value.userid, record.value.id, false).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "取消发货成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "取消发货失败",
-        })
-      }
-    })
-  })
-}
-
-const fahuoDengjiModel = ref(false)
-const fahuoDengjiForm = ref({
-  kuaidi: "",
-  danhao: "",
-})
-const fahuoDengjiKuaidiCheck = computed(() => fahuoDengjiForm.value.kuaidi && fahuoDengjiForm.value.kuaidi.length > 0)
-const fahuoDengjiDanhaoCheck = computed(() => fahuoDengjiForm.value.danhao && fahuoDengjiForm.value.danhao.length > 0)
-const fahuoDengjiAllCheck = computed(() => fahuoDengjiForm.value && fahuoDengjiForm.value)
-
-const startFaHuoDengJi = () => {
-  if (!record.value || record.value.status != 3) {
-    return
-  }
-
-  fahuoDengjiModel.value = true
-}
-
-const faHuoDengji = () => {
-  if (!record.value || record.value.status != 3) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '你确定要登记你的发货信息吗？请确保信息准确无误。',
-      '登记提示',
+      '你确定给好评吗？',
+      '好评提示',
       {
         confirmButtonText: '确定',
+        cancelButtonText: '再想想',
+        type: 'warning',
+      }
+  ).then(() => {
+    apiPostGouWuPingJia(record.value.id, true).then((res) => {
+      if (res.data.data.success) {
+        ElMessage({
+          type: 'success',
+          message: "好评成功",
+        })
+        emits("reload")
+      } else {
+        ElMessage({
+          type: 'error',
+          message: "好评失败",
+        })
+      }
+    })
+  })
+}
+
+const giveNotGood = () => {
+  if (!record.value || record.value.status !== 5) {
+    return
+  }
+
+  ElMessageBox.confirm(
+      '你确定不予置评吗？',
+      '好评提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '再想想',
+        type: 'warning',
+      }
+  ).then(() => {
+    apiPostGouWuPingJia(record.value.id, false).then((res) => {
+      if (res.data.data.success) {
+        ElMessage({
+          type: 'success',
+          message: "评价成功",
+        })
+        emits("reload")
+      } else {
+        ElMessage({
+          type: 'error',
+          message: "评价失败",
+        })
+      }
+    })
+  })
+}
+
+const userStore = useUserStore()
+
+const tuihuoTitle = ref("申请退货")
+const tuihuoModel = ref(false)
+const tuihuoForm = ref({
+  name: userStore.user.name,
+  phone: userStore.user.phone,
+  reason: "",
+})
+const tuiHuoNameCheck = computed(() => tuihuoForm.value.name && tuihuoForm.value.name.length > 0 && tuihuoForm.value.name.length <= 10)
+const tuiHuoPhoneCheck = computed(() => isMobile(tuihuoForm.value.phone))
+const tuihuoReasonCheck = computed(() => tuihuoForm.value.reason && tuihuoForm.value.reason.length > 10 && tuihuoForm.value.reason.length <= 250)
+const tuihuoAllCheck = computed(() => codeCheck.value && tuiHuoNameCheck.value && tuiHuoPhoneCheck.value && tuihuoReasonCheck.value)
+
+const startTuiHuo = () => {
+  if (!record.value || ([5, 6].every((i) => i != record.value.status))) {
+    return
+  }
+
+  resetCode()
+  tuihuoTitle.value = "申请退货"
+  tuihuoModel.value = true
+}
+
+const startReTuiHuo = () => {
+  if (!record.value || record.value.status != 10) {
+    return
+  }
+
+  resetCode()
+  tuihuoTitle.value = "重新申请退货"
+  tuihuoModel.value = true
+}
+
+const tuiHuo = () => {
+  if (!record.value || ([5, 6, 10].every((i) => i != record.value.status))) {
+    return
+  }
+
+  ElMessageBox.confirm(
+      '你确定进行退货申请登记吗？登记并不是100%通过，你可以致电客服取得联系。',
+      '退货提示',
+      {
+        confirmButtonText: '退货',
         cancelButtonText: '取消',
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostFaHuoDengJi(record.value.userid, record.value.id, fahuoDengjiForm.value.kuaidi, fahuoDengjiForm.value.danhao).then((res) => {
+    apiPostTuiHuoShenQing(record.value.id, tuihuoForm.value.name, tuihuoForm.value.phone, tuihuoForm.value.reason).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
-          message: "发货登记成功",
+          message: tuihuoTitle.value + "成功",
         })
         emits("reload")
-        fahuoDengjiModel.value = false
+        tuihuoModel.value = false
       } else {
         ElMessage({
           type: 'error',
-          message: "发货登记失败",
+          message: tuihuoTitle.value + "成功",
         })
       }
     })
   })
+}
+
+const tuihuoLocationModel = ref(false)
+
+const showTuiHuoLocation = () => {
+  if (!record.value) {
+    return
+  }
+
+  tuihuoLocationModel.value = true
 }
 
 const tuihuoDengjiModel = ref(false)
@@ -350,13 +391,14 @@ const tuihuoDengjiForm = ref({
 })
 const tuihuoDengjiKuaidiCheck = computed(() => tuihuoDengjiForm.value.kuaidi && tuihuoDengjiForm.value.kuaidi.length > 0)
 const tuihuoDengjiDanhaoCheck = computed(() => tuihuoDengjiForm.value.danhao && tuihuoDengjiForm.value.danhao.length > 0)
-const tuihuoDengjiAllCheck = computed(() => tuihuoDengjiForm.value && tuihuoDengjiForm.value)
+const tuihuoDengjiAllCheck = computed(() => codeCheck.value && tuihuoDengjiForm.value && tuihuoDengjiForm.value)
 
 const startTuiHuoDengJi = () => {
   if (!record.value || record.value.status != 8) {
     return
   }
 
+  resetCode()
   tuihuoDengjiModel.value = true
 }
 
@@ -374,7 +416,7 @@ const tuiHuoDengji = () => {
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostTuiHuoDengJi(record.value.userid, record.value.id, tuihuoDengjiForm.value.kuaidi, tuihuoDengjiForm.value.danhao).then((res) => {
+    apiPostTuiHuoDengJi(record.value.id, tuihuoDengjiForm.value.kuaidi, tuihuoDengjiForm.value.danhao).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -395,7 +437,7 @@ const tuiHuoDengji = () => {
 const fahuoLocationModel = ref(false)
 
 const showFaHuoLocation = () => {
-  if (!record.value || !([1, 2, 3, 4].some((i) => i == record.value.status))) {
+  if (!record.value) {
     return
   }
 
@@ -421,13 +463,14 @@ const changeUserEmailCheck = computed(() => {
   }
   return isEmail(changeUserForm.value.email)
 })
-const changeUserAllCheck = computed(() => changeUserCheckLocation.value && changeUserCheckName.value && changeUserPhoneCheck.value && changeUserEmailCheck.value)
+const changeUserAllCheck = computed(() => codeCheck.value && changeUserCheckLocation.value && changeUserCheckName.value && changeUserPhoneCheck.value && changeUserEmailCheck.value)
 
 const startChangeUser = () => {
   if (!record.value || !([1, 2, 3].some((i) => i == record.value.status))) {
     return
   }
 
+  resetCode()
   changeUserModel.value = true
 }
 
@@ -437,7 +480,7 @@ const changeUser = () => {
   }
 
   ElMessageBox.confirm(
-      '你确定要更改用户的收货信息了吗？',
+      '你确定要更改你的收货信息了吗？',
       '更改提示',
       {
         confirmButtonText: '确定',
@@ -445,182 +488,18 @@ const changeUser = () => {
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostChangeUser(record.value.userid, record.value.id, changeUserForm.value).then((res) => {
+    apiPostChangeUser(record.value.id, changeUserForm.value).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
-          message: "用户收货信息更改成功",
+          message: "收货信息更改成功",
         })
         emits("reload")
         changeUserModel.value = false
       } else {
         ElMessage({
           type: 'error',
-          message: "用户收货信息更改失败",
-        })
-      }
-    })
-  })
-}
-
-const tuihuoLocationModel = ref(false)
-
-const showTuiHuoLocation = () => {
-  if (!record.value) {
-    return
-  }
-
-  tuihuoLocationModel.value = true
-}
-
-const changeShopModel = ref(false)
-const changeShopForm = ref({
-  name: record.value.shop.name || record.value.wupin.ren || configStore.config.name || "未知商铺",
-  phone: record.value.shop.phone || record.value.wupin.phone || configStore.config.hotline || "000-00000000",
-  location: record.value.shop.location || record.value.wupin.location || "按快递原路返回",
-  wechat: record.value.shop.wechat || record.value.wupin.wechat || configStore.config.wechat,
-  email: record.value.shop.email || record.value.wupin.email,
-  remark: record.value.user.remark,
-} as LocationForUser)
-
-const changeShopCheckLocation = computed(() => changeShopForm.value.location && changeShopForm.value.location.length > 0)
-const changeShopCheckName = computed(() => changeShopForm.value.name && changeShopForm.value.name.length > 0 && changeShopForm.value.name.length <= 10)
-const changeShopPhoneCheck = computed(() => isMobile(changeShopForm.value.phone))
-const changeShopEmailCheck = computed(() => {
-  if (!changeShopForm.value.email) {
-    return true
-  }
-  return isEmail(changeShopForm.value.email)
-})
-const changeShopAllCheck = computed(() => changeShopCheckLocation.value && changeShopCheckName.value && changeShopPhoneCheck.value && changeShopEmailCheck.value)
-
-const startChangeShop = () => {
-  if (!record.value) {
-    return
-  }
-
-  changeShopModel.value = true
-}
-
-const changeShop = () => {
-  if (!record.value) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '你确定要更改商户的收货信息了吗？',
-      '更改提示',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostChangeShop(record.value.userid, record.value.id, changeShopForm.value).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "商品收货信息更改成功",
-        })
-        emits("reload")
-        changeShopModel.value = false
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "商品收货信息更改失败",
-        })
-      }
-    })
-  })
-}
-
-const acceptTuiHuo = () => {
-  if (!record.value || record.value.status !== 7) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '你确定要同意用户退货吗？',
-      '退货提示',
-      {
-        confirmButtonText: '同意退货申请',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostTuiHuoAccept(record.value.userid, record.value.id, true).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "同意成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "同意失败",
-        })
-      }
-    })
-  })
-}
-
-const notAcceptTuiHuo = () => {
-  if (!record.value || record.value.status !== 7) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '你确定要拒绝用户退货吗？',
-      '退货提示',
-      {
-        confirmButtonText: '拒绝退货申请',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostTuiHuoAccept(record.value.userid, record.value.id, false).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "拒绝成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "拒绝失败",
-        })
-      }
-    })
-  })
-}
-
-const shenQingAndAcceptTuiHuo = () => {
-  if (!record.value || !([5, 6, 10].some((i) => i == record.value.status))) {
-    return
-  }
-
-  ElMessageBox.confirm(
-      '你是否帮助并同意用户退货？',
-      '退货提示',
-      {
-        confirmButtonText: '同意',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-  ).then(() => {
-    apiAdminPostTuiHuoShenQingAccept(record.value.userid, record.value.id).then((res) => {
-      if (res.data.data.success) {
-        ElMessage({
-          type: 'success',
-          message: "同意成功",
-        })
-        emits("reload")
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "同意失败",
+          message: "收货信息更改失败",
         })
       }
     })
@@ -651,52 +530,42 @@ const shenQingAndAcceptTuiHuo = () => {
                 取消支付
               </el-button>
               <el-button v-if="safe && record.status === 2" type="warning" @click="startRepay">
-                人工支付确认
+                重新支付
               </el-button>
-              <el-button v-if="safe && record.status === 3" type="danger" @click="quXiao">
+              <el-button v-if="safe && record.status === 3" type="warning" @click="quXiao">
                 取消发货
               </el-button>
-              <el-button v-if="safe && record.status === 3" type="warning" @click="startFaHuoDengJi">
-                发货登记
-              </el-button>
-              <el-button v-if="safe && ([1, 2, 3, 4].some((i) => i == record.status))" type="success" @click="showFaHuoLocation">
-                查看发货地址
-              </el-button>
               <el-button v-if="safe && ([1, 2, 3].some((i) => i == record.status))" type="warning" @click="startChangeUser">
-                更改发货地址
+                更改收货地址
               </el-button>
-              <el-button v-if="safe && record.status === 4" type="warning" @click="confirmDaohuo">
+              <el-button v-if="safe && record.status === 4" type="success" @click="confirmDaohuo">
                 确认收货
               </el-button>
-              <el-button v-if="safe && ([5, 6].some((i) => i == record.status))" type="danger" @click="shenQingAndAcceptTuiHuo">
-                帮助用户退货
+              <el-button v-if="safe && record.status === 5" type="success" @click="giveGood">
+                给个好评
               </el-button>
-              <el-button v-if="safe && record.status === 7" type="warning" @click="acceptTuiHuo">
-                同意用户退货
+              <el-button v-if="safe && record.status === 5" type="info" @click="giveNotGood">
+                不予置评
               </el-button>
-              <el-button v-if="safe && record.status === 7" type="success" @click="notAcceptTuiHuo">
-                拒绝用户退货
+              <el-button v-if="safe && ([5, 6].some((i) => i == record.status))" type="danger" @click="startTuiHuo">
+                申请退货
               </el-button>
-              <el-button v-if="safe && record.status === 8" type="primary" @click="startTuiHuoDengJi">
-                帮助用户登记退货
+              <el-button v-if="safe && record.status === 8" type="success" @click="startTuiHuoDengJi">
+                登记退货信息
               </el-button>
-              <el-button v-if="safe && record.status === 9" type="primary" @click="confirmTuiHuo">
-                确认退货到货
+              <el-button v-if="safe && record.status === 10" type="danger" @click="startReTuiHuo">
+                重新申请退货
               </el-button>
-              <el-button v-if="safe && record.status === 10" type="danger" @click="shenQingAndAcceptTuiHuo">
-                帮助用户再次退货
+              <el-button v-if="safe" type="primary" @click="showTuiHuoLocation">
+                <span v-if="([7, 8, 9, 10, 11].some((i) => i == record.status))">
+                  查看退货地址
+                </span>
+                <span v-else>
+                  查看商家地址
+                </span>
               </el-button>
-              <el-button v-if="safe && record.status === 12" type="danger" @click="acceptQuXiao">
-                同意取消订单
-              </el-button>
-              <el-button v-if="safe && record.status === 12" type="primary" @click="notAcceptQuXiao">
-                拒绝取消订单
-              </el-button>
-              <el-button v-if="safe" type="success" @click="showTuiHuoLocation">
-                查看商家退货地址
-              </el-button>
-              <el-button v-if="safe" type="warning" @click="startChangeShop">
-                更改商家发货地址
+              <el-button v-if="safe" type="success" @click="showFaHuoLocation">
+                查看收货地址
               </el-button>
             </el-button-group>
         </div>
@@ -705,7 +574,7 @@ const shenQingAndAcceptTuiHuo = () => {
         <div>
           <div>
             <el-text>
-              当前状态：{{ (AdminBuyRecordStatus[record.status]) || "未知" }}
+              当前状态：{{ (BuyRecordStatus[record.status]) || "未知" }}
             </el-text>
           </div>
           <div>
@@ -726,11 +595,6 @@ const shenQingAndAcceptTuiHuo = () => {
           <div>
             <el-text>
               下单时间：{{ formatDate(record.time) }}
-            </el-text>
-          </div>
-          <div v-if="record.user.remark">
-            <el-text>
-              用户备注：{{ record.user.remark }}
             </el-text>
           </div>
           <div v-if="[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].some((i) => i == record.status)">
@@ -825,6 +689,86 @@ const shenQingAndAcceptTuiHuo = () => {
     </el-card>
   </div>
   <el-dialog
+      v-model="repayModel"
+      width="25%"
+      destroy-on-close
+  >
+    <template #title>
+      <div style="width: 100%; display: flex; justify-content: center">
+        <el-text style="font-size: 1vw">
+          重新支付订单
+        </el-text>
+      </div>
+    </template>
+
+    <div style="width: 100%; display: flex; justify-content: center">
+      <div>
+        <div class="repay_box">
+          <div class="repay_info">
+            <el-text>
+              购买数量：{{ record.num }} 件
+            </el-text>
+          </div>
+          <div class="repay_info">
+            <el-text>
+              商品单价：￥{{ ((record.price / 100).toFixed(2)) }}
+            </el-text>
+          </div>
+          <div class="repay_info">
+            <el-text class="pay_price">
+              付款金额：￥{{ ((record.totalPrice / 100).toFixed(2)) }}
+            </el-text>
+          </div>
+        </div>
+        <el-divider style="margin-top: 30px"></el-divider>
+        <div>
+          <el-form :model="repayForm" label-width="auto" style="width: 15vw">
+            <el-form-item>
+              <template #label>
+                <el-text>账号密码</el-text>
+              </template>
+              <el-input v-model="repayForm.password" type="password" show-password clearable />
+            </el-form-item>
+            <el-form-item>
+              <template #label>
+                <el-text>验证码</el-text>
+              </template>
+              <el-input v-model="code" clearable>
+                <template #append>
+                  <el-text>
+                    {{ question }}
+                  </el-text>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div style="width: 15vw; margin-top: 5px; display: flex; justify-content: center">
+          <el-button-group>
+            <el-button type="info" @click="repayModel = false">取消支付</el-button>
+            <el-button :disabled="!repayAllCheck" type="primary" @click="doAliRepay">
+              支付宝支付
+            </el-button>
+            <el-button :disabled="!repayAllCheck" type="success" @click="doWeChatRepay">
+              微信支付
+            </el-button>
+          </el-button-group>
+        </div>
+        <div style="width: 15vw; margin-top: 5px">
+          <div v-if="!codeCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
+            </el-alert>
+          </div>
+          <div v-if="!repayPasswordCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="请输入密码！" :closable="false" type="warning" center show-icon>
+            </el-alert>
+          </div>
+        </div>
+      </div>
+    </div>
+  </el-dialog>
+
+  <el-dialog
       v-model="tuihuoDengjiModel"
       width="25%"
       destroy-on-close
@@ -832,12 +776,44 @@ const shenQingAndAcceptTuiHuo = () => {
     <template #title>
       <div style="width: 100%; display: flex; justify-content: center">
         <el-text style="font-size: 1vw">
-          帮助用户退货
+          退货信息登记
         </el-text>
       </div>
     </template>
+
     <div style="width: 100%; display: flex; justify-content: center">
       <div>
+        <div class="location_info">
+          <el-text>
+            收件人：{{ record.shop.name || record.wupin.ren || configStore.config.name || "未知商铺"  }}
+          </el-text>
+        </div>
+        <div class="location_info">
+          <el-text>
+            收件号码：{{ record.shop.phone || record.wupin.phone || configStore.config.hotline || "000-00000000"  }}
+          </el-text>
+        </div>
+        <div class="location_info">
+          <el-text>
+            收件地址：{{ record.shop.location || record.wupin.location || "按快递原路返回" }}
+          </el-text>
+        </div>
+        <div v-if="record.shop.wechat || record.wupin.wechat || configStore.config.wechat" class="location_info">
+          <el-text>
+            联系微信：{{ record.shop.wechat || record.wupin.wechat || configStore.config.wechat  }}
+          </el-text>
+        </div>
+        <div v-if="record.shop.email || record.wupin.email" class="location_info">
+          <el-text>
+            联系邮箱：{{ record.shop.email || record.wupin.email }}
+          </el-text>
+        </div>
+        <div v-if="record.shop.remark" class="location_info">
+          <el-text>
+            备注：{{ record.shop.remark }}
+          </el-text>
+        </div>
+        <el-divider style="margin-top: 30px"></el-divider>
         <div>
           <el-form :model="tuihuoDengjiForm" label-width="auto" style="width: 15vw">
             <el-form-item>
@@ -864,17 +840,36 @@ const shenQingAndAcceptTuiHuo = () => {
                   clearable
               />
             </el-form-item>
+            <el-form-item>
+              <template #label>
+                <el-text>验证码</el-text>
+              </template>
+              <el-input
+                  v-model="code"
+                  clearable
+              >
+                <template #append>
+                  <el-text>
+                    {{ question }}
+                  </el-text>
+                </template>
+              </el-input>
+            </el-form-item>
           </el-form>
         </div>
         <div style="width: 15vw; margin-top: 5px; display: flex; justify-content: center">
           <el-button-group>
             <el-button type="info" @click="tuihuoDengjiModel = false">取消</el-button>
             <el-button :disabled="!tuihuoDengjiAllCheck" type="primary" @click="tuiHuoDengji">
-              立即登记
+              立即申请
             </el-button>
           </el-button-group>
         </div>
         <div style="width: 15vw; margin-top: 5px">
+          <div v-if="!codeCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
+            </el-alert>
+          </div>
           <div v-if="!tuihuoDengjiKuaidiCheck" class="tip_box" style="display: flex; justify-content: center">
             <el-alert title="请填写快递公司！" :closable="false" type="warning" center show-icon>
             </el-alert>
@@ -888,60 +883,47 @@ const shenQingAndAcceptTuiHuo = () => {
     </div>
   </el-dialog>
   <el-dialog
-      v-model="fahuoDengjiModel"
+      v-model="tuihuoModel"
       width="25%"
       destroy-on-close
   >
     <template #title>
       <div style="width: 100%; display: flex; justify-content: center">
         <el-text style="font-size: 1vw">
-          发货信息登记
+          {{ tuihuoTitle }}
         </el-text>
       </div>
     </template>
 
     <div style="width: 100%; display: flex; justify-content: center">
       <div>
-        <div class="location_info">
-          <el-text>
-            收件人：{{ record.user.name }}
-          </el-text>
-        </div>
-        <div class="location_info">
-          <el-text>
-            收件号码：{{ record.user.phone }}
-          </el-text>
-        </div>
-        <div class="location_info">
-          <el-text>
-            收件地址：{{ record.user.location }}
-          </el-text>
-        </div>
-        <div v-if="record.user.wechat" class="location_info">
-          <el-text>
-            联系微信：{{ record.user.wechat }}
-          </el-text>
-        </div>
-        <div v-if="record.user.email" class="location_info">
-          <el-text>
-            联系邮箱：{{ record.user.email }}
-          </el-text>
-        </div>
-        <div v-if="record.user.remark" class="location_info">
-          <el-text>
-            备注：{{ record.user.remark }}
-          </el-text>
+        <div class="repay_box">
+          <div class="repay_info">
+            <el-text>
+              购买数量：{{ record.num }} 件
+            </el-text>
+          </div>
+          <div class="repay_info">
+            <el-text>
+              商品单价：￥{{ ((record.price / 100).toFixed(2)) }}
+            </el-text>
+          </div>
+          <div class="repay_info">
+            <el-text class="pay_price">
+              付款金额：￥{{ ((record.totalPrice / 100).toFixed(2)) }}
+            </el-text>
+          </div>
         </div>
         <el-divider style="margin-top: 30px"></el-divider>
         <div>
-          <el-form :model="fahuoDengjiForm" label-width="auto" style="width: 15vw">
+          <el-form :model="tuihuoForm" label-width="auto" style="width: 15vw">
             <el-form-item>
               <template #label>
-                <el-text>快递公司</el-text>
+                <el-text>退货联系人</el-text>
               </template>
               <el-input
-                  v-model="fahuoDengjiForm.kuaidi"
-                  maxlength="50"
+                  v-model="tuihuoForm.name"
+                  maxlength="10"
                   minlength="1"
                   show-word-limit
                   clearable
@@ -949,38 +931,130 @@ const shenQingAndAcceptTuiHuo = () => {
             </el-form-item>
             <el-form-item>
               <template #label>
-                <el-text>快递面单号码</el-text>
+                <el-text>退货联系人电话</el-text>
               </template>
               <el-input
-                  v-model="fahuoDengjiForm.danhao"
-                  maxlength="100"
+                  v-model="tuihuoForm.phone"
+                  maxlength="20"
                   minlength="1"
                   show-word-limit
                   clearable
               />
+            </el-form-item>
+            <el-form-item>
+              <template #label>
+                <el-text>退货原因</el-text>
+              </template>
+              <el-input
+                  v-model="tuihuoForm.reason"
+                  maxlength="250"
+                  minlength="10"
+                  show-word-limit
+                  type="textarea"
+                  clearable
+                  :rows="5"
+              />
+            </el-form-item>
+            <el-form-item>
+              <template #label>
+                <el-text>验证码</el-text>
+              </template>
+              <el-input
+                  v-model="code"
+                  clearable
+              >
+                <template #append>
+                  <el-text>
+                    {{ question }}
+                  </el-text>
+                </template>
+              </el-input>
             </el-form-item>
           </el-form>
         </div>
         <div style="width: 15vw; margin-top: 5px; display: flex; justify-content: center">
           <el-button-group>
-            <el-button type="info" @click="fahuoDengjiModel = false">取消</el-button>
-            <el-button :disabled="!fahuoDengjiAllCheck" type="primary" @click="faHuoDengji">
-              立即登记
+            <el-button type="info" @click="tuihuoModel = false">取消申请</el-button>
+            <el-button :disabled="!tuihuoAllCheck" type="primary" @click="tuiHuo">
+              立即申请
             </el-button>
           </el-button-group>
         </div>
-        <div>
-          <div v-if="!fahuoDengjiKuaidiCheck" class="tip_box" style="display: flex; justify-content: center">
-            <el-alert title="请填写快递公司！若没有可填写暂无。" :closable="false" type="warning" center show-icon>
+        <div style="width: 15vw; margin-top: 5px">
+          <div v-if="!codeCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
             </el-alert>
           </div>
-          <div v-if="!fahuoDengjiDanhaoCheck" class="tip_box" style="display: flex; justify-content: center">
-            <el-alert title="请填写快递运单号码！若没有可填写暂无。" :closable="false" type="warning" center show-icon>
+          <div v-if="!tuiHuoNameCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="联系人姓名字数应该为1-10个！" :closable="false" type="warning" center show-icon>
+            </el-alert>
+          </div>
+          <div v-if="!tuiHuoPhoneCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="手机号不正确！" :closable="false" type="warning" center show-icon>
+            </el-alert>
+          </div>
+          <div v-if="!tuihuoReasonCheck" class="tip_box" style="display: flex; justify-content: center">
+            <el-alert title="退货原因应在10-250个字以内！" :closable="false" type="warning" center show-icon>
             </el-alert>
           </div>
         </div>
       </div>
     </div>
+  </el-dialog>
+  <el-dialog
+      v-model="tuihuoLocationModel"
+      width="15vw"
+  >
+    <template #title>
+      <div style="width: 100%; display: flex; justify-content: center">
+        <el-text style="font-size: 1vw">
+          <span v-if="([7, 8, 9, 10, 11].some((i) => i == record.status))">
+            {{ record.wupin.name }}退货地址
+          </span>
+          <span v-else>
+            {{ record.wupin.name }}商家地址
+          </span>
+        </el-text>
+      </div>
+    </template>
+
+    <div class="location_box">
+      <div class="location_info">
+        <el-text>
+          收件人：{{ record.shop.name || record.wupin.ren || configStore.config.name || "未知商铺"  }}
+        </el-text>
+      </div>
+      <div class="location_info">
+        <el-text>
+          收件号码：{{ record.shop.phone || record.wupin.phone || configStore.config.hotline || "000-00000000"  }}
+        </el-text>
+      </div>
+      <div class="location_info">
+        <el-text>
+          收件地址：{{ record.shop.location || record.wupin.location || "按快递原路返回" }}
+        </el-text>
+      </div>
+      <div v-if="record.shop.wechat || record.wupin.wechat || configStore.config.wechat" class="location_info">
+        <el-text>
+          联系微信：{{ record.shop.wechat || record.wupin.wechat || configStore.config.wechat  }}
+        </el-text>
+      </div>
+      <div v-if="record.shop.email || record.wupin.email" class="location_info">
+        <el-text>
+          联系邮箱：{{ record.shop.email || record.wupin.email }}
+        </el-text>
+      </div>
+      <div v-if="record.shop.remark" class="location_info">
+        <el-text>
+          备注：{{ record.shop.remark }}
+        </el-text>
+      </div>
+    </div>
+    <template #footer>
+      <div style="display: flex; width: 100%; justify-content: right;">
+        <el-button type="success" @click="tuihuoLocationModel = false">好的</el-button>
+      </div>
+    </template>
   </el-dialog>
   <el-dialog
       v-model="fahuoLocationModel"
@@ -1029,56 +1103,6 @@ const shenQingAndAcceptTuiHuo = () => {
     <template #footer>
       <div style="display: flex; width: 100%; justify-content: right;">
         <el-button type="success" @click="fahuoLocationModel = false">好的</el-button>
-      </div>
-    </template>
-  </el-dialog>
-  <el-dialog
-      v-model="tuihuoLocationModel"
-      width="15vw"
-  >
-    <template #title>
-      <div style="width: 100%; display: flex; justify-content: center">
-        <el-text style="font-size: 1vw">
-          {{ record.wupin.name }}商家地址/退货地址
-        </el-text>
-      </div>
-    </template>
-
-    <div class="location_box">
-      <div class="location_info">
-        <el-text>
-          收件人：{{ record.shop.name || record.wupin.ren || configStore.config.name || "未知商铺"  }}
-        </el-text>
-      </div>
-      <div class="location_info">
-        <el-text>
-          收件号码：{{ record.shop.phone || record.wupin.phone || configStore.config.hotline || "000-00000000"  }}
-        </el-text>
-      </div>
-      <div class="location_info">
-        <el-text>
-          收件地址：{{ record.shop.location || record.wupin.location || "按快递原路返回" }}
-        </el-text>
-      </div>
-      <div v-if="record.shop.wechat || record.wupin.wechat || configStore.config.wechat" class="location_info">
-        <el-text>
-          联系微信：{{ record.shop.wechat || record.wupin.wechat || configStore.config.wechat  }}
-        </el-text>
-      </div>
-      <div v-if="record.shop.email || record.wupin.email" class="location_info">
-        <el-text>
-          联系邮箱：{{ record.shop.email || record.wupin.email }}
-        </el-text>
-      </div>
-      <div v-if="record.shop.remark" class="location_info">
-        <el-text>
-          备注：{{ record.shop.remark }}
-        </el-text>
-      </div>
-    </div>
-    <template #footer>
-      <div style="display: flex; width: 100%; justify-content: right;">
-        <el-button type="success" @click="tuihuoLocationModel = false">好的</el-button>
       </div>
     </template>
   </el-dialog>
@@ -1143,6 +1167,18 @@ const shenQingAndAcceptTuiHuo = () => {
           </template>
           <el-input v-model="changeUserForm.remark"  minlength="0" maxlength="150" show-word-limit type="textarea" :rows="3"/>
         </el-form-item>
+        <el-form-item>
+          <template #label>
+            <el-text>验证码</el-text>
+          </template>
+          <el-input v-model="code" clearable>
+            <template #append>
+              <el-text>
+                {{ question }}
+              </el-text>
+            </template>
+          </el-input>
+        </el-form-item>
       </el-form>
     </div>
     <div style="display: flex; justify-content: center; width: 100%;">
@@ -1155,6 +1191,10 @@ const shenQingAndAcceptTuiHuo = () => {
     </div>
     <div style="display: flex; justify-content: center; width: 100%;">
       <div>
+        <div v-if="!codeCheck" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确的验证码！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
         <div v-if="!changeUserCheckName" class="tip_box" style="display: flex; justify-content: center">
           <el-alert title="名字需要在1-10位！" :closable="false" type="warning" center show-icon>
           </el-alert>
@@ -1168,98 +1208,6 @@ const shenQingAndAcceptTuiHuo = () => {
           </el-alert>
         </div>
         <div v-if="!changeUserCheckLocation" class="tip_box" style="display: flex; justify-content: center">
-          <el-alert title="请输入正确的收件地址！" :closable="false" type="warning" center show-icon>
-          </el-alert>
-        </div>
-      </div>
-    </div>
-  </el-dialog>
-  <el-dialog
-      v-model="changeShopModel"
-      width="500"
-  >
-    <template #title>
-      <div style="width: 100%; display: flex; justify-content: center">
-        <el-text style="font-size: 1vw">
-          商户地址信息更改
-        </el-text>
-      </div>
-    </template>
-    <div style="display: flex; justify-content: center; width: 100%;" >
-      <el-form :model="changeShopForm" label-width="auto" style="width: 15vw">
-        <el-form-item>
-          <template #label>
-            <el-text>收件人</el-text>
-          </template>
-          <el-input
-              v-model="changeShopForm.name"
-              maxlength="10"
-              minlength="1"
-              show-word-limit
-              clearable
-          />
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <el-text>收件号码</el-text>
-          </template>
-          <el-input
-              v-model="changeShopForm.phone"
-              maxlength="20"
-              minlength="1"
-              show-word-limit
-              clearable
-          />
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <el-text>收件地址</el-text>
-          </template>
-          <el-input v-model="changeShopForm.location" minlength="0" maxlength="150" show-word-limit/>
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <el-text>微信号</el-text>
-          </template>
-          <el-input v-model="changeShopForm.wechat" minlength="0" maxlength="30" show-word-limit/>
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <el-text>邮箱</el-text>
-          </template>
-          <el-input v-model="changeShopForm.email" minlength="0" maxlength="30" show-word-limit/>
-        </el-form-item>
-        <el-form-item>
-          <template #label>
-            <el-text>备注</el-text>
-          </template>
-          <el-input v-model="changeShopForm.remark"  minlength="0" maxlength="150" show-word-limit type="textarea" :rows="3"/>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div style="display: flex; justify-content: center; width: 100%; margin-top: 10px;">
-      <el-button-group>
-        <el-button type="info" @click="changeShopModel = false">取消</el-button>
-        <el-button :disabled="!changeShopAllCheck" type="primary" @click="changeShop">
-          确定
-        </el-button>
-      </el-button-group>
-    </div>
-    <div style="display: flex; justify-content: center; width: 100%; margin-top: 10px;">
-      <div>
-        <div v-if="!changeShopCheckName" class="tip_box" style="display: flex; justify-content: center">
-          <el-alert title="名字需要在1-10位！" :closable="false" type="warning" center show-icon>
-          </el-alert>
-        </div>
-        <div v-if="!changeShopPhoneCheck" class="tip_box" style="display: flex; justify-content: center">
-          <el-alert title="请输入正确到手机号！" :closable="false" type="warning" center show-icon>
-          </el-alert>
-        </div>
-        <div v-if="!changeShopEmailCheck" class="tip_box" style="display: flex; justify-content: center">
-          <el-alert title="请输入正确到邮箱！" :closable="false" type="warning" center show-icon>
-          </el-alert>
-        </div>
-        <div v-if="!changeShopCheckLocation" class="tip_box" style="display: flex; justify-content: center">
           <el-alert title="请输入正确的收件地址！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>

@@ -23,7 +23,7 @@ const active = ref("")
 const changePage = () => {
   if (!route.path.startsWith("/admin")) {
     router.push({
-      path: "/error",
+      path: "/system/error",
       query: {
         msg: "页面错误"
       }
@@ -34,7 +34,7 @@ const changePage = () => {
   const pathLst = routePath.split("/")
   if (pathLst.length <= 2 || pathLst[0] !== "" || pathLst[1] !== "admin") {
     router.push({
-      path: "/error",
+      path: "/system/error",
       query: {
         msg: "页面错误"
       }

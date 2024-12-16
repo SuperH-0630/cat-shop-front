@@ -65,7 +65,7 @@ const reload = () => {
     record.value = res.data.data as AdminBuyRecordData
   }).catch(() => {
     router.push({
-      path: "/error",
+      path: "/system/error",
       query: {
         msg: "获取数据失败"
       }

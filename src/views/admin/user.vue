@@ -51,7 +51,7 @@ if (userId.value) {
     user.value = res as AdminUser
   }, () => {
     router.push({
-      path: "/error",
+      path: "/system/error",
       query: {
         msg: "页面错误"
       }
@@ -59,7 +59,7 @@ if (userId.value) {
   })
 } else {
   router.push({
-    path: "/error",
+    path: "/system/error",
     query: {
       msg: "页面错误"
     }

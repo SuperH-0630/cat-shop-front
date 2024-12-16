@@ -3,8 +3,8 @@ import Logo from "@/assets/images/logo.jpg"
 import AD from "@/assets/images/ad.jpeg"
 import defaultAvatar from "@/assets/images/avatar.jpg"
 
-import {apiGetConfig} from "@/api/config"
-import {apiGetXieyi} from "@/api/xieyi";
+import {apiGetConfig} from "@/api/center/config"
+import {apiGetXieyi} from "@/api/center/xieyi";
 
 export interface Config {
     "name": string,

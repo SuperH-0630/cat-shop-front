@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import {apiPostAddToShoppingBag, ShopRecord} from "@/api/center/shoppingbag"
 import {formatDate} from "@/utils/time"
-import {getFacePrice, getRealPrice} from "@/utils/price";
-import {AdminShopRecord, apiAdminPostAddToShoppingBag} from "@/api/admin/shoppingbag";
+import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
+import {ElNotification} from "element-plus";
 
 const props = defineProps({
   "record": {
-    type: Object as PropType<AdminShopRecord>,
+    type: Object as PropType<ShopRecord>,
     required: true,
   }
 })
@@ -22,6 +23,9 @@ const realPrice = computed(() => {
 
 const facePrice = computed(() => {
   return getFacePrice(record.value.wupin?.hotPrice, record.value.wupin?.realPrice)
+})
+const totalPrice = computed(() => {
+  return getTotalPrice(record.value.wupin?.hotPrice, record.value.wupin?.realPrice, num.value)
 })
 
 const onClassClick = () => {
@@ -46,17 +50,23 @@ const onWupinClick = () => {
 }
 
 const onClickBag = () => {
-  record.value && apiAdminPostAddToShoppingBag(record.value.userid, record.value.wupin.id, num.value).then((res) => {
+  record.value && apiPostAddToShoppingBag(record.value.wupin.id, num.value).then((res) => {
     if (res.data.data.success) {
       if (num.value <= 0) {
-        ElMessage({
-          type: 'success',
-          message: `已经将 ${record.value.wupin.name} 从用户的购物车移出。`,
+        ElNotification({
+          title: '已经移出购物车',
+          message: `尊敬的用户您好，我们已经将 ${record.value.wupin.name} 从您的购物车移出。请您进行接下来的操作。`,
+          duration: 5000,
+          type: "success",
+          position: 'top-left',
         })
       } else {
-        ElMessage({
-          type: 'success',
-          message: `已经将 ${num.value}件 ${record.value.wupin.name} 添加到用户的购物车。`,
+        ElNotification({
+          title: '已经加入购物车',
+          message: `尊敬的用户您好，我们已经将 ${num.value}件 ${record.value.wupin.name} 添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
+          duration: 5000,
+          type: "success",
+          position: 'top-left',
         })
       }
       emits("reload")
@@ -84,6 +94,23 @@ const onSameClick = () => {
 const num = ref(record.value && record.value.num || 0)
 if (num.value < 0) {
   num.value = 0
+}
+
+const byn = ref(null as any)
+const buy = () => {
+  if (!byn.value) {
+    ElMessage({
+      type: 'warning',
+      message: "系统出现了问题，请重试。"
+    })
+    return
+  }
+
+  if (num.value <= 0) {
+    return
+  }
+
+  byn.value.openWithShop(record.value)
 }
 
 </script>
@@ -211,24 +238,20 @@ if (num.value < 0) {
                 </template>
               </el-input-number>
               <el-button class="buy_item" size="large" @click="onClickBag">
-                <el-icon style="margin-right: 3px"><Handbag /></el-icon> 重设用户购物车
+                <el-icon style="margin-right: 3px"><Handbag /></el-icon> 重新加入加入购物车
               </el-button>
             </div>
-            <el-tooltip
-                effect="dark"
-                content="只有用户能为自己购买"
-                placement="bottom"
-            >
-              <el-button class="buy_item" size="large" disabled>
-                <el-icon style="margin-right: 3px"><Money /></el-icon>
-                立即购买
-              </el-button>
-            </el-tooltip>
+            <el-button class="buy_item" size="large" :disabled="num <= 0" @click="buy">
+              <el-icon style="margin-right: 3px"><Money /></el-icon>
+              立即购买
+              <el-text v-if="num >= 1"> （ 实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }} ） </el-text>
+            </el-button>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <Buynew ref="byn"></Buynew>
 </template>
 
 <style scoped lang="scss">

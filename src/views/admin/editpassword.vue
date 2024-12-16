@@ -3,7 +3,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import useAdminUserStore, {AdminUser} from "@/store/admin/user";
 import {isAdmin, isRootAdmin} from "@/store/admin";
 import pushTo from "@/views/admin/router_push";
-import {BuyRecordStatus} from "@/api/buyrecord";
+import {BuyRecordStatus} from "@/api/center/center/buyrecord";
 import {apiAdminGetUserBuyRecordByPage} from "@/api/admin/buyrecord";
 
 const router = useRouter()

@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import useConfigStore from "@/store/config"
-  import Footer from "@/components/footer.vue"
+  import Footer from "@/components/system/footer.vue"
+  import Wechat from "@/components/system/wechat.vue"
+  import Rightwin from "@/components/system/rightwin.vue"
+  import Header from "@/components/system/header.vue"
   import useUserStore, {isLogin} from "@/store/user"
   import useClassStore from "@/store/class"
   import useHotWupinStore from "@/store/hotwupin"
@@ -69,7 +72,7 @@
     <div class="header" style="height: 10vh">
       <Header></Header>
     </div>
-    <div id="body" :style='{"height": bodyHeight}'>
+    <div id="body" :style='{"min-height": bodyHeight}'>
       <el-container>
         <el-main>
           <router-view></router-view>
