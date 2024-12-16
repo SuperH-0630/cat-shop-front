@@ -53,6 +53,102 @@ type AdminBuyRecordLstByPage = {
     list: AdminBuyRecord[]
 }
 
+export function apiAdminGetBuyRecordByPage(page: number, pagesize: number, status: number): Result<AdminBuyRecordLstByPage> {
+    if (page <= 0) {
+        return Promise.reject()
+    }
+
+    if (pagesize <= 0 || pagesize > 20) {
+        return Promise.reject()
+    }
+
+    // return request({
+    //     url: '/user/buy/record',
+    //     method: 'get',
+    // })
+
+    const pagemax = 100
+    const buyRecordLst = ref([] as AdminBuyRecord[])
+    for (let i = (page - 1) * pagesize; i < pagemax; i++) {
+        if (buyRecordLst.value.length >= pagesize) {
+            break
+        }
+
+        buyRecordLst.value.push({
+            id: page * pagesize + i + 1,
+            userid: 1,
+            wupinid: 1,
+            classid: 1,
+            num: 2,
+            price: 5000,
+            totalPrice: 9999,
+            time: 1734024269,
+            fukuantime: 1734024269,
+            fahuotime: 1734024269,
+            shouhuotime: 1734024269,
+            pingjiatime: 1734024269,
+            dengjituihuotime: 1734024269,
+            querentuihuotime: 1734024269,
+            tuohuotime: 1734024269,
+            quxiaotime: 1734024269,
+            status: status,
+            kuaidi: "顺丰",
+            kuaidinum: "SF1234",
+            backkuaidi: "",
+            backkuaidinum: "",
+            isgood: true,
+            wupin: {
+                id: 1,
+                name: `物品-${page}-${i}`,
+                pic: wupinPic,
+                classid: 1,
+                classOf: {
+                    id: 1,
+                    name: "分类1",
+                },
+                tag: "火爆",
+                hotPrice: 9999,
+                realPrice: 19999,
+                info: "hhhhhh",
+                ren: "小超市",
+                phone: "17322061610",
+                email: "songzihuan@song-zh.com",
+                location: "广东广州",
+                buytotal: 100,
+                buygood: 90,
+            },
+            user: {
+                name: "用户",
+                phone: "17322061610",
+                location: "广东广州",
+                wechat: "1234",
+                email: "1234",
+                remark: "1234,"
+            },
+            shop: {
+                name: "用户",
+                phone: "17322061610",
+                location: "广东广州",
+                wechat: "1234",
+                email: "1234",
+                remark: "1234,"
+            },
+        })
+    }
+
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                maxpage: pagemax,
+                total: buyRecordLst.value.length,
+                list: buyRecordLst.value,
+            },
+        },
+        status: 200,
+    })
+}
+
 export function apiAdminGetUserBuyRecordByPage(userId: number, page: number, pagesize: number, status: number): Result<AdminBuyRecordLstByPage> {
     if (page <= 0) {
         return Promise.reject()
@@ -149,8 +245,8 @@ export function apiAdminGetUserBuyRecordByPage(userId: number, page: number, pag
     })
 }
 
-export function apiAdminGetBuyRecordInfo(id: number, userId: number): Result<AdminBuyRecord> {
-    if (id <= 0 || userId <= 0) {
+export function apiAdminGetBuyRecordInfo(id: number, userId: number = 0): Result<AdminBuyRecord> {
+    if (id <= 0 || userId < 0) {
         return Promise.reject()
     }
 

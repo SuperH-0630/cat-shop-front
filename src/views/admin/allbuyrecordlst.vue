@@ -2,9 +2,7 @@
 import {BuyRecordStatus} from "@/api/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue";
 import {isAdmin} from "@/store/admin";
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {apiAdminGetUserBuyRecordByPage} from "@/api/admin/buyrecord";
-import pushTo from "@/views/admin/router_push";
+import {apiAdminGetBuyRecordByPage} from "@/api/admin/buyrecord";
 
 const router = useRouter()
 const route = useRoute()
@@ -18,73 +16,40 @@ if (!isAdmin()) {
   })
 }
 
-const userAdminStore = useAdminUserStore()
-
-const userId = ref(Number(route.query?.userId).valueOf() || 0)
-const user = ref(null as AdminUser | null)
-
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
 const currentPage = ref({} as { [key: number]: number })
 
 const onChangeUser = () => {
-  userId.value = Number(route.query?.userId).valueOf() || 0
-  user.value = null
+  Object.entries(BuyRecordStatus).forEach(([_key]) => {
+    const key = Number(_key).valueOf() || 0
+    apiAdminGetBuyRecordByPage(1, 20, Number(key).valueOf()).then((res) => {
+      dataInfo.value[key] = {
+        data: res.data.data.list,
+        pagesizze: 20,
+        total: res.data.data.total,
+        maxpage: res.data.data.maxpage,
+      }
 
-  if (userId.value) {
-    userAdminStore.getUser(userId.value).then((res) => {
-      user.value = res as AdminUser
+      currentPage.value[key] = 1
 
-      Object.entries(BuyRecordStatus).forEach(([_key]) => {
-        const key = Number(_key).valueOf() || 0
-        apiAdminGetUserBuyRecordByPage(userId.value, 1, 20, Number(key).valueOf()).then((res) => {
-          dataInfo.value[key] = {
-            data: res.data.data.list,
-            pagesizze: 20,
-            total: res.data.data.total,
-            maxpage: res.data.data.maxpage,
+      if ((Number(route.query?.status).valueOf() || -1) === key) {
+        if (route.query?.page) {
+          currentPage.value[key] = Number(route.query?.page).valueOf() || 1
+          if (currentPage.value[key] < 1) {
+            currentPage.value[key] = 1
           }
-
-          currentPage.value[key] = 1
-
-          if ((Number(route.query?.status).valueOf() || -1) === key) {
-            if (route.query?.page) {
-              currentPage.value[key] = Number(route.query?.page).valueOf() || 1
-              if (currentPage.value[key] < 1) {
-                currentPage.value[key] = 1
-              }
-            }
-          }
-        })
-      }, () => {
-        toBack()
-      })
-    })
-  } else {
-    toBack()
-  }
-}
-
-watch(() => route.query?.userId, onChangeUser)
-onChangeUser()
-
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
-}
-
-const changePage = (status: number) => {
-  if (!user.value) {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
+        }
       }
     })
-    return
-  }
+  })
+}
 
+onChangeUser()
+
+const changePage = (status: number) => {
   const page = currentPage.value[status]
-  apiAdminGetUserBuyRecordByPage(userId.value, page, 20, Number(status).valueOf()).then((res) => {
+  apiAdminGetBuyRecordByPage(page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,
       pagesizze:20,
@@ -100,14 +65,10 @@ const changePage = (status: number) => {
     })
   })
 }
-
-const toHome = () => {
-  pushTo(router, route, "/admin/user/list/info")
-}
 </script>
 
 <template>
-  <div v-if="user && isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+  <div v-if="isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; height: 70vh; width: 80vw; justify-content: center; margin-top: 10px">
       <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true">
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
@@ -119,7 +80,7 @@ const toHome = () => {
              <div style="width: 100%; display: flex; justify-content: center">
                <div style="width: 100%;">
                    <div v-for="(record, idx) in dataInfo[index]?.data || {}" :key="idx" style="margin-top: 10px; width: 100%;">
-                     <AdminBuyRecord :record="record" :safe="false" :xiangqing="true" :adminuser="true"> </AdminBuyRecord>
+                     <AdminBuyRecord :record="record" :safe="false" :xiangqing="true" :adminuser="false"> </AdminBuyRecord>
                    </div>
                </div>
              </div>
@@ -134,9 +95,6 @@ const toHome = () => {
                 title="在此处您没有任何销售记录"
                 sub-title="欢迎到别处去看看吧"
             >
-              <template #extra>
-                <el-button type="primary" @click="toHome">到我的中心</el-button>
-              </template>
             </el-result>
           </div>
         </el-tab-pane>

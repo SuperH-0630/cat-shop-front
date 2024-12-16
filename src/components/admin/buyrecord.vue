@@ -36,6 +36,10 @@ const props = defineProps({
   "xiangqing": {
     type: Boolean,
     default: false,
+  },
+  "adminuser": {
+    type: Boolean,
+    default: true,
   }
 })
 
@@ -46,6 +50,7 @@ const route = useRoute()
 const record = computed(() => props.record)
 const safe = computed(() => props.safe)
 const xiangqing = computed(() => props.xiangqing)
+const adminuser = computed(() => props.adminuser)
 
 const onClassClick = () => {
   record.value && router.push({
@@ -69,7 +74,13 @@ const onGoWupin = () => {
 }
 
 const onXiangQing = () => {
-  pushTo(router, route, "/admin/user/list/buyrecord", {
+  if (adminuser.value) {
+    pushTo(router, route, "/admin/user/list/buyrecord", {
+      "recordId": record.value.id,
+    })
+    return
+  }
+  pushTo(router, route, "/admin/buyrecord/list/info", {
     "recordId": record.value.id,
   })
 }

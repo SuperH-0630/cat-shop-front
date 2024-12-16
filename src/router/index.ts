@@ -314,6 +314,26 @@ const routes: RouteRecordRaw[] = [
           admin: true,
         },
       },
+      {
+        path: "buyrecord",
+        redirect: "/admin/buyrecord/list"
+      },
+      {
+        path: 'buyrecord/list',
+        component: () => import('@/views/admin/allbuyrecordlst.vue'),
+        meta: {
+          title: '订单列表',
+          admin: true,
+        },
+      },
+      {
+        path: 'buyrecord/list/info',
+        component: () => import('@/views/admin/allbuyrecord.vue'),
+        meta: {
+          title: '订单列表',
+          admin: true,
+        },
+      },
     ]
   },
   {

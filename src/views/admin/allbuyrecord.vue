@@ -2,8 +2,6 @@
 import {apiAdminGetBuyRecordInfo, AdminBuyRecord as AdminBuyRecordData } from "@/api/admin/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue"
 import {isAdmin} from "@/store/admin";
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import pushTo from "@/views/admin/router_push";
 
 const router = useRouter()
 const route = useRoute()
@@ -17,36 +15,15 @@ if (!isAdmin()) {
   })
 }
 
-const userAdminStore = useAdminUserStore()
-
-const userId = ref(Number(route.query?.userId).valueOf() || 0)
-const user = ref(null as AdminUser | null)
-
 const recordId = ref(Number(route.query?.recordId).valueOf() || 0)
 const record = ref(null as AdminBuyRecordData | null)
-
-const onChangeUser = () => {
-  userId.value = Number(route.query?.userId).valueOf() || 0
-  user.value = null
-
-  if (userId.value) {
-    userAdminStore.getUser(userId.value).then((res) => {
-      user.value = res as AdminUser
-      onChangeRecord()
-    }, () => {
-      toBack()
-    })
-  } else {
-    toBack()
-  }
-}
 
 const onChangeRecord = () => {
   recordId.value = Number(route.query?.recordId).valueOf() || 0
   record.value = null
 
   if (recordId.value) {
-    apiAdminGetBuyRecordInfo(recordId.value as number, userId.value || 0).then((res) => {
+    apiAdminGetBuyRecordInfo(recordId.value as number).then((res) => {
       record.value = res.data.data as AdminBuyRecordData
     }, () => {
       record.value = null
@@ -56,12 +33,11 @@ const onChangeRecord = () => {
   }
 }
 
-watch(() => route.query?.userId, onChangeUser)
-watch(() => route.query?.recordId, onChangeUser)
-onChangeUser()
+watch(() => route.query?.recordId, onChangeRecord)
+onChangeRecord()
 
 const reload = () => {
-  recordId.value && user.value && apiAdminGetBuyRecordInfo(recordId.value as number, userId.value as number).then((res) => {
+  recordId.value && apiAdminGetBuyRecordInfo(recordId.value as number).then((res) => {
     record.value = res.data.data as AdminBuyRecordData
   }).catch(() => {
     router.push({
@@ -73,16 +49,12 @@ const reload = () => {
   })
 }
 
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
-}
-
 </script>
 
 <template>
-  <div v-if="user && record && isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+  <div v-if="record && isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <div style="width: 80%;">
-      <AdminBuyRecord :record="record" :safe="true" :xiangqing="false" :adminuser="true" @reload="reload"></AdminBuyRecord>
+      <AdminBuyRecord :record="record" :safe="true" :xiangqing="false" :adminuser="false" @reload="reload"></AdminBuyRecord>
     </div>
   </div>
   <div v-else></div>

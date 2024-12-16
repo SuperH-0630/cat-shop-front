@@ -208,6 +208,14 @@ const toAddWupin = () => {
   pushTo(router, route, "/admin/wupin/add")
 }
 
+const toAllBuyRecordLst = () => {
+  pushTo(router, route, "/admin/buyrecord/list")
+}
+
+const toAllBuyRecordInfo = () => {
+  pushTo(router, route, "/admin/buyrecord/list/info")
+}
+
 </script>
 
 <template>
@@ -216,7 +224,7 @@ const toAddWupin = () => {
       <el-scrollbar height="100%" style="width: 100%">
         <el-menu
             :default-active="active"
-            :default-openeds='["user", "user/list", "class", "class/list", "wupin", "wupin/list"]'
+            :default-openeds='["user", "user/list", "class", "class/list", "wupin", "wupin/list", "buyrecord", "buyrecord/list"]'
         >
           <el-sub-menu
               index="user"
@@ -279,6 +287,22 @@ const toAddWupin = () => {
             <el-menu-item index="wupin/add" @click="toAddWupin">添加商品</el-menu-item>
           </el-sub-menu>
 
+          <el-sub-menu
+              index="buyrecord"
+          >
+            <template #title>
+              <el-text>订单管理</el-text>
+            </template>
+            <el-sub-menu
+                index="buyrecord/list"
+            >
+              <template #title>
+                <el-text>订单列表</el-text>
+              </template>
+              <el-menu-item index="buyrecord/list" @click="toAllBuyRecordLst">订单列表</el-menu-item>
+              <el-menu-item index="buyrecord/list/info" @click="toAllBuyRecordInfo">订单详情</el-menu-item>
+            </el-sub-menu>
+          </el-sub-menu>
         </el-menu>
       </el-scrollbar>
     </el-aside>
