@@ -8,7 +8,6 @@ export interface AdminShopRecord {
     wupinid: number
     classid: number
     num: number
-    price: number
     time: number
     wupin: Wupin
 }
@@ -45,7 +44,6 @@ export function apiAdminGetUserShoppingRecord(userId: number, page: number, page
             wupinid: 1,
             classid: 1,
             num: 2,
-            price: 9999,
             time: 1734024269,
             wupin: {
                 id: 1,

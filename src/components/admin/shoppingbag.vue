@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {formatDate} from "@/utils/time"
-import {getFacePrice, getRealPrice} from "@/utils/price";
+import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
 import {AdminShopRecord, apiAdminPostAddToShoppingBag} from "@/api/admin/shoppingbag";
 
 const props = defineProps({
@@ -22,6 +22,10 @@ const realPrice = computed(() => {
 
 const facePrice = computed(() => {
   return getFacePrice(record.value.wupin?.hotPrice, record.value.wupin?.realPrice)
+})
+
+const totalPrice = computed(() => {
+  return getTotalPrice(record.value.wupin?.hotPrice, record.value.wupin?.realPrice, num.value)
 })
 
 const onClassClick = () => {
@@ -222,6 +226,7 @@ if (num.value < 0) {
               <el-button class="buy_item" size="large" disabled>
                 <el-icon style="margin-right: 3px"><Money /></el-icon>
                 立即购买
+                <span v-if="num >= 1"> （ 实际价格：{{ totalPrice > 0 ? "￥" + (totalPrice / 100).toFixed(2) : "免费" }} ） </span>
               </el-button>
             </el-tooltip>
           </div>

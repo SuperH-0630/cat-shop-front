@@ -8,7 +8,6 @@ export interface ShopRecord {
     wupinid: number
     classid: number
     num: number
-    price: number
     time: number
     wupin: Wupin
 }
@@ -48,7 +47,6 @@ export function apiGetUserShoppingRecord(offset: number, limit: number): Result<
             wupinid: 1,
             classid: 1,
             num: 2,
-            price: 9999,
             time: 1734024269,
             wupin: {
                 id: 1,
