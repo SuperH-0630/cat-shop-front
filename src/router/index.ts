@@ -298,6 +298,22 @@ const routes: RouteRecordRaw[] = [
           admin: true,
         },
       },
+      {
+        path: 'wupin/list/edit',
+        component: () => import('@/views/admin/editwupin.vue'),
+        meta: {
+          title: '商品编辑',
+          admin: true,
+        },
+      },
+      {
+        path: 'wupin/add',
+        component: () => import('@/views/admin/addwupin.vue'),
+        meta: {
+          title: '商品添加',
+          admin: true,
+        },
+      },
     ]
   },
   {

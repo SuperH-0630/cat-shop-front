@@ -2,6 +2,7 @@
   import useWechatStore from "@/store/wechat"
   import useConfigStore from "@/store/config"
 
+  const route = useRoute()
   const wechatStore = useWechatStore()
   const configStore = useConfigStore()
 
@@ -9,12 +10,13 @@
     wechatStore.close()
   }
 
-  const deleayShow = ref(false)
+  const delayShow = ref(false)
   const show = ref(false)
+  const isAdmin = computed(() => route.meta?.admin === true || route.meta?.rootAdmin === true)
 
   onMounted(() => {
     setTimeout(() => {
-      deleayShow.value = true
+      delayShow.value = true
     }, 1500)
   })
 
@@ -25,7 +27,7 @@
 </script>
 
 <template>
-  <div v-if="wechatStore.show && deleayShow && configStore.config?.wechat" class="wechat">
+  <div v-if="!isAdmin && wechatStore.show && delayShow && configStore.config?.wechat" class="wechat">
     <div class="wechat_box">
       <el-card>
         <template #header>

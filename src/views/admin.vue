@@ -204,6 +204,10 @@ const toWupinInfo = () => {
   pushTo(router, route, "/admin/wupin/list/info")
 }
 
+const toAddWupin = () => {
+  pushTo(router, route, "/admin/wupin/add")
+}
+
 </script>
 
 <template>
@@ -270,8 +274,9 @@ const toWupinInfo = () => {
               </template>
               <el-menu-item index="wupin/list" @click="toWupinLst">商品列表</el-menu-item>
               <el-menu-item index="wupin/list/info" :disabled="!wupin" @click="toWupinInfo">商品详情</el-menu-item>
+              <el-menu-item index="wupin/list/edit" :disabled="!wupin" @click="toWupinEdit">商品编辑</el-menu-item>
             </el-sub-menu>
-            <el-menu-item index="wupin/add" @click="toAddClass">添加商品</el-menu-item>
+            <el-menu-item index="wupin/add" @click="toAddWupin">添加商品</el-menu-item>
           </el-sub-menu>
 
         </el-menu>

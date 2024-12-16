@@ -4,15 +4,18 @@ import {ElMessage} from "element-plus"
 import useUserStore, {isLogin} from "@/store/user"
 import { ElMessageBox } from "element-plus"
 
-const service: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || '/'
-})
+export const config = {
+    baseURL: import.meta.env.VITE_API_BASE || '/'
+}
+
+const service: AxiosInstance = axios.create(config)
 
 service.interceptors.request.use(
   (config): any => {
     const headers = {
         ...config.headers,
-        'Content-Type': "application/json",
+        'Content-Type': "application/form-data",
+        "Accept": "application/json",
     }
 
     const xtoken = getXtoken()

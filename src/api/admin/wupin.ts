@@ -1,7 +1,8 @@
 import useClassStore from "@/store/class";
-import {Result} from "@/utils/request";
+import {Result, Success} from "@/utils/request";
 import WupinPic from "@/assets/images/logo.jpg";
 import {AdminClass} from "@/api/admin/class";
+import {UploadRawFile} from "element-plus";
 
 export interface AdminWupinID {
     isHot: boolean
@@ -15,7 +16,6 @@ export interface AdminWupinBase extends AdminHotWupin {
     name: string
     pic: string
     classid: number
-    classOf: AdminClass
     tag?: string
     hotPrice?: number
     realPrice: number
@@ -27,7 +27,11 @@ export interface AdminWupinBase extends AdminHotWupin {
     location: string
 }
 
-export interface AdminWupinWithInfo extends AdminWupinBase {
+export interface AdminWupinBaseWithClass extends AdminWupinBase {
+    classOf: AdminClass
+}
+
+export interface AdminWupinWithInfo extends AdminWupinBaseWithClass {
     buytotal: number
     buygood: number
 }
@@ -181,6 +185,32 @@ export function apiAdminGetWupinLst(page: number, pagesize: number): Result<Admi
                 maxpage: pagemax,
                 total: wupinLst.value.length,
                 list: wupinLst.value,
+            },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function apiAdminPostUpdateWupin(data: AdminWupinBase, pic: UploadRawFile | null): Success {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
+            },
+        },
+        status: 200,
+    })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function apiAdminPostAddWupin(data: AdminWupinBase, pic: UploadRawFile): Success {
+    return Promise.resolve({
+        data: {
+            code: 0,
+            data: {
+                success: true,
             },
         },
         status: 200,

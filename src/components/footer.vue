@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import useConfigStore from "@/store/config";
 
+const route = useRoute()
+const isAdmin = computed(() => route.meta?.admin === true || route.meta?.rootAdmin === true)
 const configStore = useConfigStore()
 
 </script>
 
 <template>
-<div v-if="configStore.config.footer && configStore.config.footer.length > 0" style="display: flex; justify-content: center; min-height: 2vh; width: 100%">
+<div v-if="!isAdmin && configStore.config.footer && configStore.config.footer.length > 0" style="display: flex; justify-content: center; height: 7vh; width: 100%">
   <div class="box">
     <el-text class="txt">
       {{ configStore.config.footer }}

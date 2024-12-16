@@ -45,7 +45,7 @@ export const isMobile = (phone: string) => /^1[0-9]{10}$/.test(phone)
  * @param email
  * @returns {boolean}
  */
-export const isEmail = (email: string) => /^\w+@\w+\.\w+$/i.test(email)
+export const isEmail = (email: string) => /^.+@.+\..+$/i.test(email)
 
 /**
  * 获取滚动的坐标

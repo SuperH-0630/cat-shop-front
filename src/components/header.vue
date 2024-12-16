@@ -3,17 +3,29 @@ import useConfigStore from "@/store/config"
 import UserTitle from "@/components/user_title.vue"
 
 const router = useRouter()
+const route = useRoute()
+
+const isAdmin = computed(() => route.meta?.admin === true || route.meta?.rootAdmin === true)
+const title = computed(() => route.meta?.title ? route.meta.title : "")
+const configStore = useConfigStore()
+
 const goHome = () => {
+  if (isAdmin.value) {
+    router.push({
+      path: "/admin/user/list"
+    })
+    return
+  }
   router.push({
     path: "/home"
   })
 }
+
 const goKefu = () => {
   router.push({
     path: "/kefu"
   })
 }
-const configStore = useConfigStore()
 </script>
 
 <template>
@@ -22,7 +34,10 @@ const configStore = useConfigStore()
       <template #title>
         <div class="title_box" @click="goHome">
           <el-avatar class="avatar_logo" :src="configStore.config?.logo" fit="fill"></el-avatar>
-          <el-text class="title">
+          <el-text v-if="isAdmin" class="title">
+            {{ configStore.config?.name }}管理后台
+          </el-text>
+          <el-text v-else class="title">
             {{ configStore.config?.name }}
           </el-text>
         </div>
@@ -30,7 +45,7 @@ const configStore = useConfigStore()
 
       <template #content>
         <el-text class="subtitle">
-          {{ configStore.config?.subname }}
+          {{ title }} - {{ configStore.config?.subname }}
         </el-text>
       </template>
 
@@ -87,7 +102,7 @@ const configStore = useConfigStore()
 }
 
 .subtitle {
-  font-size: 1.8vh;
+  font-size: 2vh;
   font-weight: normal;
   margin-left: 5px;
   vertical-align: middle;

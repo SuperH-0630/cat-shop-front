@@ -94,7 +94,9 @@ const toInfo = (wupinId: number) => {
         <el-table-column prop="tag" label="标签" />
         <el-table-column label="火爆价" >
           <template #default="{ row }">
-            ￥{{ (row.hotPrice / 100).toFixed(2) }}
+            <span v-if="row.hotPrice >= 0">
+              ￥{{ (row.hotPrice / 100).toFixed(2) }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="真实价" >

@@ -5,20 +5,17 @@
   import useClassStore from "@/store/class"
   import useHotWupinStore from "@/store/hotwupin"
 
+  const route = useRoute()
   const configStore = useConfigStore()
   const userStore = useUserStore()
   const classStore = useClassStore()
   const hotWupinStore = useHotWupinStore()
-  const route = useRoute()
 
   configStore.updateConfig()
   configStore.updateXieyi()
   isLogin() && userStore.updateInfo()
   classStore.updateInfo()
   hotWupinStore.updateInfo()
-  const isAdmin = computed(() => route.meta?.admin === true)
-
-  const bodyHeight = ref(isAdmin.value ? "85vh" : "84.5vh")
 
   const fn1 = (t: number) => {
     Promise.all(
@@ -60,26 +57,30 @@
   }
   s.setAttribute('href', configStore.config?.logo)
 
+  const isAdmin = computed(() => route.meta?.admin === true || route.meta?.rootAdmin === true)
+  const showFooter = computed(() => !isAdmin.value && configStore.config.footer && configStore.config.footer.length > 0)
+
+  const bodyHeight = computed(() => showFooter.value ? "83vh" : "90vh")
+
 </script>
 
 <template>
   <div id="home">
-    <div class="header">
+    <div class="header" style="height: 10vh">
       <Header></Header>
     </div>
-    <div id="body" :style='{"min-height": bodyHeight}'>
+    <div id="body" :style='{"height": bodyHeight}'>
       <el-container>
         <el-main>
           <router-view></router-view>
         </el-main>
       </el-container>
     </div>
-    <div v-if="!isAdmin" id="foot">
+    <div v-if="showFooter" style="height: 7vh;">
       <Footer></Footer>
     </div>
   </div>
   <Rightwin></Rightwin>
-<!--  <Back></Back>-->
   <Wechat></Wechat>
 </template>
 
@@ -91,15 +92,6 @@
   #home {
     display: flex;
     flex-direction: column;
-    min-height: 98%;
-  }
-
-  #header {
-    min-height: 10vh;
-  }
-
-  #foot {
-    min-height: 3vh;
   }
 
   .avatar_logo {
