@@ -5,7 +5,7 @@ import {AdminClass} from "@/api/admin/class";
 import {UploadRawFile} from "element-plus";
 
 export interface AdminWupinID {
-    isHot: boolean
+    id: number
 }
 
 export interface AdminHotWupin {
