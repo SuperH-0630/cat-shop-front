@@ -244,12 +244,60 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'class',
-        component: () => import('@/views/admin/home.vue'),
+        redirect: "/admin/class/list"
+      },
+      {
+        path: 'class/list',
+        component: () => import('@/views/admin/classlst.vue'),
         meta: {
-          title: '分类管理',
+          title: '类别列表',
           admin: true,
         },
-      }
+      },
+      {
+        path: 'class/list/info',
+        component: () => import('@/views/admin/class.vue'),
+        meta: {
+          title: '类别详情',
+          admin: true,
+        },
+      },
+      {
+        path: 'class/list/edit',
+        component: () => import('@/views/admin/editclass.vue'),
+        meta: {
+          title: '类别编辑',
+          admin: true,
+        },
+      },
+      {
+        path: 'class/add',
+        component: () => import('@/views/admin/addclass.vue'),
+        meta: {
+          title: '新增类别',
+          admin: true,
+        },
+      },
+      {
+        path: 'wupin',
+        redirect: "/admin/wupin/list"
+      },
+      {
+        path: 'wupin/list',
+        component: () => import('@/views/admin/wupinlst.vue'),
+        meta: {
+          title: '商品列表',
+          admin: true,
+        },
+      },
+      {
+        path: 'wupin/list/info',
+        component: () => import('@/views/admin/wupin.vue'),
+        meta: {
+          title: '商品详情',
+          admin: true,
+        },
+      },
     ]
   },
   {

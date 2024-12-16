@@ -9,12 +9,16 @@
   const userStore = useUserStore()
   const classStore = useClassStore()
   const hotWupinStore = useHotWupinStore()
+  const route = useRoute()
 
   configStore.updateConfig()
   configStore.updateXieyi()
   isLogin() && userStore.updateInfo()
   classStore.updateInfo()
   hotWupinStore.updateInfo()
+  const isAdmin = computed(() => route.meta?.admin === true)
+
+  const bodyHeight = ref(isAdmin.value ? "85vh" : "84.5vh")
 
   const fn1 = (t: number) => {
     Promise.all(
@@ -55,6 +59,7 @@
     s.setAttribute('rel', "icon")
   }
   s.setAttribute('href', configStore.config?.logo)
+
 </script>
 
 <template>
@@ -62,19 +67,19 @@
     <div class="header">
       <Header></Header>
     </div>
-    <div id="body">
+    <div id="body" :style='{"min-height": bodyHeight}'>
       <el-container>
         <el-main>
           <router-view></router-view>
         </el-main>
       </el-container>
     </div>
-    <div id="foot">
+    <div v-if="!isAdmin" id="foot">
       <Footer></Footer>
     </div>
   </div>
   <Rightwin></Rightwin>
-  <Back></Back>
+<!--  <Back></Back>-->
   <Wechat></Wechat>
 </template>
 
@@ -91,10 +96,6 @@
 
   #header {
     min-height: 10vh;
-  }
-
-  #body {
-    min-height: 84vh;
   }
 
   #foot {

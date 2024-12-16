@@ -3,6 +3,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import useAdminUserStore, {AdminUser} from "@/store/admin/user";
 import {isAdmin, isRootAdmin} from "@/store/admin";
 import pushTo from "@/views/admin/router_push";
+import {BuyRecordStatus} from "@/api/buyrecord";
+import {apiAdminGetUserBuyRecordByPage} from "@/api/admin/buyrecord";
 
 const router = useRouter()
 const route = useRoute()
@@ -17,7 +19,7 @@ if (!isAdmin()) {
 }
 
 const toBack = () => {
-  pushTo(router, route, "/admin/user/list/info")
+  pushTo(router, route, "/admin/user/list")
 }
 
 const backSec = ref(6)
@@ -41,32 +43,30 @@ const form = ref({
   newPasswordDouble: "",
 } as { newPassword: string; newPasswordDouble: string })
 
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res as AdminUser
-    if (user.value.status === 3) {
-      backTimer()
-    }
-    if (user.value.type === 3 && !isRootAdmin()) {
-      backTimer()
-    }
-  }, () => {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
+      if (user.value.status === 3) {
+        backTimer()
       }
-    })
-  })
-} else {
-  router.push({
-    path: "/error",
-    query: {
-      msg: "页面错误"
-    }
-  })
+      if (user.value.type === 3 && !isRootAdmin()) {
+        backTimer()
+      }
+      }, () => {
+        toBack()
+      })
+  } else {
+    toBack()
+  }
 }
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
+
 
 const passwordCheck = computed(() => form.value.newPassword.length >= 8)
 const doublePasswordCheck = computed(() => form.value.newPassword === form.value.newPasswordDouble)

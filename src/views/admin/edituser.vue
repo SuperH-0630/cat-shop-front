@@ -31,7 +31,7 @@ const ub = ref({
 } as AdminUserBase)
 
 const toBack = () => {
-  pushTo(router, route, "/admin/user/list/info")
+  pushTo(router, route, "/admin/user/list")
 }
 
 const backSec = ref(6)
@@ -45,50 +45,48 @@ const backTimer = () => {
   setTimeout(backTimer, 1000)
 }
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res as AdminUser
-    ub.value = {
-      name: res.name,
-      location: res.location,
-      status: res.status,
-      wechat: res.wechat,
-      email: res.email,
-    }
-    if (user.value.type === 3) {
-      if (!isRootAdmin()) {
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
+
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
+      ub.value = {
+        name: res.name,
+        location: res.location,
+        status: res.status,
+        wechat: res.wechat,
+        email: res.email,
+      }
+      if (user.value.type === 3) {
+        if (!isRootAdmin()) {
+          backTimer()
+        }
+        userStatusLst.value = {
+          1: "正常",
+        }
+        ub.value.status = 1
+        if (res.status !== 1) {
+          ElMessage({
+            type: 'warning',
+            message: "根管理员状态错误，已自动修正"
+          })
+        }
+      }
+      if (user.value.status === 3) {
         backTimer()
       }
-      userStatusLst.value = {
-        1: "正常",
-      }
-      ub.value.status = 1
-      if (res.status !== 1) {
-       ElMessage({
-        type: 'warning',
-        message: "根管理员状态错误，已自动修正"
-       })
-      }
-    }
-    if (user.value.status === 3) {
-      backTimer()
-    }
-  }, () => {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
-      }
+    }, () => {
+      toBack()
     })
-  })
-} else {
-  router.push({
-    path: "/error",
-    query: {
-      msg: "页面错误"
-    }
-  })
+  } else {
+    toBack()
+  }
 }
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
 
 const hasChange = computed(() => {
   return ub.value.name !== user.value?.name || ub.value.location !== user.value?.location || ub.value.status !== user.value?.status || ub.value.wechat !== user.value?.wechat || ub.value.email !== user.value?.email

@@ -114,6 +114,9 @@ const toInfo = (id: number) => {
           </template>
         </el-table-column>
       </el-table>
+      <div style="display: flex; justify-content: center; margin-top: 10px;">
+        <el-pagination v-model:current-page="page" class="pager" background layout="prev, pager, next" :page-size="pagesize" :total="maxpage || 0" @change="onChange" />
+      </div>
     </el-card>
   </div>
   <div v-else></div>

@@ -32,10 +32,6 @@ const ub = ref({
   email: "",
 } as NewUserData)
 
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
-}
-
 const userStatusLst = ref(GetAdminUserStatus() as { [key: number]: string })
 
 const checkName = computed(() => ub.value.name && ub.value.name.length > 0 && ub.value.name.length <= 10)
@@ -55,7 +51,15 @@ const update = () => {
         type: 'success',
         message: "更新成功",
       })
-      toBack()
+      ub.value = {
+        name: "",
+        phone: "",
+        password: "",
+        location: "",
+        status: 1,
+        wechat: "",
+        email: "",
+      }
     }, () => {
       ElMessage({
         type: 'error',

@@ -3,6 +3,7 @@ import {apiAdminGetBuyRecordInfo, AdminBuyRecord as AdminBuyRecordData } from "@
 import AdminBuyRecord from "@/components/admin/buyrecord.vue"
 import {isAdmin} from "@/store/admin";
 import useAdminUserStore, {AdminUser} from "@/store/admin/user";
+import pushTo from "@/views/admin/router_push";
 
 const router = useRouter()
 const route = useRoute()
@@ -24,26 +25,24 @@ const user = ref(null as AdminUser | null)
 const recordId = ref(Number(route.query?.recordId).valueOf() || 0)
 const record = ref(null as AdminBuyRecordData | null)
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res as AdminUser
-    reload()
-  }, () => {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
-      }
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
+
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
+      reload()
+    }, () => {
+      toBack()
     })
-  })
-} else {
-  router.push({
-    path: "/error",
-    query: {
-      msg: "页面错误"
-    }
-  })
+  } else {
+    toBack()
+  }
 }
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
 
 const reload = () => {
   recordId.value && user.value && apiAdminGetBuyRecordInfo(recordId.value as number, userId.value as number).then((res) => {
@@ -56,6 +55,10 @@ const reload = () => {
       }
     })
   })
+}
+
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
 }
 
 </script>

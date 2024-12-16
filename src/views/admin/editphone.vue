@@ -18,7 +18,7 @@ if (!isAdmin()) {
 }
 
 const toBack = () => {
-  pushTo(router, route, "/admin/user/list/info")
+  pushTo(router, route, "/admin/user/list")
 }
 
 const backSec = ref(6)
@@ -41,33 +41,31 @@ const form = ref({
   newPhone: ""
 } as { newPhone: string })
 
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res as AdminUser
-    form.value.newPhone = user.value.phone
-    if (user.value.status === 3) {
-      backTimer()
-    }
-    if (user.value.type === 3 && !isRootAdmin()) {
-      backTimer()
-    }
-  }, () => {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
+      form.value.newPhone = user.value.phone
+      if (user.value.status === 3) {
+        backTimer()
       }
+      if (user.value.type === 3 && !isRootAdmin()) {
+        backTimer()
+      }
+    }, () => {
+      toBack()
     })
-  })
-} else {
-  router.push({
-    path: "/error",
-    query: {
-      msg: "页面错误"
-    }
-  })
+  } else {
+    toBack()
+  }
 }
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
+
 const hasChange = computed(() => form.value.newPhone !== user.value?.phone)
 const phoneCheck = computed(() => isMobile(form.value.newPhone))
 const allCheck = computed(() => phoneCheck.value && hasChange.value)

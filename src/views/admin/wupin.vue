@@ -1,57 +1,30 @@
 <script setup lang="ts">
-  import {Wupin} from "@/store/hotwupin"
-  import { ElNotification } from 'element-plus'
   import {Location} from "@element-plus/icons-vue";
-  import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-  import {apiPostAddToShoppingBag} from "@/api/shoppingbag";
-  import {apiGetWupin} from "@/api/wupin";
+  import {getFacePrice, getRealPrice} from "@/utils/price";
+  import {isAdmin} from "@/store/admin";
+  import {AdminWupin, apiAdminGetWupin} from "@/api/admin/wupin";
+  import pushTo from "@/views/admin/router_push";
 
-  const route = useRoute()
   const router = useRouter()
+  const route = useRoute()
 
-  const wupinId = ref(route.query.id as number | null | undefined)
-  if (!wupinId.value || wupinId.value <= 0) {
+  if (!isAdmin()) {
     router.push({
-      path: '/error',
+      path: "error",
       query: {
-        msg: "找不到物品",
+        msg: "页面错误"
       }
     })
   }
 
-  const wupin = ref(null as Wupin | null)
-  apiGetWupin(wupinId.value as number).then((res) => {
-    wupin.value = res.data.data
-  }).catch(() => {
-    router.push({
-      path: '/error',
-      query: {
-        msg: "找不到物品",
-      }
-    })
-  })
+  const wupinId = ref(0)
+  const wupin = ref(null as AdminWupin | null)
 
-  const onClassClick = () => {
-    wupin.value && router.push({
-      path: "/search",
-      query: {
-        "info": JSON.stringify({
-          select: [wupin.value && wupin.value.classid],
-          search: "",
-        })
-      }
-    })
-  }
-
-  const num = ref(1)
   const realPrice = computed(() => {
     return getRealPrice(wupin.value?.realPrice)
   })
   const facePrice = computed(() => {
     return getFacePrice(wupin.value?.hotPrice, wupin.value?.realPrice)
-  })
-  const totalPrice = computed(() => {
-    return getTotalPrice(wupin.value?.hotPrice, wupin.value?.realPrice, num.value)
   })
 
   const totalBuy = computed(() => (wupin.value && wupin.value.buytotal >= 0) ? wupin.value.buytotal : 0)
@@ -64,57 +37,50 @@
   })
 
   const goodBuyPre = computed(() => (totalBuyGood.value / totalBuy.value) * 100)
-  const goodBuyMsg = ref("好评如潮")
-  if (goodBuyPre.value >= 85) {
-    goodBuyMsg.value = "好评如潮"
-  } else if (goodBuyPre.value >= 50) {
-    goodBuyMsg.value = "部分好评"
-  } else if (goodBuyPre.value >= 30) {
-    goodBuyMsg.value = "好评甚少"
-  } else {
-    goodBuyMsg.value = "谨慎购买"
-  }
+  const goodBuyMsg = computed(() => {
+    if (goodBuyPre.value >= 85) {
+      return "好评如潮"
+    } else if (goodBuyPre.value >= 50) {
+      return "部分好评"
+    } else if (goodBuyPre.value >= 30) {
+      return "好评甚少"
+    } else {
+      return "谨慎购买"
+    }
+  })
 
-  const onClickBag = () => {
-    wupin.value && apiPostAddToShoppingBag(wupin.value.id, num.value).then((res) => {
-      if (res.data.data.success) {
-        wupin.value && ElNotification({
-          title: '已经加入购物车',
-          message: `尊敬的用户您好，我们已经将 ${num.value}件 ${wupin.value.name} 添加到您的购物车。请您进行接下来的操作。若现在购买，预测价格为￥${totalPrice.value}。`,
-          duration: 5000,
-          type: "success",
-          position: 'top-left',
-        })
-      } else {
-        ElMessage({
-          type: 'error',
-          message: "加入购物车失败",
-        })
-      }
-    })
-  }
+  const onChangeWupin = () => {
+    wupinId.value = Number(route.query?.wupinId).valueOf() || 0
+    wupin.value = null
 
-  const byn = ref(null as any)
-  const buy = () => {
-    if (!byn.value) {
-      ElMessage({
-        type: 'warning',
-        message: "系统出现了问题，请重试。"
+    if (wupinId.value) {
+      apiAdminGetWupin(wupinId.value).then((res) => {
+        wupin.value = res.data.data as AdminWupin
+      }, () => {
+        toBack()
       })
-      return
+    } else {
+      toBack()
     }
+  }
 
-    if (num.value <= 0) {
-      return
-    }
+  const toBack = () => {
+    pushTo(router, route, "/admin/wupin/list")
+  }
 
-    byn.value.open(wupin.value, num.value)
+  watch(() => route.query?.wupinId, onChangeWupin)
+  onChangeWupin()
+
+  const onClassClick = () => {
+    wupin.value && pushTo(router, route, "/admin/class/list/info", {
+      classId: wupin.value?.classOf.id
+    })
   }
 </script>
 
 <template>
   <div v-if="wupin" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-    <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
+    <el-card style="display: flex; max-width: 90%; justify-content: center; margin-top: 10px">
       <div style="display: inline-block; width: 15vw; height: 70vh; margin-right: 20px; margin-left: 20px">
         <el-scrollbar height="70vh">
           <div style="padding-right: 5px">
@@ -256,20 +222,6 @@
                 </el-text>
               </div>
             </div>
-
-            <div style="display: flex; justify-content: left">
-              <el-input-number v-model="num" :min="1" :max="99" size="large" class="buy_item" style="margin-left: 0px">
-                <template #suffix>
-                  <span> 件 </span>
-                </template>
-              </el-input-number>
-              <el-button class="buy_item" size="large" @click="onClickBag">
-                <el-icon style="margin-right: 3px"><Handbag /></el-icon> 加入购物车
-              </el-button>
-              <el-button class="buy_item" size="large" :disabled="num <= 0" @click="buy">
-                <el-icon style="margin-right: 3px"><Money /></el-icon> 立即购买 <span v-if="num >= 1"> （实际价格：{{ totalPrice > 0 ? "￥" + totalPrice.toFixed(2) : "免费" }}） </span>
-              </el-button>
-            </div>
             <div class="info_box">
               <div v-html="wupin.info"></div>
             </div>
@@ -279,7 +231,6 @@
     </el-card>
   </div>
   <div v-else></div>
-  <Buynew ref="byn"></Buynew>
 </template>
 
 <style scoped lang="scss">

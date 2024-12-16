@@ -3,6 +3,8 @@ import useAdminUserStore from "@/store/admin/user";
 import { AdminUser } from "@/store/admin/user"
 import pushTo from "@/views/admin/router_push";
 import {isAdmin, isRootAdmin} from "@/store/admin";
+import {AdminWupin, apiAdminGetWupin} from "@/api/admin/wupin";
+import {AdminClass, apiAdminGetClass} from "@/api/admin/class";
 
 const router = useRouter()
 const route = useRoute()
@@ -17,7 +19,6 @@ if (!isAdmin()) {
 }
 
 const active = ref("")
-const openArray = ref([] as string[])
 
 const changePage = () => {
   if (!route.path.startsWith("/admin")) {
@@ -43,19 +44,16 @@ const changePage = () => {
   const m1Index = ref(pathLst.length >= 3 ? pathLst[2] : "")
   if (m1Index.value) {
     active.value = m1Index.value
-    openArray.value.push(m1Index.value)
   }
 
   const m2Index = ref(pathLst.length >= 4 ? pathLst[2] + "/" + pathLst[3] : "")
   if (m2Index.value) {
     active.value = m2Index.value
-    openArray.value.push(m2Index.value)
   }
 
   const m3Index = ref(pathLst.length >= 5 ? pathLst[2] + "/" + pathLst[3] + "/" + pathLst[4] : "")
   if (m3Index.value) {
     active.value = m3Index.value
-    openArray.value.push(m3Index.value)
   }
 }
 
@@ -100,15 +98,47 @@ const onChangeUser = () => {
 watch(() => route.query?.userId, onChangeUser)
 onChangeUser()
 
+const wupinId = ref(0)
+const wupin = ref(null as AdminWupin | null)
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    console.log("res is ", res)
-    user.value = res
-  }).catch(() => {
-    user.value = null
-  })
+const onChangeWupin = () => {
+  wupinId.value = Number(route.query?.wupinId).valueOf() || 0
+  wupin.value = null
+
+  if (wupinId.value) {
+    apiAdminGetWupin(wupinId.value).then((res) => {
+      wupin.value = res.data.data as AdminWupin
+    }, () => {
+      wupin.value = null
+    })
+  } else {
+    wupin.value = null
+  }
 }
+
+watch(() => route.query?.wupinId, onChangeWupin)
+onChangeWupin()
+
+const classId = ref(Number(route.query?.classId).valueOf() || 0)
+const classObj = ref(null as AdminClass | null)
+
+const onChangeClass = () => {
+  classId.value = Number(route.query?.classId).valueOf() || 0
+  classObj.value = null
+
+  if (classId.value) {
+    apiAdminGetClass(classId.value).then((res) => {
+      classObj.value = res.data.data as AdminClass
+    }, () => {
+      classObj.value = null
+    })
+  } else {
+    classObj.value = null
+  }
+}
+
+watch(() => route.query?.classId, onChangeClass)
+onChangeClass()
 
 const toUserList = () => {
   pushTo(router, route, "/admin/user/list")
@@ -150,15 +180,39 @@ const toMsg = () => {
   pushTo(router, route, "/admin/user/msg")
 }
 
+const toClassLst = () => {
+  pushTo(router, route, "/admin/class/list")
+}
+
+const toClassInfo = () => {
+  pushTo(router, route, "/admin/class/list/info")
+}
+
+const toClassEdit = () => {
+  pushTo(router, route, "/admin/class/list/edit")
+}
+
+const toAddClass = () => {
+  pushTo(router, route, "/admin/class/add")
+}
+
+const toWupinLst = () => {
+  pushTo(router, route, "/admin/wupin/list")
+}
+
+const toWupinInfo = () => {
+  pushTo(router, route, "/admin/wupin/list/info")
+}
+
 </script>
 
 <template>
   <el-container v-if="isAdmin()">
-    <el-aside style=" width: 12vw; height: 75vh; border-radius: 15px">
+    <el-aside style=" width: 12vw; height: 85vh; border-radius: 15px">
       <el-scrollbar height="100%" style="width: 100%">
         <el-menu
             :default-active="active"
-            :default-openeds="openArray"
+            :default-openeds='["user", "user/list", "class", "class/list", "wupin", "wupin/list"]'
         >
           <el-sub-menu
               index="user"
@@ -187,49 +241,39 @@ const toMsg = () => {
               index="class"
           >
             <template #title>
-              <el-text>分类管理</el-text>
+              <el-text>类别管理</el-text>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="class/list">分类列表</el-menu-item>
-              <el-menu-item index="class/add">添加分类</el-menu-item>
-            </el-menu-item-group>
+            <el-sub-menu
+                index="class/list"
+            >
+              <template #title>
+                <el-text>类别列表</el-text>
+              </template>
+              <el-menu-item index="class/list" @click="toClassLst">类别列表</el-menu-item>
+              <el-menu-item index="class/list/info" :disabled="!classObj" @click="toClassInfo">类别详情</el-menu-item>
+              <el-menu-item index="class/list/edit" :disabled="!classObj" @click="toClassEdit">类别编辑</el-menu-item>
+            </el-sub-menu>
+            <el-menu-item index="class/add" @click="toAddClass">添加类别</el-menu-item>
           </el-sub-menu>
 
           <el-sub-menu
-              index="class"
+              index="wupin"
           >
             <template #title>
-              <el-text>分类管理</el-text>
+              <el-text>商品管理</el-text>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="class/list">分类列表</el-menu-item>
-              <el-menu-item index="class/add">添加分类</el-menu-item>
-            </el-menu-item-group>
+            <el-sub-menu
+                index="wupin/list"
+            >
+              <template #title>
+                <el-text>商品管理</el-text>
+              </template>
+              <el-menu-item index="wupin/list" @click="toWupinLst">商品列表</el-menu-item>
+              <el-menu-item index="wupin/list/info" :disabled="!wupin" @click="toWupinInfo">商品详情</el-menu-item>
+            </el-sub-menu>
+            <el-menu-item index="wupin/add" @click="toAddClass">添加商品</el-menu-item>
           </el-sub-menu>
 
-          <el-sub-menu
-              index="class"
-          >
-            <template #title>
-              <el-text>分类管理</el-text>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="class/list">分类列表</el-menu-item>
-              <el-menu-item index="class/add">添加分类</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
-
-          <el-sub-menu
-              index="class"
-          >
-            <template #title>
-              <el-text>分类管理</el-text>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="class/list">分类列表</el-menu-item>
-              <el-menu-item index="class/add">添加分类</el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
         </el-menu>
       </el-scrollbar>
     </el-aside>

@@ -2,7 +2,7 @@
 import useAdminUserStore from "@/store/admin/user";
 import { AdminUser } from "@/store/admin/user"
 import {Edit, EditPen} from "@element-plus/icons-vue";
-import {genFileId, type UploadInstance, UploadProps, UploadRawFile} from "element-plus";
+import {ElMessage, genFileId, type UploadInstance, UploadProps, UploadRawFile} from "element-plus";
 import pushTo from "@/views/admin/router_push";
 import {isAdmin, isRootAdmin} from "@/store/admin";
 
@@ -22,6 +22,29 @@ const userAdminStore = useAdminUserStore()
 
 const userId = ref(Number(route.query?.userId).valueOf() || 0)
 const user = ref(null as AdminUser | null)
+
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
+
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
+    }, () => {
+      toBack()
+    })
+  } else {
+    toBack()
+  }
+}
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
+
+
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
+}
 
 if (userId.value) {
   userAdminStore.getUser(userId.value).then((res) => {

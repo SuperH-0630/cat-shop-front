@@ -30,26 +30,24 @@ if (page.value < 1) {
 }
 const msgLst = ref([] as AdminMsg[])
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res as AdminUser
-    onChange()
-  }, () => {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
-      }
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
+
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
+      onChange()
+    }, () => {
+      toBack()
     })
-  })
-} else {
-  router.push({
-    path: "/error",
-    query: {
-      msg: "页面错误"
-    }
-  })
+  } else {
+    toBack()
+  }
 }
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
 
 const onChange = () => {
   user.value && apiAdminGetUserMsg(userId.value, page.value, pagesize.value).then((res) => {
@@ -58,8 +56,8 @@ const onChange = () => {
   })
 }
 
-const toHome = () => {
-  pushTo(router, route, "/admin/user/list/info")
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
 }
 
 </script>
@@ -104,7 +102,7 @@ const toHome = () => {
             sub-title="请用户留言了再来看吧！"
         >
           <template #extra>
-            <el-button type="primary" @click="toHome">到我的中心</el-button>
+            <el-button type="primary" @click="toBack">到我的中心</el-button>
           </template>
         </el-result>
       </div>

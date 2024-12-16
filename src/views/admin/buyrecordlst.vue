@@ -27,48 +27,49 @@ const activeModel = ref("1")
 const dataInfo = ref({} as any)
 const currentPage = ref({} as { [key: number]: number })
 
-if (userId.value) {
-  userAdminStore.getUser(userId.value).then((res) => {
-    user.value = res as AdminUser
+const onChangeUser = () => {
+  userId.value = Number(route.query?.userId).valueOf() || 0
+  user.value = null
 
-    Object.entries(BuyRecordStatus).forEach(([_key]) => {
-      const key = Number(_key).valueOf() || 0
-      apiAdminGetUserBuyRecordByPage(userId.value, 1, 20, Number(key).valueOf()).then((res) => {
-        dataInfo.value[key] = {
-          data: res.data.data.list,
-          pagesizze: 20,
-          total: res.data.data.total,
-          maxpage: res.data.data.maxpage,
-        }
+  if (userId.value) {
+    userAdminStore.getUser(userId.value).then((res) => {
+      user.value = res as AdminUser
 
-        currentPage.value[key] = 1
+      Object.entries(BuyRecordStatus).forEach(([_key]) => {
+        const key = Number(_key).valueOf() || 0
+        apiAdminGetUserBuyRecordByPage(userId.value, 1, 20, Number(key).valueOf()).then((res) => {
+          dataInfo.value[key] = {
+            data: res.data.data.list,
+            pagesizze: 20,
+            total: res.data.data.total,
+            maxpage: res.data.data.maxpage,
+          }
 
-        if ((Number(route.query?.status).valueOf() || -1) === key) {
-          if (route.query?.page) {
-            currentPage.value[key] = Number(route.query?.page).valueOf() || 1
-            if (currentPage.value[key] < 1) {
-              currentPage.value[key] = 1
+          currentPage.value[key] = 1
+
+          if ((Number(route.query?.status).valueOf() || -1) === key) {
+            if (route.query?.page) {
+              currentPage.value[key] = Number(route.query?.page).valueOf() || 1
+              if (currentPage.value[key] < 1) {
+                currentPage.value[key] = 1
+              }
             }
           }
-        }
+        })
+      }, () => {
+        toBack()
       })
-      // 不处理catch
     })
-  }, () => {
-    router.push({
-      path: "/error",
-      query: {
-        msg: "页面错误"
-      }
-    })
-  })
-} else {
-  router.push({
-    path: "/error",
-    query: {
-      msg: "页面错误"
-    }
-  })
+  } else {
+    toBack()
+  }
+}
+
+watch(() => route.query?.userId, onChangeUser)
+onChangeUser()
+
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
 }
 
 const changePage = (status: number) => {
