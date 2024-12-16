@@ -21,6 +21,10 @@ if (!isAdmin()) {
   })
 }
 
+const toBack = () => {
+  pushTo(router, route, "/admin/class/list")
+}
+
 const classId = ref(Number(route.query?.classId).valueOf() || 0)
 const classObj = ref(null as AdminClass | null)
 
@@ -45,10 +49,6 @@ const onChangeClass = () => {
 
 watch(() => route.query?.wupinId, onChangeClass)
 onChangeClass()
-
-const toBack = () => {
-  pushTo(router, route, "/admin/class/list")
-}
 
 const form = ref({
   name: "",

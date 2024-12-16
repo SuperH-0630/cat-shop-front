@@ -17,6 +17,10 @@
     })
   }
 
+  const toBack = () => {
+    pushTo(router, route, "/admin/wupin/list")
+  }
+
   const wupinId = ref(0)
   const wupin = ref(null as AdminWupin | null)
 
@@ -62,10 +66,6 @@
     } else {
       toBack()
     }
-  }
-
-  const toBack = () => {
-    pushTo(router, route, "/admin/wupin/list")
   }
 
   watch(() => route.query?.wupinId, onChangeWupin)

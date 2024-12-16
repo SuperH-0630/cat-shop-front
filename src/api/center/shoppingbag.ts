@@ -1,6 +1,6 @@
 import {Wupin} from "@/store/hotwupin";
 import {Result, Success} from "@/utils/request";
-import wupinPic from "@/assets/images/logo.jpg";
+import wupinPic from "@/assets/images/tmp.jpg";
 
 export interface ShopRecord {
     id: number

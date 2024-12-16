@@ -1,6 +1,6 @@
 import useClassStore from "@/store/class";
 import {Result, Success} from "@/utils/request";
-import WupinPic from "@/assets/images/logo.jpg";
+import WupinPic from "@/assets/images/tmp.jpg";
 import {AdminClass} from "@/api/admin/class";
 import {UploadRawFile} from "element-plus";
 

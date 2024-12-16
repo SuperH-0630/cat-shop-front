@@ -326,6 +326,14 @@ const routes: RouteRecordRaw[] = [
           admin: true,
         },
       },
+      {
+        path: 'config/list',
+        component: () => import('@/views/admin/configlst.vue'),
+        meta: {
+          title: '配置项列表',
+          rootAdmin: true,
+        },
+      },
     ]
   },
   {
@@ -470,7 +478,11 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to) => {
   const configStore = useConfigStore()
   if (to.meta.title && typeof to.meta.title === 'string') {
-    document.title = configStore.config?.name + " - " + (to.meta.title || "首页")
+    if (to.meta.admin && to.meta.admin === true || to.meta.rootAdmin && to.meta.rootAdmin === true) {
+      document.title = configStore.config?.name + "管理后台 - " + (to.meta.title || "首页")
+    } else {
+      document.title = configStore.config?.name + " - " + (to.meta.title || "首页")
+    }
   }
 
   if (to.meta.wechat && to.meta.wechat === true) {

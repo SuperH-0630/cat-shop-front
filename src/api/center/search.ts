@@ -1,5 +1,5 @@
 import {Wupin} from "@/store/hotwupin";
-import WupinPic from "@/assets/images/logo.jpg";
+import WupinPic from "@/assets/images/tmp.jpg";
 import useClassStore from "@/store/class";
 import { Result} from "@/utils/request";
 

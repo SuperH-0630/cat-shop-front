@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {BuyRecordStatus, apiGetUserBuyRecordByPage} from "@/api/center/center/buyrecord"
+import {BuyRecordStatus, apiGetUserBuyRecordByPage} from "@/api/center/buyrecord"
 import {ElNotification} from "element-plus";
 import BuyRecord from "@/components/center/buyrecord.vue"
 const router = useRouter()

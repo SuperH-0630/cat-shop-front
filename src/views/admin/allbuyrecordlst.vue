@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {BuyRecordStatus} from "@/api/center/center/buyrecord"
+import {BuyRecordStatus} from "@/api/center/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue";
 import {isAdmin} from "@/store/admin";
 import {apiAdminGetBuyRecordByPage} from "@/api/admin/buyrecord";

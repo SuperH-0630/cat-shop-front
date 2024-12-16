@@ -53,12 +53,20 @@
   }
   setTimeout(() => fn3(900000), 900000)// 10分
 
-  let s = document.querySelector('link[rel="icon"]')
-  if (!s) {
-    s = document.createElement('link')
-    s.setAttribute('rel', "icon")
+  const setLogo = () => {
+    if (!configStore.config.icon) {
+      return
+    }
+
+    let s = document.querySelector('link[rel="icon"]')
+    if (!s) {
+      s = document.createElement('link')
+      s.setAttribute('rel', "icon")
+    }
+    s.setAttribute('href', configStore.config.icon)
   }
-  s.setAttribute('href', configStore.config?.logo)
+  watch(() => configStore.config.icon, setLogo)
+  setLogo()
 
   const isAdmin = computed(() => route.meta?.admin === true || route.meta?.rootAdmin === true)
   const showFooter = computed(() => !isAdmin.value && configStore.config.footer && configStore.config.footer.length > 0)

@@ -1,6 +1,6 @@
 import {config} from "@/utils/request";
 
-export function apiAdminUploadImageUrl() {
+export function apiAdminPostUploadImageUrl() {
     const baseUrl = (config.baseURL || "/") as string
     if (baseUrl.endsWith("/")) {
         return baseUrl + "api/v1/admin/image/upload"
@@ -8,7 +8,7 @@ export function apiAdminUploadImageUrl() {
     return baseUrl + "/api/v1/admin/image/upload"
 }
 
-export function apiAdminUploadVideoUrl() {
+export function apiAdminPostUploadVideoUrl() {
     const baseUrl = (config.baseURL || "/") as string
     if (baseUrl.endsWith("/")) {
         return baseUrl + "api/v1/admin/video/upload"

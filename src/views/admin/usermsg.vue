@@ -17,6 +17,10 @@ if (!isAdmin()) {
   })
 }
 
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
+}
+
 const userAdminStore = useAdminUserStore()
 
 const userId = ref(Number(route.query?.userId).valueOf() || 0)
@@ -54,10 +58,6 @@ const onChange = () => {
     maxpage.value = res.data.data.maxpage
     msgLst.value = res.data.data.list
   })
-}
-
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
 }
 
 </script>

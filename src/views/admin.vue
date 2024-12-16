@@ -5,6 +5,7 @@ import pushTo from "@/views/admin/router_push";
 import {isAdmin, isRootAdmin} from "@/store/admin";
 import {AdminWupin, apiAdminGetWupin} from "@/api/admin/wupin";
 import {AdminClass, apiAdminGetClass} from "@/api/admin/class";
+import {AdminBuyRecord as AdminBuyRecordData, apiAdminGetBuyRecordInfo} from "@/api/admin/buyrecord";
 
 const router = useRouter()
 const route = useRoute()
@@ -140,6 +141,27 @@ const onChangeClass = () => {
 watch(() => route.query?.classId, onChangeClass)
 onChangeClass()
 
+const recordId = ref(Number(route.query?.recordId).valueOf() || 0)
+const record = ref(null as AdminBuyRecordData | null)
+
+const onChangeRecord = () => {
+  recordId.value = Number(route.query?.recordId).valueOf() || 0
+  record.value = null
+
+  if (recordId.value) {
+    apiAdminGetBuyRecordInfo(recordId.value as number).then((res) => {
+      record.value = res.data.data as AdminBuyRecordData
+    }, () => {
+      record.value = null
+    })
+  } else {
+    record.value = null
+  }
+}
+
+watch(() => route.query?.recordId, onChangeRecord)
+onChangeRecord()
+
 const toUserList = () => {
   pushTo(router, route, "/admin/user/list")
 }
@@ -216,6 +238,18 @@ const toAllBuyRecordInfo = () => {
   pushTo(router, route, "/admin/buyrecord/list/info")
 }
 
+const toConfigLst = () => {
+  pushTo(router, route, "/admin/config/list")
+}
+
+const defaultOpeneds = ref([
+  "user", "user/list",
+  "class", "class/list",
+  "wupin", "wupin/list",
+  "buyrecord", "buyrecord/list",
+  "config", "config/list"
+])
+
 </script>
 
 <template>
@@ -224,7 +258,7 @@ const toAllBuyRecordInfo = () => {
       <el-scrollbar height="100%" style="width: 100%">
         <el-menu
             :default-active="active"
-            :default-openeds='["user", "user/list", "class", "class/list", "wupin", "wupin/list", "buyrecord", "buyrecord/list"]'
+            :default-openeds='defaultOpeneds'
         >
           <el-sub-menu
               index="user"
@@ -300,7 +334,25 @@ const toAllBuyRecordInfo = () => {
                 <el-text>订单列表</el-text>
               </template>
               <el-menu-item index="buyrecord/list" @click="toAllBuyRecordLst">订单列表</el-menu-item>
-              <el-menu-item index="buyrecord/list/info" @click="toAllBuyRecordInfo">订单详情</el-menu-item>
+              <el-menu-item index="buyrecord/list/info" :disabled="!record" @click="toAllBuyRecordInfo">订单详情</el-menu-item>
+            </el-sub-menu>
+          </el-sub-menu>
+
+          <el-sub-menu
+              index="config"
+              :disabled="!isRootAdmin()"
+          >
+            <template #title>
+              <el-text>配置项管理</el-text>
+            </template>
+            <el-sub-menu
+                index="config/list"
+                :disabled="!isRootAdmin()"
+            >
+              <template #title>
+                <el-text>配置项列表</el-text>
+              </template>
+              <el-menu-item index="config/list" :disabled="!isRootAdmin()" @click="toConfigLst">配置项列表编辑</el-menu-item>
             </el-sub-menu>
           </el-sub-menu>
         </el-menu>

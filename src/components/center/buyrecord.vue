@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {BuyRecordStatus, BuyRecord} from "@/api/center/center/buyrecord"
+import {BuyRecordStatus, BuyRecord} from "@/api/center/buyrecord"
 import {formatDate} from "@/utils/time"
 import {ElNotification} from "element-plus"
 import {apiPostAliRepay, apiPostWechatRepay, LocationForUser} from "@/api/center/pay"

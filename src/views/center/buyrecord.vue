@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {apiGetBuyRecordInfo, BuyRecord as BuyRecordData} from "@/api/center/center/buyrecord"
+import {apiGetBuyRecordInfo, BuyRecord as BuyRecordData} from "@/api/center/buyrecord"
 import BuyRecord from "@/components/center/buyrecord.vue"
 
 const route = useRoute()

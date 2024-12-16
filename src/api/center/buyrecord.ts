@@ -1,6 +1,6 @@
 import {Wupin} from "@/store/hotwupin"
 import {Result} from "@/utils/request"
-import wupinPic from "@/assets/images/logo.jpg"
+import wupinPic from "@/assets/images/tmp.jpg"
 import {LocationForUser} from "@/api/center/pay";
 
 export const BuyRecordStatus = {

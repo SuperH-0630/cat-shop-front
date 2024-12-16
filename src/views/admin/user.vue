@@ -18,6 +18,10 @@ if (!isAdmin()) {
   })
 }
 
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
+}
+
 const userAdminStore = useAdminUserStore()
 
 const userId = ref(Number(route.query?.userId).valueOf() || 0)
@@ -40,11 +44,6 @@ const onChangeUser = () => {
 
 watch(() => route.query?.userId, onChangeUser)
 onChangeUser()
-
-
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
-}
 
 if (userId.value) {
   userAdminStore.getUser(userId.value).then((res) => {

@@ -2,6 +2,7 @@
 import {apiAdminGetBuyRecordInfo, AdminBuyRecord as AdminBuyRecordData } from "@/api/admin/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue"
 import {isAdmin} from "@/store/admin";
+import pushTo from "@/views/admin/router_push";
 
 const router = useRouter()
 const route = useRoute()
@@ -18,6 +19,10 @@ if (!isAdmin()) {
 const recordId = ref(Number(route.query?.recordId).valueOf() || 0)
 const record = ref(null as AdminBuyRecordData | null)
 
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
+}
+
 const onChangeRecord = () => {
   recordId.value = Number(route.query?.recordId).valueOf() || 0
   record.value = null
@@ -26,10 +31,10 @@ const onChangeRecord = () => {
     apiAdminGetBuyRecordInfo(recordId.value as number).then((res) => {
       record.value = res.data.data as AdminBuyRecordData
     }, () => {
-      record.value = null
+      toBack()
     })
   } else {
-    record.value = null
+    toBack()
   }
 }
 

@@ -87,7 +87,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 8vw;
+  width: 10vw;
   height: auto;
 }
 

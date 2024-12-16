@@ -1,5 +1,5 @@
 import {Result} from "@/utils/request";
-import wupinPic from "@/assets/images/logo.jpg";
+import wupinPic from "@/assets/images/tmp.jpg";
 import {Wupin} from "@/store/hotwupin";
 import {LocationForUser} from "@/api/center/pay";
 

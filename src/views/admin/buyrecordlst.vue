@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {BuyRecordStatus} from "@/api/center/center/buyrecord"
+import {BuyRecordStatus} from "@/api/center/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue";
 import {isAdmin} from "@/store/admin";
 import useAdminUserStore, {AdminUser} from "@/store/admin/user";
@@ -16,6 +16,10 @@ if (!isAdmin()) {
       msg: "页面错误"
     }
   })
+}
+
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
 }
 
 const userAdminStore = useAdminUserStore()
@@ -67,10 +71,6 @@ const onChangeUser = () => {
 
 watch(() => route.query?.userId, onChangeUser)
 onChangeUser()
-
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
-}
 
 const changePage = (status: number) => {
   if (!user.value) {

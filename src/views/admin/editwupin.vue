@@ -10,7 +10,7 @@ import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig } from '@wangeditor/editor'
 import { IEditorConfig } from '@wangeditor/editor'
-import {apiAdminUploadImageUrl, apiAdminUploadVideoUrl} from "@/api/admin/image";
+import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "@/api/admin/image";
 import {getXtoken} from "@/store/user";
 
 const router = useRouter()
@@ -25,13 +25,17 @@ if (!isAdmin()) {
   })
 }
 
+const toBack = () => {
+  pushTo(router, route, "/admin/wupin/list")
+}
+
 const editorRef = shallowRef()
 const toolbarConfig: Partial<IToolbarConfig> = {}
 const editorConfig: Partial<IEditorConfig> = {
   placeholder: '请输入介绍信息...',
   MENU_CONF: {
     uploadImage: {
-      server: apiAdminUploadImageUrl(),
+      server: apiAdminPostUploadImageUrl(),
       fieldName: "image",
       maxFileSize: 2 * 1024 * 1024,
       headers: {
@@ -40,7 +44,7 @@ const editorConfig: Partial<IEditorConfig> = {
       }
     },
     uploadVideo: {
-      server: apiAdminUploadVideoUrl(),
+      server: apiAdminPostUploadVideoUrl(),
       fieldName: "video",
       maxFileSize: 10 * 1024 * 1024,
       headers: {
@@ -107,10 +111,6 @@ const onChangeWupin = () => {
   } else {
     toBack()
   }
-}
-
-const toBack = () => {
-  pushTo(router, route, "/admin/wupin/list")
 }
 
 watch(() => route.query?.wupinId, onChangeWupin)
@@ -344,7 +344,7 @@ const selectMsg = computed(() => {
                 </div>
                 <div v-else>
                   <el-upload
-                      ref="avatarUpload"
+                      ref="pictureUpload"
                       v-model:file-list="pictureLst"
                       action="#"
                       accept=".jpg,.jpeg,.png"

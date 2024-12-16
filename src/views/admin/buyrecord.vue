@@ -17,6 +17,10 @@ if (!isAdmin()) {
   })
 }
 
+const toBack = () => {
+  pushTo(router, route, "/admin/user/list")
+}
+
 const userAdminStore = useAdminUserStore()
 
 const userId = ref(Number(route.query?.userId).valueOf() || 0)
@@ -49,10 +53,10 @@ const onChangeRecord = () => {
     apiAdminGetBuyRecordInfo(recordId.value as number, userId.value || 0).then((res) => {
       record.value = res.data.data as AdminBuyRecordData
     }, () => {
-      record.value = null
+      toBack()
     })
   } else {
-    record.value = null
+    toBack()
   }
 }
 
@@ -71,10 +75,6 @@ const reload = () => {
       }
     })
   })
-}
-
-const toBack = () => {
-  pushTo(router, route, "/admin/user/list")
 }
 
 </script>

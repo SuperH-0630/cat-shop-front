@@ -11,6 +11,11 @@ import {ElMessage, ElMessageBox} from "element-plus";
 const route = useRoute()
 const router = useRouter()
 
+const toBack = () => {
+  pushTo(router, route, "/admin/class/list")
+}
+
+
 const classId = ref(Number(route.query?.classId).valueOf() || 0)
 const classObj = ref(null as AdminClass | null)
 
@@ -31,10 +36,6 @@ const onChangeClass = () => {
 
 watch(() => route.query?.wupinId, onChangeClass)
 onChangeClass()
-
-const toBack = () => {
-  pushTo(router, route, "/admin/class/list")
-}
 
 const changeName = () => {
   classObj.value && ElMessageBox.prompt(`新名字不能于旧名字（${classObj.value.name}）相同`, '请输入新名字', {
