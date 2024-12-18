@@ -15,7 +15,7 @@ export const apiAdminPostGouWuDaoHuo = (userId: number, buyRecordId: number): Su
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const apiAdminPostGouWuTuiHuo = (userId: number, buyRecordId: number): Success => {
+export const apiAdminPostGouWuTuiHuoDaohuo = (userId: number, buyRecordId: number): Success => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -29,19 +29,6 @@ export const apiAdminPostGouWuTuiHuo = (userId: number, buyRecordId: number): Su
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const apiAdminPostQuXiaoPay = (userId: number, buyRecordId: number): Success => {
-    return Promise.resolve({
-        data: {
-            code: 0,
-            data: {
-                success: true,
-            },
-        },
-        status: 200,
-    })
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const apiAdminPostGouWuPingJia = (userId: number, buyRecordId: number, isGood: boolean = true): Success => {
     return Promise.resolve({
         data: {
             code: 0,
@@ -132,7 +119,7 @@ export const apiAdminPostChangeShop = (userId: number, buyRecordId: number, shop
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const apiAdminPostFaHuoQuXiaoDengJi = (userId: number, buyRecordId: number): Success => {
+export const apiAdminPostFaHuoQuXiao = (userId: number, buyRecordId: number): Success => {
     return Promise.resolve({
         data: {
             code: 0,

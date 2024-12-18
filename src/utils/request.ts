@@ -5,7 +5,7 @@ import useUserStore, {isLogin} from "@/store/user"
 import { ElMessageBox } from "element-plus"
 
 export const config = {
-    baseURL: import.meta.env.VITE_API_BASE || '/'
+    baseURL: import.meta.env.VITE_API_BASE || '/api'
 }
 
 const service: AxiosInstance = axios.create(config)
@@ -78,6 +78,13 @@ service.interceptors.response.use(
                   confirmButtonText: '好的',
                   callback: () => {},
               })
+          } else if (response.data.code === 5) {
+              // 静默
+
+              // ElMessageBox.alert('非测试模式，无法访问API。', '提示', {
+              //     confirmButtonText: '好的',
+              //     callback: () => {},
+              // })
           }
           return Promise.reject(response)
       } else if (response.data.code <= 1) {// 针对性错误

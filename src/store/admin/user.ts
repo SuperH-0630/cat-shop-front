@@ -4,7 +4,7 @@ import {
     apiAdminGetUserInfo,
     apiAdminGetUserLst, apiAdminPostNewUser,
     apiAdminPostUpdateAvatarData,
-    apiAdminPostUpdateInfo, apiAdminPostUpdatePassword, NewUserData
+    apiAdminPostUpdateInfo, apiAdminPostUpdatePassword, apiAdminPostUpdatePhone, NewUserData
 } from "@/api/admin/user";
 import {sha256} from "@/utils/encrypt";
 
@@ -209,7 +209,7 @@ const useAdminUserStore = defineStore("useAdminUserStore", () => {
             return
         }
 
-        return apiAdminPostUpdatePassword(userId, data.newPhone).then((res) => {
+        return apiAdminPostUpdatePhone(userId, data.newPhone).then((res) => {
             if (!res.data.data.success) {
                 return Promise.reject("更新失败")
             }

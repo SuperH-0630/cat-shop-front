@@ -8,7 +8,7 @@ import {
 } from "@/api/admin/pay";
 import {
   apiAdminPostGouWuDaoHuo,
-  apiAdminPostFaHuoQuXiaoDengJi,
+  apiAdminPostFaHuoQuXiao,
   apiAdminPostTuiHuoDengJi,
   apiAdminPostQuXiaoPay,
   apiAdminPostFaHuoDengJi,
@@ -16,7 +16,7 @@ import {
   apiAdminPostChangeShop,
   apiAdminPostTuiHuoAccept,
   apiAdminPostTuiHuoShenQingAccept,
-  apiAdminPostGouWuTuiHuo,
+  apiAdminPostGouWuTuiHuoDaohuo,
   apiAdminPostAcceptFaHuoQuXiaoDengJi
 } from "@/api/admin/huo"
 import {LocationForUser} from "@/api/center/pay";
@@ -184,7 +184,7 @@ const confirmTuiHuo = () => {
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostGouWuTuiHuo(record.value.userid, record.value.id).then((res) => {
+    apiAdminPostGouWuTuiHuoDaohuo(record.value.userid, record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -211,11 +211,11 @@ const quXiao = () => {
       '取消发货提示',
       {
         confirmButtonText: '取消发货',
-        cancelButtonText: '暂不觉得',
+        cancelButtonText: '暂不决定',
         type: 'warning',
       }
   ).then(() => {
-    apiAdminPostFaHuoQuXiaoDengJi(record.value.userid, record.value.id).then((res) => {
+    apiAdminPostFaHuoQuXiao(record.value.userid, record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',

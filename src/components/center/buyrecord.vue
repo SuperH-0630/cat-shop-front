@@ -7,7 +7,7 @@ import { ElMessageBox } from 'element-plus'
 import {
   apiPostGouWuPingJia,
   apiPostGouWuDaoHuo,
-  apiPostFaHuoQuXiaoDengJi,
+  apiPostFaHuoQuXiaoShenQing,
   apiPostTuiHuoDengJi,
   apiPostTuiHuoShenQing,
   apiPostQuXiaoPay, apiPostChangeUser
@@ -229,7 +229,7 @@ const quXiao = () => {
         type: 'warning',
       }
   ).then(() => {
-    apiPostFaHuoQuXiaoDengJi(record.value.id).then((res) => {
+    apiPostFaHuoQuXiaoShenQing(record.value.id).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',

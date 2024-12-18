@@ -67,7 +67,7 @@ export const apiPostTuiHuoDengJi = (buyRecordId: number, kuaidi: string, danhao:
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const apiPostFaHuoQuXiaoDengJi = (buyRecordId: number): Success => {
+export const apiPostFaHuoQuXiaoShenQing = (buyRecordId: number): Success => {
     return Promise.resolve({
         data: {
             code: 0,

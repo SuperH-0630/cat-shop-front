@@ -23,28 +23,19 @@ if (!isRootAdmin()) {
   })
 }
 
-const AdminConfigType = ref({})
-const AdminConfigTypeName = ref({})
-const AdminConfigInfo = ref({})
+const configtype = ref({})
+const configtypename = ref({})
+const configinfo = ref({})
 
 const config = ref(null as AdminConfig | null)
-const configKeys = computed(() => Object.keys(AdminConfigType.value))
+const configKeys = computed(() => Object.keys(configtype.value))
 
 const onChange = () => {
-  apiAdminGetConfigType().then((res) => {
-    AdminConfigType.value = res.data.data
-
-    apiAdminGetConfigTypeName().then((res) => {
-      AdminConfigTypeName.value = res.data.data
-
-      apiAdminGetConfigInfo().then((res) => {
-        AdminConfigInfo.value = res.data.data
-
-        apiAdminGetConfig().then((res) => {
-          config.value = apiAdminConfigAsDefault(res.data.data)
-        })
-      })
-    })
+  apiAdminGetConfig().then((res) => {
+    config.value = apiAdminConfigAsDefault(res.data.data.config)
+    configinfo.value = res.data.data.info
+    configtype.value = res.data.data.type
+    configtypename.value = res.data.data.typename
   })
 }
 onChange()
@@ -118,7 +109,7 @@ const openUpdateText = (key: string) => {
 }
 
 const updateText = () => {
-  if (AdminConfigType.value[newTextKey.value] === "text|must") {
+  if (configtype.value[newTextKey.value] === "text|must") {
     if (!newText.value || newText.value.length === 0) {
       ElMessage({
         type: "error",
@@ -157,7 +148,7 @@ const openUpdateString = (key: string) => {
 }
 
 const updateString = () => {
-  if (AdminConfigType.value[newStringKey.value] === "string|must") {
+  if (configtype.value[newStringKey.value] === "string|must") {
     if (!newString.value || newString.value.length === 0) {
       ElMessage({
         type: "error",
@@ -186,7 +177,7 @@ const updateString = () => {
 }
 
 const deleteConfig = (key: string) => {
-  if (((AdminConfigType.value[key] || "") as string).endsWith("|must")) {
+  if (((configtype.value[key] || "") as string).endsWith("|must")) {
     return
   }
 
@@ -222,20 +213,20 @@ const deleteConfig = (key: string) => {
         <el-table-column label="配置项类型" >
           <template #default="{ row }">
             <el-text>
-              {{ AdminConfigTypeName[AdminConfigType[row]] || "未知" }}
+              {{ configtypename[configtype[row]] || "未知" }}
             </el-text>
           </template>
         </el-table-column>
         <el-table-column label="配置项含义" >
           <template #default="{ row }">
             <el-text>
-              {{ AdminConfigInfo[row] || "未知" }}
+              {{ configinfo[row] || "未知" }}
             </el-text>
           </template>
         </el-table-column>
         <el-table-column label="配置值" >
           <template #default="{ row }">
-            <el-button v-if="AdminConfigType[row] === 'pic|must' || AdminConfigType[row] === 'pic'" :disabled="!config[row]" @click="openPic(config[row])">
+            <el-button v-if="configtype[row] === 'pic|must' || configtype[row] === 'pic'" :disabled="!config[row]" @click="openPic(config[row])">
               查看图片
             </el-button>
             <el-text v-else>
@@ -245,7 +236,7 @@ const deleteConfig = (key: string) => {
         </el-table-column>
         <el-table-column label="更新" >
           <template #default="{ row }">
-            <div v-if="AdminConfigType[row] === 'pic|must' || AdminConfigType[row] === 'pic'">
+            <div v-if="configtype[row] === 'pic|must' || configtype[row] === 'pic'">
               <el-upload
                   ref="pictureUpload"
                   v-model:file-list="pictureLst"
@@ -274,7 +265,7 @@ const deleteConfig = (key: string) => {
                 </el-tooltip>
               </el-upload>
             </div>
-            <div v-else-if="AdminConfigType[row] === 'string|must' || AdminConfigType[row] === 'string'">
+            <div v-else-if="configtype[row] === 'string|must' || configtype[row] === 'string'">
               <el-button type="primary" plain @click="openUpdateString(row)">
                 <el-icon><Edit /></el-icon>
                 更新文本
@@ -291,7 +282,7 @@ const deleteConfig = (key: string) => {
         <el-table-column label="删除" >
           <template #default="{ row }">
             <el-button
-                v-if="AdminConfigType[row] === 'text' || AdminConfigType[row] === 'string' || AdminConfigType[row] === 'pic'"
+                v-if="configtype[row] === 'text' || configtype[row] === 'string' || configtype[row] === 'pic'"
                 type="danger"
                 plain
                 @click="deleteConfig(row)"
