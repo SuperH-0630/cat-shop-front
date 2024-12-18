@@ -99,7 +99,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
     server: {
       host: '0.0.0.0',
       proxy: {
-        '^/(api|tools)': {
+        '/api': {
           target: VITE_PROXY_TARGET,
           changeOrigin: true,
           secure: false
