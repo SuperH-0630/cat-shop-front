@@ -8,6 +8,11 @@
 
 MIT License: [mit-license.org](https://mit-license.org/)
 
+# AI（人工智能）声明
+本项目使用了AI（人工智能）技术进行代码创作。
+
+AI来源：Jetbrains AI Assistant (中国大陆版)。
+
 ## 配置文件
 配置文件通常为`.env`开头的文件。例如开发模式会读取`.env.development`文件，生产模式会读取`.env.production`文件。
 当然，读取文件的后缀是根据`pacckage.json`中的指令决定的。具体更详细的说明可见后文。
@@ -109,3 +114,12 @@ npm run preview
 
 这并不是开发运行模式，而是把经过上述方式构建生成的文件（`.\dist-production`）模拟生产环境进行预览。
 在运行此命令之前，你应该先进行构建，并生成`.\dist-production`目录。
+
+## 鸣谢
+感谢Jetbrains AI Assistant（中国大陆版）为本项目提供了AI（人工智能）技术支持。
+
+感谢Vite、Vue、Vue Router、Vuex、Axios、Element Plus等开源项目为本项目提供了技术支持。
+
+感谢Github平台为本项目提供了代码托管服务。
+
+特别鸣谢本项目所有贡献者和贡献团体对本项目的支持，你可以从PR记录、Commit记录中查看到他们的名字和贡献。
