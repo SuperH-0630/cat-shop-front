@@ -3,6 +3,14 @@
 
 后端：[github.com/SuperH-0630/cat-shop-backend](https://github.com/SuperH-0630/cat-shop-backend)
 
+技术栈：node.js + TypeScript + Vite + Vue 3 + Vue Router 4 + Axios + Pinia + Element Plus
+
+node.js: 作者本人使用`18.19.0`。
+
+pnpm: 作者本人使用`8.12.1`。
+
+其他细节可见：[package.json](./package.json)
+
 ## 许可（License）
 本项目使用[MIT LICENSE](./LICENSE)许可证发布。
 
