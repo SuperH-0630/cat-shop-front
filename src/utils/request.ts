@@ -73,6 +73,11 @@ service.interceptors.response.use(
                       callback: () => {},
                   })
               }
+          } else if (response.data.code === 3 || response.data.code === 4) {
+              ElMessageBox.alert('你的权限不足。', '提示', {
+                  confirmButtonText: '好的',
+                  callback: () => {},
+              })
           }
           return Promise.reject(response)
       } else if (response.data.code <= 1) {// 针对性错误
