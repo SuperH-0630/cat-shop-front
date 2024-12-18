@@ -3,6 +3,11 @@
 
 后端：[github.com/SuperH-0630/cat-shop-backend](https://github.com/SuperH-0630/cat-shop-backend)
 
+## 许可（License）
+本项目使用[MIT LICENSE](./LICENSE)许可证发布。
+
+MIT License: [mit-license.org](https://mit-license.org/)
+
 ## 配置文件
 配置文件通常为`.env`开头的文件。例如开发模式会读取`.env.development`文件，生产模式会读取`.env.production`文件。
 当然，读取文件的后缀是根据`pacckage.json`中的指令决定的。具体更详细的说明可见后文。
