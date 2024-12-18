@@ -40,6 +40,12 @@ service.interceptors.response.use(
     if (response.status === 200) {
       if (response.data.code >= 1) {// 公共错误
           if (response.data.code === 1) {
+              ElMessageBox.alert(response.data.msg || "您遇到了未知的错误", '提示', {
+                  confirmButtonText: '好的',
+                  callback: () => {},
+              })
+              return Promise.reject(response)
+          } else if (response.data.code === 2) {
               const userStore = useUserStore()
               const router = useRouter()
               const route = useRoute()
@@ -85,7 +91,13 @@ service.interceptors.response.use(
       }
       return Promise.reject(response)
     }
+
+    ElMessageBox.alert("您遇到了未知的错误", '提示', {
+        confirmButtonText: '好的',
+        callback: () => {},
+    })
     return Promise.reject(response)
+
   },
   (error: AxiosError) => {
     return Promise.reject(error)
