@@ -6,7 +6,7 @@ import {
   apiAdminGetClassLst,
   apiAdminPostChangeClassName,
   apiAdminPostChangeClassShow
-} from "@/api/admin/class";
+} from "#/admin/class";
 
 const route = useRoute()
 const router = useRouter()

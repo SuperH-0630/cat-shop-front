@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {AdminBuyRecordStatus, AdminBuyRecord} from "@/api/admin/buyrecord"
+import {AdminBuyRecordStatus, AdminBuyRecord} from "#/admin/buyrecord"
 import {formatDate} from "@/utils/time"
 import { ElMessageBox } from 'element-plus'
 import pushTo from "@/views/admin/router_push";
 import {
   apiAdminPostPeoplePay,
-} from "@/api/admin/pay";
+} from "#/admin/pay";
 import {
   apiAdminPostGouWuDaoHuo,
   apiAdminPostFaHuoQuXiao,
@@ -18,8 +18,8 @@ import {
   apiAdminPostTuiHuoShenQingAccept,
   apiAdminPostGouWuTuiHuoDaohuo,
   apiAdminPostAcceptFaHuoQuXiaoDengJi
-} from "@/api/admin/huo"
-import {LocationForUser} from "@/api/center/pay";
+} from "#/admin/huo"
+import {LocationForUser} from "#/center/pay";
 import {isEmail, isMobile} from "@/utils/str";
 import useConfigStore from "@/store/config";
 

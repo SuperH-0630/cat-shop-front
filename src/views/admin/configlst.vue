@@ -8,7 +8,7 @@ import {
   apiAdminPostDeleteConfig,
   apiAdminPostUpdateConfigSPic,
   apiAdminPostUpdateConfigString
-} from "@/api/admin/config";
+} from "#/admin/config";
 import {Edit} from "@element-plus/icons-vue";
 import {ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile} from "element-plus";
 

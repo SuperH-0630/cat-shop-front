@@ -21,7 +21,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 const CWD = process.cwd()
 export default ({ mode }: ConfigEnv): UserConfig => {
   // 环境变量
-  const { VITE_PROXY_TARGET, VITE_HASH, VITE_VISUALIZE, VITE_ASSETS_BASE } = loadEnv(mode, CWD)
+  const { VITE_PROXY_TARGET, VITE_HASH, VITE_VISUALIZE, VITE_ASSETS_BASE, VITE_SIMULATION } = loadEnv(mode, CWD)
 
   // 测试环境不加hash
   let output = {
@@ -108,7 +108,8 @@ export default ({ mode }: ConfigEnv): UserConfig => {
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src')
+        '@': resolve(__dirname, 'src'),
+        '#': VITE_SIMULATION === "true" ? resolve(__dirname, 'src', 'api', 'simulation') : resolve(__dirname, 'src', 'api', 'real')
       }
     },
     css: {

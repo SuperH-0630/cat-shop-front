@@ -1,5 +1,5 @@
 import {Success} from "@/utils/request"
-import {LocationForUser} from "@/api/center/pay";
+import {LocationForUser} from "#/center/pay";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const apiPostGouWuDaoHuo = (buyRecordId: number): Success => {

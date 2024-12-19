@@ -3,8 +3,8 @@
   import { ElNotification } from 'element-plus'
   import {Location} from "@element-plus/icons-vue";
   import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-  import {apiPostAddToShoppingBag} from "@/api/center/shoppingbag";
-  import {apiGetWupin} from "@/api/center/wupin";
+  import {apiPostAddToShoppingBag} from "#/center/shoppingbag";
+  import {apiGetWupin} from "#/center/wupin";
 
   const route = useRoute()
   const router = useRouter()

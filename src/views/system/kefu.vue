@@ -2,7 +2,7 @@
 import useConfigStore from "@/store/config"
 import {Service} from "@element-plus/icons-vue";
 import {isLogin, hasLoad} from "@/store/user";
-import {apiSendKefuMsg} from "@/api/center/kefu";
+import {apiSendKefuMsg} from "#/center/kefu";
 
 const configStore = useConfigStore()
 configStore.updateConfig()

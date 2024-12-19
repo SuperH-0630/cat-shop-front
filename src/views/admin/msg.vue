@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {isAdmin} from "@/store/admin";
-import {AdminMsg, apiAdminGetMsg} from "@/api/admin/msg";
+import {AdminMsg, apiAdminGetMsg} from "#/admin/msg";
 import {formatDate} from "@/utils/time";
 import pushTo from "@/views/admin/router_push";
 

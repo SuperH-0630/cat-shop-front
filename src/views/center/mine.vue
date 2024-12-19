@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
   import {Edit} from "@element-plus/icons-vue"
-  import {BuyRecord, apiGetUserBuyRecordLst} from "@/api/center/buyrecord"
+  import {BuyRecord, apiGetUserBuyRecordLst} from "#/center/buyrecord"
   import Buyrecord from "@/components/center/buyrecord.vue"
   import {ElNotification} from "element-plus"
   import { genFileId } from 'element-plus'

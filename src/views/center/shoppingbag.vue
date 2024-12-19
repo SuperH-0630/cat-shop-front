@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {apiGetUserShoppingRecord, ShopRecord} from "@/api/center/shoppingbag"
+import {apiGetUserShoppingRecord, ShopRecord} from "#/center/shoppingbag"
 import Shoppingbag from "@/components/center/shoppingbag.vue";
 
 let offset = 0

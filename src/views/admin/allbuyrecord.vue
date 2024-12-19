@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {apiAdminGetBuyRecordInfo, AdminBuyRecord as AdminBuyRecordData } from "@/api/admin/buyrecord"
+import {apiAdminGetBuyRecordInfo, AdminBuyRecord as AdminBuyRecordData } from "#/admin/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue"
 import {isAdmin} from "@/store/admin";
 import pushTo from "@/views/admin/router_push";

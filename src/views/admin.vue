@@ -3,9 +3,9 @@ import useAdminUserStore from "@/store/admin/user";
 import { AdminUser } from "@/store/admin/user"
 import pushTo from "@/views/admin/router_push";
 import {isAdmin, isRootAdmin} from "@/store/admin";
-import {AdminWupin, apiAdminGetWupin} from "@/api/admin/wupin";
-import {AdminClass, apiAdminGetClass} from "@/api/admin/class";
-import {AdminBuyRecord as AdminBuyRecordData, apiAdminGetBuyRecordInfo} from "@/api/admin/buyrecord";
+import {AdminWupin, apiAdminGetWupin} from "#/admin/wupin";
+import {AdminClass, apiAdminGetClass} from "#/admin/class";
+import {AdminBuyRecord as AdminBuyRecordData, apiAdminGetBuyRecordInfo} from "#/admin/buyrecord";
 
 const router = useRouter()
 const route = useRoute()

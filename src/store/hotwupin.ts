@@ -1,4 +1,4 @@
-import {apiGetHotWupinLst} from "@/api/center/hotwupin";
+import {apiGetHotWupinLst} from "#/center/hotwupin";
 import { Class } from "@/store/class"
 
 export interface Wupin {

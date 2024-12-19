@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {BuyRecordStatus} from "@/api/center/buyrecord"
+import {BuyRecordStatus} from "#/center/buyrecord"
 import AdminBuyRecord from "@/components/admin/buyrecord.vue";
 import {isAdmin} from "@/store/admin";
-import {apiAdminGetBuyRecordByPage} from "@/api/admin/buyrecord";
+import {apiAdminGetBuyRecordByPage} from "#/admin/buyrecord";
 
 const router = useRouter()
 const route = useRoute()

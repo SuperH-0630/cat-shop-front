@@ -8,7 +8,7 @@ import {
     apiPostUpdateAvatarData,
     apiPostUpdateSelfInfo,
     apiPostUpdateSelfPassword
-} from "@/api/center/user"
+} from "#/center/user"
 
 export const UserType = {
     1: "",//无显示

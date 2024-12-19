@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {isAdmin} from "@/store/admin";
-import {apiAdminGetXieyi, apiAdminPostUpdateXieyi} from "@/api/admin/xieyi";
+import {apiAdminGetXieyi, apiAdminPostUpdateXieyi} from "#/admin/xieyi";
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig } from '@wangeditor/editor'
 import { IEditorConfig } from '@wangeditor/editor'
 import '@wangeditor/editor/dist/css/style.css';
-import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "@/api/admin/image";
+import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image";
 import {getXtoken} from "@/store/user";
 
 const router = useRouter()

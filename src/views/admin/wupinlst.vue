@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {isAdmin} from "@/store/admin";
-import {AdminWupin, apiAdminGetWupinLst} from "@/api/admin/wupin";
+import {AdminWupin, apiAdminGetWupinLst} from "#/admin/wupin";
 import pushTo from "@/views/admin/router_push";
 
 const route = useRoute()

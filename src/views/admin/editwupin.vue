@@ -3,14 +3,14 @@ import {ElMessage, ElMessageBox , genFileId, type UploadInstance, UploadProps, U
 import pushTo from "@/views/admin/router_push"
 import {isAdmin} from "@/store/admin"
 import {isEmail, isMobile} from "@/utils/str"
-import {AdminWupin, AdminWupinBase, apiAdminGetWupin, apiAdminPostUpdateWupin} from "@/api/admin/wupin"
-import {AdminClass, apiAdminGetClassLst} from "@/api/admin/class"
+import {AdminWupin, AdminWupinBase, apiAdminGetWupin, apiAdminPostUpdateWupin} from "#/admin/wupin"
+import {AdminClass, apiAdminGetClassLst} from "#/admin/class"
 import {Edit} from "@element-plus/icons-vue"
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig } from '@wangeditor/editor'
 import { IEditorConfig } from '@wangeditor/editor'
-import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "@/api/admin/image";
+import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image";
 import {getXtoken} from "@/store/user";
 
 const router = useRouter()

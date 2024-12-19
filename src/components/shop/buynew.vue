@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import {apiPostAliNewPay, apiPostAliNewPayWithShop, LocationForUser, apiPostWechatNewPay, apiPostWechatNewPayWithShop} from "@/api/center/pay";
+import {apiPostAliNewPay, apiPostAliNewPayWithShop, LocationForUser, apiPostWechatNewPay, apiPostWechatNewPayWithShop} from "#/center/pay";
 import {Wupin} from "@/store/hotwupin";
 import useUserStore from "@/store/user";
 import {isEmail, isMobile} from "@/utils/str";
 import {getFacePrice, getTotalPrice} from "@/utils/price";
-import {ShopRecord} from "@/api/center/shoppingbag";
+import {ShopRecord} from "#/center/shoppingbag";
 
 const wupin = ref({} as Wupin)
 const num = ref(1 as number)

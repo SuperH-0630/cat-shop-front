@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {BuyRecordStatus, BuyRecord} from "@/api/center/buyrecord"
+import {BuyRecordStatus, BuyRecord} from "#/center/buyrecord"
 import {formatDate} from "@/utils/time"
 import {ElNotification} from "element-plus"
-import {apiPostAliRepay, apiPostWechatRepay, LocationForUser} from "@/api/center/pay"
+import {apiPostAliRepay, apiPostWechatRepay, LocationForUser} from "#/center/pay"
 import { ElMessageBox } from 'element-plus'
 import {
   apiPostGouWuPingJia,
@@ -11,7 +11,7 @@ import {
   apiPostTuiHuoDengJi,
   apiPostTuiHuoShenQing,
   apiPostQuXiaoPay, apiPostChangeUser
-} from "@/api/center/huo"
+} from "#/center/huo"
 import useUserStore from "@/store/user";
 import {isEmail, isMobile} from "@/utils/str";
 import useConfigStore from "@/store/config";

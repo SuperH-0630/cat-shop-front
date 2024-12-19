@@ -31,6 +31,8 @@ VITE_HASH # 对于资源文件（例如图片）在build的时候，是否在文
 VITE_VISUALIZE # 是否在构建时生成构建分析报告（HTML交互式报告）。具体作用见后文。
 VITE_API_BASE_URL # API请求前缀。具体作用见后文。
 VITE_PROXY_TARGET # 代理目标。具体作用见后文。
+VITE_ASSETS_BASE # 资源文件打包路径的前缀，默认为：/
+VITE_SIMULATION # 模拟api。具体作用见后文。
 ```
 
 ### 读取配置文件的说明
@@ -85,6 +87,9 @@ VITE_PROXY_TARGET # 代理目标。具体作用见后文。
 因此需要vite进行一个反向代理。
 
 生产环境下不需要此功能，通常使用Nginx（或其他技术）解决问题，让后端和前端在一起，即同一个IP或域名，同一个端口号（例如常见的443和80）。
+
+### 模拟API（VITE_SIMULATION）
+当该值设置为true时，启用模拟API，所有api请求不实际发出，而是直接返回模拟值。
 
 ## 运行和构建
 **下文使用npm为例，作者实际上使用的是pnpm。**

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {apiPostAddToShoppingBag, ShopRecord} from "@/api/center/shoppingbag"
+import {apiPostAddToShoppingBag, ShopRecord} from "#/center/shoppingbag"
 import {formatDate} from "@/utils/time"
 import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
 import {ElNotification} from "element-plus";

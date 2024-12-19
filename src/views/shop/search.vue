@@ -2,7 +2,7 @@
 import WupinLst from "@/components/shop/wupinlist.vue"
 import Search from "@/components/shop/search.vue"
 import {Wupin} from "@/store/hotwupin"
-import {apiGetSearchWupin} from "@/api/center/search"
+import {apiGetSearchWupin} from "#/center/search"
 
 const route = useRoute()
 

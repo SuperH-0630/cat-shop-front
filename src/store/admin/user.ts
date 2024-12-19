@@ -5,7 +5,7 @@ import {
     apiAdminGetUserLst, apiAdminPostNewUser,
     apiAdminPostUpdateAvatarData,
     apiAdminPostUpdateInfo, apiAdminPostUpdatePassword, apiAdminPostUpdatePhone, NewUserData
-} from "@/api/admin/user";
+} from "#/admin/user";
 import {sha256} from "@/utils/encrypt";
 
 export const AdminUserType = {

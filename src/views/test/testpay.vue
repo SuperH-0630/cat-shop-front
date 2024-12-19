@@ -10,7 +10,7 @@ import {
   newpay,
   buyRecordId,
   apiPostTestPay
-} from "@/api/center/pay"
+} from "#/center/pay"
 
   const route = useRoute()
   const router = useRouter()

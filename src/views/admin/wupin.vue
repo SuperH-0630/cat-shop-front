@@ -2,7 +2,7 @@
   import {Location} from "@element-plus/icons-vue";
   import {getFacePrice, getRealPrice} from "@/utils/price";
   import {isAdmin} from "@/store/admin";
-  import {AdminWupin, apiAdminGetWupin} from "@/api/admin/wupin";
+  import {AdminWupin, apiAdminGetWupin} from "#/admin/wupin";
   import pushTo from "@/views/admin/router_push";
 
   const router = useRouter()

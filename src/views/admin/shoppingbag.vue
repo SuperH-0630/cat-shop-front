@@ -2,7 +2,7 @@
 import AdminShoppingbag from "@/components/admin/shoppingbag.vue"
 import {isAdmin} from "@/store/admin";
 import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {AdminShopRecord, apiAdminGetUserShoppingRecord} from "@/api/admin/shoppingbag";
+import {AdminShopRecord, apiAdminGetUserShoppingRecord} from "#/admin/shoppingbag";
 import pushTo from "@/views/admin/router_push";
 
 const router = useRouter()

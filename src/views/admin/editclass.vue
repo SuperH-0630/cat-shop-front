@@ -6,7 +6,7 @@ import {
   AdminClassData,
   apiAdminGetClass,
   apiAdminPostUpdateClass,
-} from "@/api/admin/class";
+} from "#/admin/class";
 import pushTo from "@/views/admin/router_push";
 
 const router = useRouter()

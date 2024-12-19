@@ -1,6 +1,6 @@
 import {Result, Success} from "@/utils/request"
 import {Wupin} from "@/store/hotwupin";
-import {ShopRecord} from "@/api/center/shoppingbag";
+import {ShopRecord} from "#/center/shoppingbag";
 
 export const testPayPath = "/test/pay"
 export const alipay = "alipay"

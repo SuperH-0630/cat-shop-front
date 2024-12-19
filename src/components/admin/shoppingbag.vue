@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {formatDate} from "@/utils/time"
 import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-import {AdminShopRecord, apiAdminPostAddToShoppingBag} from "@/api/admin/shoppingbag";
+import {AdminShopRecord, apiAdminPostAddToShoppingBag} from "#/admin/shoppingbag";
 
 const props = defineProps({
   "record": {

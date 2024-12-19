@@ -5,7 +5,7 @@ import {
   apiAdminGetClass,
   apiAdminPostChangeClassName,
   apiAdminPostChangeClassShow
-} from "@/api/admin/class";
+} from "#/admin/class";
 import {ElMessage, ElMessageBox} from "element-plus";
 
 const route = useRoute()
