@@ -38,31 +38,7 @@ const onChangeUser = () => {
   if (userId.value) {
     userAdminStore.getUser(userId.value).then((res) => {
       user.value = res as AdminUser
-
-      Object.entries(BuyRecordStatus).forEach(([_key]) => {
-        const key = Number(_key).valueOf() || 0
-        apiAdminGetUserBuyRecordByPage(userId.value, 1, 20, Number(key).valueOf()).then((res) => {
-          dataInfo.value[key] = {
-            data: res.data.data.list,
-            pagesizze: 20,
-            total: res.data.data.total,
-            maxpage: res.data.data.maxpage,
-          }
-
-          currentPage.value[key] = 1
-
-          if ((Number(route.query?.status).valueOf() || -1) === key) {
-            if (route.query?.page) {
-              currentPage.value[key] = Number(route.query?.page).valueOf() || 1
-              if (currentPage.value[key] < 1) {
-                currentPage.value[key] = 1
-              }
-            }
-          }
-        })
-      }, () => {
-        toBack()
-      })
+      changePage(activeModel.value)
     })
   } else {
     toBack()
@@ -72,7 +48,7 @@ const onChangeUser = () => {
 watch(() => route.query?.userId, onChangeUser)
 onChangeUser()
 
-const changePage = (status: number) => {
+const changePage = (status: number | string) => {
   if (!user.value) {
     router.push({
       path: "/system/error",
@@ -83,7 +59,7 @@ const changePage = (status: number) => {
     return
   }
 
-  const page = currentPage.value[status]
+  const page = currentPage.value[status] | 1
   apiAdminGetUserBuyRecordByPage(userId.value, page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,
@@ -92,7 +68,6 @@ const changePage = (status: number) => {
       maxpage: res.data.data.maxpage,
       pagesize: 20,
     }
-    console.log(res.data.data.maxpage)
   }).catch(() => {
     ElMessage({
       type: "error",
@@ -109,7 +84,7 @@ const toHome = () => {
 <template>
   <div v-if="user && isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; height: 70vh; width: 80vw; justify-content: center; margin-top: 10px">
-      <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true">
+      <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true" @tab-change="changePage(activeModel)">
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
          <div v-if="dataInfo[index]?.data && dataInfo[index].data.length > 0">
            <el-scrollbar height="60vh">

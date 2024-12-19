@@ -1,49 +1,14 @@
 <script setup lang="ts">
 import {BuyRecordStatus, apiGetUserBuyRecordByPage} from "@/api/center/buyrecord"
-import {ElNotification} from "element-plus";
+import {ElNotification} from "element-plus"
 import BuyRecord from "@/components/center/buyrecord.vue"
 const router = useRouter()
-const route = useRoute()
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
 const currentPage = ref({} as { [key: number]: number })
 
-Object.entries(BuyRecordStatus).forEach(([_key]) => {
-  const key = Number(_key).valueOf() || 0
-  apiGetUserBuyRecordByPage(1, 20, Number(key).valueOf()).then((res) => {
-    dataInfo.value[key] = {
-      data: res.data.data.list,
-      pagesizze:20,
-      total: res.data.data.total,
-      maxpage: res.data.data.maxpage,
-    }
-
-    currentPage.value[key] = 1
-
-    if ((Number(route.query?.status).valueOf() || -1) === key) {
-      if (route.query?.page) {
-        currentPage.value[key] = Number(route.query?.page).valueOf() || 1
-        if (currentPage.value[key] < 1) {
-          currentPage.value[key] = 1
-        }
-      }
-    }
-  })
-  // 不处理catch
-})
-
-if (dataInfo.value[2] && dataInfo.value[2].data && dataInfo.value[2].data.length > 0) {
-  ElNotification({
-    title: '支付提示',
-    message: '有订单支付失败哦，请尝试重新支付！',
-    type: 'warning',
-    duration: 0,
-    position: 'top-left',
-  })
-}
-
-const changePage = (status: number) => {
-  const page = currentPage.value[status]
+const changePage = (status: number | string) => {
+  const page = currentPage.value[status] || 1
   apiGetUserBuyRecordByPage(page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,
@@ -52,7 +17,16 @@ const changePage = (status: number) => {
       maxpage: res.data.data.maxpage,
       pagesize: 20,
     }
-    console.log(res.data.data.maxpage)
+
+    if (status === "2" && res.data.data.total > 0) {
+      ElNotification({
+        title: '支付提示',
+        message: '有订单支付失败哦，请尝试重新支付！',
+        type: 'warning',
+        duration: 0,
+        position: 'top-left',
+      })
+    }
   }).catch(() => {
     ElMessage({
       type: "error",
@@ -60,6 +34,8 @@ const changePage = (status: number) => {
     })
   })
 }
+
+changePage(activeModel.value)
 
 const toHome = () => {
   router.push({
@@ -71,7 +47,7 @@ const toHome = () => {
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; min-width: 50%; justify-content: center; margin-top: 10px">
-      <el-tabs v-model="activeModel">
+      <el-tabs v-model="activeModel" @tab-change="changePage(activeModel)">
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
          <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
            <div style="display: flex; justify-content: center">

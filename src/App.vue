@@ -7,6 +7,9 @@
   import useUserStore, {isLogin} from "@/store/user"
   import useClassStore from "@/store/class"
   import useHotWupinStore from "@/store/hotwupin"
+  import { placeholderLoading } from '@/utils/placeholder-loading'
+
+  placeholderLoading()
 
   const route = useRoute()
   const configStore = useConfigStore()

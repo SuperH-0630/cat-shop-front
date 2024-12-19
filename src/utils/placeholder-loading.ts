@@ -1,5 +1,6 @@
 class Loading {
   private static instance: Loading
+
   el: HTMLDivElement | null = null
   styleEl: HTMLStyleElement | null = null
   defaultStyle = `
@@ -69,6 +70,10 @@ class Loading {
 
 const loadingInstance = Loading.getInstance()
 
-export const placeholderLoading = loadingInstance.load.bind(loadingInstance)
+export const placeholderLoading = () => {
+  loadingInstance && loadingInstance.load.bind(loadingInstance)
+}
 
-export const clearPlaceholderLoading = loadingInstance.removeEl.bind(loadingInstance)
+export const clearPlaceholderLoading = () => {
+  loadingInstance && loadingInstance.removeEl.bind(loadingInstance)
+}
