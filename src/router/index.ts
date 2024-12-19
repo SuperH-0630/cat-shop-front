@@ -1,5 +1,5 @@
-import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
-import { clearPlaceholderLoading } from '@/utils/placeholder-loading'
+import {createRouter, createWebHistory, NavigationGuardNext, RouteRecordRaw} from 'vue-router'
+import {clearPlaceholderLoading, placeholderLoading} from '@/utils/placeholder-loading'
 import {isLogin } from "@/store/user"
 import usePathStore from "@/store/path"
 import useWechatStore from "@/store/wechat"
@@ -437,7 +437,12 @@ const router = createRouter({
   }
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, nextFn) => {
+  const next: NavigationGuardNext = (obj?: any) => {
+    placeholderLoading()
+    nextFn(obj)
+  }
+
   if (to.meta.xauth && to.meta.xauth === true && !isLogin()) {
     next({
       path: "/shop/login",
