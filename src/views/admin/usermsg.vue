@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {isAdmin} from "@/store/admin";
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {AdminMsg, apiAdminGetUserMsg} from "#/admin/msg";
-import {formatDate} from "@/utils/time";
-import pushTo from "@/views/admin/router_push";
+import {isAdmin} from "@/store/admin"
+import useAdminUserStore, {AdminUser} from "@/store/admin/user"
+import {AdminMsg, apiAdminGetUserMsg} from "#/admin/msg"
+import {formatDate} from "@/utils/time"
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()

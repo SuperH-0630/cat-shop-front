@@ -1,7 +1,7 @@
 import {Wupin} from "@/store/hotwupin"
 import {Result} from "@/utils/request"
 import wupinPic from "@/assets/images/tmp.jpg"
-import {LocationForUser} from "#/center/pay";
+import {LocationForUser} from "#/center/pay"
 
 export const BuyRecordStatus = {
     1: "已下单，支付代确认",

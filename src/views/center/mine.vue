@@ -3,7 +3,7 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
   import {Edit} from "@element-plus/icons-vue"
   import {BuyRecord, apiGetUserBuyRecordLst} from "#/center/buyrecord"
   import Buyrecord from "@/components/center/buyrecord.vue"
-  import {ElNotification} from "element-plus"
+import {ElNotification, ElMessage, UploadFile} from "element-plus"
   import { genFileId } from 'element-plus'
   import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 
@@ -100,12 +100,13 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
     avatarUpload.value!.handleStart(file)
   }
 
-  const updateAvatar = (avatar: UploadRawFile) => {
-    if (!avatar) {
+  const updateAvatar = (avatar: UploadFile) => {
+    if (!avatar || !avatar.size || !avatar.raw) {
       ElMessage({
         type: 'warning',
-        message: "请上传头像"
+        message: "请上传图片"
       })
+      return
     }
 
     if (avatar.size > 500000) {// 500KB
@@ -116,7 +117,7 @@ import useUserStore, {isLogin, hasLoad, UserType} from "@/store/user"
       return
     }
 
-    userStore.editAvatar(avatar).then(() => {
+    userStore.editAvatar(avatar.raw).then(() => {
       ElMessage({
         type: 'success',
         message: "头像更新成功"

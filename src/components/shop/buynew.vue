@@ -1,11 +1,11 @@
 <script setup lang="ts">
-
-import {apiPostAliNewPay, apiPostAliNewPayWithShop, LocationForUser, apiPostWechatNewPay, apiPostWechatNewPayWithShop} from "#/center/pay";
-import {Wupin} from "@/store/hotwupin";
-import useUserStore from "@/store/user";
-import {isEmail, isMobile} from "@/utils/str";
-import {getFacePrice, getTotalPrice} from "@/utils/price";
-import {ShopRecord} from "#/center/shoppingbag";
+import { ElMessage } from "element-plus"
+import {apiPostAliNewPay, apiPostAliNewPayWithShop, LocationForUser, apiPostWechatNewPay, apiPostWechatNewPayWithShop} from "#/center/pay"
+import {Wupin} from "@/store/hotwupin"
+import useUserStore from "@/store/user"
+import {isEmail, isMobile} from "@/utils/str"
+import {getFacePrice, getTotalPrice} from "@/utils/price"
+import {ShopRecord} from "#/center/shoppingbag"
 
 const wupin = ref({} as Wupin)
 const num = ref(1 as number)
@@ -43,6 +43,7 @@ const form = ref({
   location: userStore.user.location,
   wechat: userStore.user?.wechat,
   email: userStore.user?.email,
+  remark: "",
 })
 
 const checkLocation = computed(() => form.value.location && form.value.location.length > 0)

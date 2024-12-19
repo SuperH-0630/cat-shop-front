@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {BuyRecordStatus} from "#/center/buyrecord"
-import AdminBuyRecord from "@/components/admin/buyrecord.vue";
-import {isAdmin} from "@/store/admin";
-import {apiAdminGetBuyRecordByPage} from "#/admin/buyrecord";
+import AdminBuyRecord from "@/components/admin/adminbuyrecord.vue"
+import {isAdmin} from "@/store/admin"
+import {apiAdminGetBuyRecordByPage} from "#/admin/buyrecord"
+import { ElMessage } from "element-plus"
+import {asString} from "@/utils/str";
 
 const router = useRouter()
-const route = useRoute()
 
 if (!isAdmin()) {
   router.push({
@@ -18,37 +19,12 @@ if (!isAdmin()) {
 
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
-const currentPage = ref({} as { [key: number]: number })
+const currentPage = ref<{ [key: string]: number }>({})
 
-const onChangeUser = () => {
-  Object.entries(BuyRecordStatus).forEach(([_key]) => {
-    const key = Number(_key).valueOf() || 0
-    apiAdminGetBuyRecordByPage(1, 20, Number(key).valueOf()).then((res) => {
-      dataInfo.value[key] = {
-        data: res.data.data.list,
-        pagesizze: 20,
-        total: res.data.data.total,
-        maxpage: res.data.data.maxpage,
-      }
+const changePage = (status: string) => {
+  console.log("status", status, typeof status)
 
-      currentPage.value[key] = 1
-
-      if ((Number(route.query?.status).valueOf() || -1) === key) {
-        if (route.query?.page) {
-          currentPage.value[key] = Number(route.query?.page).valueOf() || 1
-          if (currentPage.value[key] < 1) {
-            currentPage.value[key] = 1
-          }
-        }
-      }
-    })
-  })
-}
-
-onChangeUser()
-
-const changePage = (status: number) => {
-  const page = currentPage.value[status]
+  const page = currentPage.value[status] || 1
   apiAdminGetBuyRecordByPage(page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,
@@ -65,17 +41,20 @@ const changePage = (status: number) => {
     })
   })
 }
+
+changePage(activeModel.value)
+
 </script>
 
 <template>
   <div v-if="isAdmin()" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; height: 70vh; width: 80vw; justify-content: center; margin-top: 10px">
-      <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true">
+      <el-tabs v-model="activeModel" style="width: 75vw" :stretch="true" @tab-change="changePage(activeModel)">
         <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
-         <div v-if="dataInfo[index]?.data && dataInfo[index].data.length > 0">
+          <div v-if="dataInfo[index]?.data && dataInfo[index].data.length > 0">
            <el-scrollbar height="60vh">
              <div style="display: flex; justify-content: center; margin-bottom: 10px; margin-top: 10px;">
-               <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
+               <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(asString(index))" />
              </div>
              <div style="width: 100%; display: flex; justify-content: center">
                <div style="width: 100%;">
@@ -85,8 +64,8 @@ const changePage = (status: number) => {
                </div>
              </div>
              <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
-               <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
-             </div>
+(               <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(asString(index))" />
+)             </div>
            </el-scrollbar>
          </div>
           <div v-else>

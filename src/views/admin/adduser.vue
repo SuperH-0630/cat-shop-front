@@ -3,13 +3,11 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import useAdminUserStore, {
   GetAdminUserStatus
 } from "@/store/admin/user";
-import pushTo from "@/views/admin/router_push";
-import {isAdmin} from "@/store/admin";
-import {isMobile} from "@/utils/str";
-import {NewUserData} from "#/admin/user";
+import {isAdmin} from "@/store/admin"
+import {isMobile} from "@/utils/str"
+import {NewUserData} from "#/admin/user"
 
 const router = useRouter()
-const route = useRoute()
 
 if (!isAdmin()) {
   router.push({

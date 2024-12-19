@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import usePathStore from "@/store/path";
+  import usePathStore from "@/store/path"
 
   const pathStore = usePathStore()
   const router = useRouter()

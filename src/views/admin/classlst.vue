@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {isAdmin} from "@/store/admin";
+import {isAdmin} from "@/store/admin"
 import {
   AdminClass,
   apiAdminGetClassLst,
@@ -170,24 +170,6 @@ const stopShow = (classId: number, name: string) => {
     </el-card>
   </div>
   <div v-else></div>
-
-  <el-dialog
-      v-model="showAvatar"
-      style="height: 50vh; width: 20vw;"
-      destroy-on-close
-  >
-    <div style="height: 35vh; width: 100%; display: flex; justify-content: center">
-      <img alt="wechat" style="height: 100%; width: 100%; object-fit: contain;" :src="avatarUrl"/>
-    </div>
-
-    <template #footer>
-      <div class="dialog-footer" style="height: 10vh">
-        <el-button type="success" @click="showAvatar = false">
-          关闭
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
 </template>
 
 <style scoped lang="scss">

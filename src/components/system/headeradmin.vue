@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import useConfigStore from "@/store/config"
 import UserTitleAdmin from "@/components/system/usertitleadmin.vue"
-import pushTo from "@/views/admin/router_push";
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {isAdmin} from "@/store/admin";
-import {AdminWupin, apiAdminGetWupinLst} from "#/admin/wupin";
-import pushTo from "@/views/admin/router_push";
+import {isAdmin} from "@/store/admin"
+import {AdminWupin, apiAdminGetWupinLst} from "#/admin/wupin"
+import pushTo from "@/views/admin/router_push"
+import { ElMessage } from "element-plus"
 
 const route = useRoute()
 const router = useRouter()

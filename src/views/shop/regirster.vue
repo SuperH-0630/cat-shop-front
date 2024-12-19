@@ -2,8 +2,11 @@
 import useUserStore, {isLogin} from "@/store/user"
 import {isMobile} from "@/utils/str"
 import {redirect} from "@/router"
+import { ElMessage } from "element-plus"
+import useConfigStore from "@/store/config"
 
 const userStore = useUserStore()
+const configStore = useConfigStore()
 
 const route = useRoute()
 const router = useRouter()

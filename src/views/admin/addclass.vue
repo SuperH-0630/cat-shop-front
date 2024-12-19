@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {isAdmin} from "@/store/admin";
-import {apiAdminPostAddClass, NewClassData} from "#/admin/class";
+import {isAdmin} from "@/store/admin"
+import {apiAdminPostAddClass, NewClassData} from "#/admin/class"
 
 const router = useRouter()
 

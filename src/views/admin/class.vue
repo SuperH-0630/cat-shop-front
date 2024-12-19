@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import pushTo from "@/views/admin/router_push";
+import pushTo from "@/views/admin/router_push"
 import {
   AdminClass,
   apiAdminGetClass,
   apiAdminPostChangeClassName,
   apiAdminPostChangeClassShow
 } from "#/admin/class";
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus"
 
 const route = useRoute()
 const router = useRouter()

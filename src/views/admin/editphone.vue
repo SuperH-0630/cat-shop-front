@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {isAdmin, isRootAdmin} from "@/store/admin";
-import pushTo from "@/views/admin/router_push";
-import {isMobile} from "@/utils/str";
+import useAdminUserStore, {AdminUser} from "@/store/admin/user"
+import {isAdmin, isRootAdmin} from "@/store/admin"
+import pushTo from "@/views/admin/router_push"
+import {isMobile} from "@/utils/str"
 
 const router = useRouter()
 const route = useRoute()

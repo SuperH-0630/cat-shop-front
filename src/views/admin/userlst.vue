@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import useAdminUserStore, {AdminUser, GetAdminUserStatus, AdminUserType} from "@/store/admin/user";
-import useConfigStore from "@/store/config";
-import {isAdmin} from "@/store/admin";
+import useAdminUserStore, {AdminUser, GetAdminUserStatus, AdminUserType} from "@/store/admin/user"
+import useConfigStore from "@/store/config"
+import {isAdmin} from "@/store/admin"
+import { ElMessage } from "element-plus"
 
 const route = useRoute()
 const router = useRouter()

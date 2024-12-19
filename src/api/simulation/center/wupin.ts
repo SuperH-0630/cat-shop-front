@@ -1,7 +1,7 @@
-import {Wupin} from "@/store/hotwupin";
-import {Result} from "@/utils/request";
-import useClassStore, {Class} from "@/store/class";
-import WupinPic from "@/assets/images/tmp.jpg";
+import {Wupin} from "@/store/hotwupin"
+import {Result} from "@/utils/request"
+import useClassStore, {Class} from "@/store/class"
+import WupinPic from "@/assets/images/tmp.jpg"
 
 export const apiGetWupin = (id: number): Result<Wupin> => {
     const classStore = useClassStore()

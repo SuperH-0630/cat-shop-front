@@ -4,7 +4,7 @@ import {isLogin } from "@/store/user"
 import usePathStore from "@/store/path"
 import useWechatStore from "@/store/wechat"
 import useConfigStore from "@/store/config"
-import {isAdmin, isRootAdmin} from "@/store/admin";
+import {isAdmin, isRootAdmin} from "@/store/admin"
 
 export const redirect = "redirect"
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AdminShoppingbag from "@/components/admin/shoppingbag.vue"
-import {isAdmin} from "@/store/admin";
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {AdminShopRecord, apiAdminGetUserShoppingRecord} from "#/admin/shoppingbag";
-import pushTo from "@/views/admin/router_push";
+import AdminShoppingbag from "@/components/admin/adminshoppingbag.vue"
+import {isAdmin} from "@/store/admin"
+import useAdminUserStore, {AdminUser} from "@/store/admin/user"
+import {AdminShopRecord, apiAdminGetUserShoppingRecord} from "#/admin/shoppingbag"
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()
@@ -77,7 +77,7 @@ const toHome = () => {
               <div style="width: 100%;">
                 <el-scrollbar>
                   <div v-for="(item, index) in shoppingbagLst" :key="index" style="margin-left: 30px; margin-right: 30px">
-                    <AdminShoppingbag ref="shopper" :record="item" @reload="reload"></AdminShoppingbag>
+                    <AdminShoppingbag ref="shopper" :record="item" @reload="onChange"></AdminShoppingbag>
                   </div>
                 </el-scrollbar>
               </div>

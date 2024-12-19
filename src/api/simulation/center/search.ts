@@ -1,7 +1,7 @@
-import {Wupin} from "@/store/hotwupin";
-import WupinPic from "@/assets/images/tmp.jpg";
-import useClassStore from "@/store/class";
-import { Result} from "@/utils/request";
+import {Wupin} from "@/store/hotwupin"
+import WupinPic from "@/assets/images/tmp.jpg"
+import useClassStore from "@/store/class"
+import { Result} from "@/utils/request"
 
 export interface WupinLst {
     list: Wupin[]

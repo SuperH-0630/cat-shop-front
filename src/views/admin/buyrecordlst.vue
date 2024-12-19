@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {BuyRecordStatus} from "#/center/buyrecord"
-import AdminBuyRecord from "@/components/admin/buyrecord.vue";
-import {isAdmin} from "@/store/admin";
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {apiAdminGetUserBuyRecordByPage} from "#/admin/buyrecord";
-import pushTo from "@/views/admin/router_push";
+import AdminBuyRecord from "@/components/admin/adminbuyrecord.vue"
+import {isAdmin} from "@/store/admin"
+import useAdminUserStore, {AdminUser} from "@/store/admin/user"
+import {apiAdminGetUserBuyRecordByPage} from "#/admin/buyrecord"
+import pushTo from "@/views/admin/router_push"
+import { ElMessage } from "element-plus"
 
 const router = useRouter()
 const route = useRoute()
@@ -29,7 +30,7 @@ const user = ref(null as AdminUser | null)
 
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
-const currentPage = ref({} as { [key: number]: number })
+const currentPage = ref<{ [key: string]: number }>({})
 
 const onChangeUser = () => {
   userId.value = Number(route.query?.userId).valueOf() || 0
@@ -59,7 +60,7 @@ const changePage = (status: number | string) => {
     return
   }
 
-  const page = currentPage.value[status] | 1
+  const page = currentPage.value[status] || 1
   apiAdminGetUserBuyRecordByPage(userId.value, page, 20, Number(status).valueOf()).then((res) => {
     dataInfo.value[status] = {
       data: res.data.data.list,

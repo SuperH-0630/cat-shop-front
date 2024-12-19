@@ -1,4 +1,4 @@
-import {Result, Success} from "@/utils/request";
+import {Result, Success} from "@/utils/request"
 
 export interface XieyiData {
     xieyi: string

@@ -25,9 +25,9 @@ reload()
 </script>
 
 <template>
-  <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
+  <div v-if="record" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <div style="width: 50%;">
-      <BuyRecord :zhifutishi="true" :record="record" :safe="true" :xiangqing="false" @reload="reload"></BuyRecord>
+      <BuyRecord :zhifutishi="true" :record="record as BuyRecordData" :safe="true" :xiangqing="false" @reload="reload"></BuyRecord>
     </div>
   </div>
 </template>

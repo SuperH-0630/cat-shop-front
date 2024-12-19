@@ -2,7 +2,7 @@
 import {AdminBuyRecordStatus, AdminBuyRecord} from "#/admin/buyrecord"
 import {formatDate} from "@/utils/time"
 import { ElMessageBox } from 'element-plus'
-import pushTo from "@/views/admin/router_push";
+import pushTo from "@/views/admin/router_push"
 import {
   apiAdminPostPeoplePay,
 } from "#/admin/pay";
@@ -19,9 +19,10 @@ import {
   apiAdminPostGouWuTuiHuoDaohuo,
   apiAdminPostAcceptFaHuoQuXiaoDengJi
 } from "#/admin/huo"
-import {LocationForUser} from "#/center/pay";
-import {isEmail, isMobile} from "@/utils/str";
-import useConfigStore from "@/store/config";
+import {LocationForUser} from "#/center/pay"
+import {isEmail, isMobile} from "@/utils/str"
+import useConfigStore from "@/store/config"
+import { ElMessage } from "element-plus"
 
 const configStore = useConfigStore()
 const props = defineProps({

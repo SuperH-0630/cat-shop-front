@@ -4,7 +4,7 @@ import Search from "@/components/shop/search.vue"
 import Ad from "@/components/shop/ad.vue"
 import Hotwupinlist from "@/components/shop/hotwupinlist.vue"
 
-const adDiv = ref(null)
+const adDiv = ref(null as any)
 
 </script>
 

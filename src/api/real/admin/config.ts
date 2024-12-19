@@ -1,10 +1,10 @@
-import {UploadRawFile} from "element-plus";
-import {Result, Success} from "@/utils/request";
-import Logo from "@/assets/images/logo.jpg";
-import WeChat from "@/assets/images/wechat.jpg";
-import AD from "@/assets/images/ad.jpeg";
-import DefaultAvatar from "@/assets/images/default-avatar.jpg";
-import LogoIco from "@/assets/images/logo-icon.png";
+import {UploadRawFile} from "element-plus"
+import {Result, Success} from "@/utils/request"
+import Logo from "@/assets/images/logo.jpg"
+import WeChat from "@/assets/images/wechat.jpg"
+import AD from "@/assets/images/ad.jpeg"
+import DefaultAvatar from "@/assets/images/default-avatar.jpg"
+import LogoIco from "@/assets/images/logo-icon.png"
 
 export interface AdminConfig {
     "name": string,

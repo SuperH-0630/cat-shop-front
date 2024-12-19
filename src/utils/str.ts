@@ -77,3 +77,7 @@ export const scrollToTop = () => {
 export function maskPhoneNumber(phoneNumber: string) {
   return phoneNumber.replace(/^(\d{3})\d{4}(\d{4})$/, '$1****$2');
 }
+
+export function asString(obj: any) {
+  return typeof obj === 'string' ? obj : ""
+}

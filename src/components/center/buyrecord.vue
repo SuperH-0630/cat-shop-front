@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import {BuyRecordStatus, BuyRecord} from "#/center/buyrecord"
+import {BuyRecord as BuyRecordData} from "#/center/buyrecord"
+import {BuyRecordStatus} from "#/center/buyrecord"
 import {formatDate} from "@/utils/time"
 import {ElNotification} from "element-plus"
 import {apiPostAliRepay, apiPostWechatRepay, LocationForUser} from "#/center/pay"
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import {
   apiPostGouWuPingJia,
   apiPostGouWuDaoHuo,
@@ -12,15 +13,15 @@ import {
   apiPostTuiHuoShenQing,
   apiPostQuXiaoPay, apiPostChangeUser
 } from "#/center/huo"
-import useUserStore from "@/store/user";
-import {isEmail, isMobile} from "@/utils/str";
-import useConfigStore from "@/store/config";
+import useUserStore from "@/store/user"
+import {isEmail, isMobile} from "@/utils/str"
+import useConfigStore from "@/store/config"
 
 const configStore = useConfigStore()
 const router = useRouter()
 const props = defineProps({
   "record": {
-    type: Object as PropType<BuyRecord>,
+    type: Object as PropType<BuyRecordData>,
     required: true
   },
   "safe":  {

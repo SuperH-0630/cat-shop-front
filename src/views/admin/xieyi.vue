@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import {isAdmin} from "@/store/admin";
-import {apiAdminGetXieyi} from "#/admin/xieyi";
-import pushTo from "@/views/admin/router_push";
+import {isAdmin} from "@/store/admin"
+import {apiAdminGetXieyi} from "#/admin/xieyi"
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()

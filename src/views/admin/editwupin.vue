@@ -10,8 +10,9 @@ import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig } from '@wangeditor/editor'
 import { IEditorConfig } from '@wangeditor/editor'
-import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image";
-import {getXtoken} from "@/store/user";
+import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image"
+import {getXtoken} from "@/store/user"
+import { UploadFile } from "element-plus"
 
 const router = useRouter()
 const route = useRoute()
@@ -226,7 +227,7 @@ const update = () => {
       form.value.classid = defaultClass.value.id
     }
 
-    return apiAdminPostUpdateWupin(form.value, newPic.value).then((res) => {
+    return apiAdminPostUpdateWupin(form.value, newPic.value && newPic.value.raw ? newPic.value.raw : null).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -245,7 +246,7 @@ const update = () => {
 
 const pictureLst = ref([])
 const pictureUpload = ref<UploadInstance>()
-const newPic = ref(null as UploadRawFile | null)
+const newPic = ref(null as UploadFile | null)
 
 const handleExceed: UploadProps['onExceed'] = (files) => {
   pictureUpload.value!.clearFiles()
@@ -254,12 +255,13 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   pictureUpload.value!.handleStart(file)
 }
 
-const updatePicture = (pic: UploadRawFile) => {
-  if (!pic) {
+const updatePicture = (pic: UploadFile) => {
+  if (!pic || !pic.size || !pic.raw) {
     ElMessage({
       type: 'warning',
       message: "请上传图片"
     })
+    return
   }
 
   if (pic.size > 500000) {// 500KB

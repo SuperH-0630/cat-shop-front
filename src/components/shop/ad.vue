@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import useConfigStore from "@/store/config"
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const configStore = useConfigStore()
 const showAD = ref({
@@ -27,8 +28,6 @@ onMounted(() => {
 defineExpose({
   height
 })
-
-import { ElMessage, ElMessageBox } from 'element-plus'
 
 const onClick = () => {
   if (showAD.value.url) {

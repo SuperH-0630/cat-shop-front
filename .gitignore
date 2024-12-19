@@ -25,3 +25,5 @@ dist-production
 *.njsproj
 *.sln
 *.sw?
+
+tsconfig.json

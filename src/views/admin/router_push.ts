@@ -1,4 +1,4 @@
-import {RouteLocationNormalizedLoaded, Router} from "vue-router";
+import {RouteLocationNormalizedLoaded, Router} from "vue-router"
 
 const pushTo = (router: Router, route: RouteLocationNormalizedLoaded, path: string, query?: object) => {
     if (!path) {

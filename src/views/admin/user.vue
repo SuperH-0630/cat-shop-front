@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import useAdminUserStore from "@/store/admin/user";
+import useAdminUserStore from "@/store/admin/user"
 import { AdminUser } from "@/store/admin/user"
-import {Edit, EditPen} from "@element-plus/icons-vue";
-import {ElMessage, genFileId, type UploadInstance, UploadProps, UploadRawFile} from "element-plus";
-import pushTo from "@/views/admin/router_push";
-import {isAdmin, isRootAdmin} from "@/store/admin";
+import {Edit, EditPen} from "@element-plus/icons-vue"
+import {ElMessage, genFileId, UploadFile, type UploadInstance, UploadProps, UploadRawFile} from "element-plus"
+import pushTo from "@/views/admin/router_push"
+import {isAdmin, isRootAdmin} from "@/store/admin"
 
 const router = useRouter()
 const route = useRoute()
@@ -75,12 +75,13 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   avatarUpload.value!.handleStart(file)
 }
 
-const updateAvatar = (avatar: UploadRawFile) => {
-  if (!avatar) {
+const updateAvatar = (avatar: UploadFile) => {
+  if (!avatar || !avatar.size || !avatar.raw) {
     ElMessage({
       type: 'warning',
-      message: "请上传头像"
+      message: "请上传图片"
     })
+    return
   }
 
   if (avatar.size > 500000) {// 500KB
@@ -91,7 +92,7 @@ const updateAvatar = (avatar: UploadRawFile) => {
     return
   }
 
-  userAdminStore.editUserAvatar(userId.value, avatar).then(() => {
+  userAdminStore.editUserAvatar(userId.value, avatar.raw).then(() => {
     ElMessage({
       type: 'success',
       message: "头像更新成功"

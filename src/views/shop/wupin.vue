@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import {Wupin} from "@/store/hotwupin"
   import { ElNotification } from 'element-plus'
-  import {Location} from "@element-plus/icons-vue";
-  import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-  import {apiPostAddToShoppingBag} from "#/center/shoppingbag";
-  import {apiGetWupin} from "#/center/wupin";
-
+  import {Location} from "@element-plus/icons-vue"
+  import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price"
+  import {apiPostAddToShoppingBag} from "#/center/shoppingbag"
+  import {apiGetWupin} from "#/center/wupin"
+  import { ElMessage } from 'element-plus'
   const route = useRoute()
   const router = useRouter()
 
@@ -54,6 +54,7 @@
     return getTotalPrice(wupin.value?.hotPrice, wupin.value?.realPrice, num.value)
   })
 
+  const totalBuy = computed(() => (wupin.value && wupin.value.buytotal >= 0) ? wupin.value.buytotal : 0)
   const totalDaoHuo = computed(() => (wupin.value && wupin.value.buydaohuo >= 0) ? wupin.value.buydaohuo : 0)
   const totalBuyGood = computed(() => {
     const g = (wupin.value && wupin.value.buygood >= 0) ? wupin.value.buygood : 0

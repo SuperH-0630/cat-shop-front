@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import useConfigStore from "@/store/config"
-import {Service} from "@element-plus/icons-vue";
-import {isLogin, hasLoad} from "@/store/user";
-import {apiSendKefuMsg} from "#/center/kefu";
+import {Service} from "@element-plus/icons-vue"
+import {isLogin, hasLoad} from "@/store/user"
+import {apiSendKefuMsg} from "#/center/kefu"
+import {ElMessage} from "element-plus"
 
 const configStore = useConfigStore()
 configStore.updateConfig()

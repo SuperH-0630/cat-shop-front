@@ -5,7 +5,7 @@ import AD from "@/assets/images/ad.jpeg"
 import DefaultAvatar from "@/assets/images/default-avatar.jpg"
 
 import {apiGetConfig} from "#/center/config"
-import {apiGetXieyi} from "#/center/xieyi";
+import {apiGetXieyi} from "#/center/xieyi"
 
 export interface Config {
     "name": string,

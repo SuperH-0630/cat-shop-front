@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {isAdmin} from "@/store/admin";
+import {isAdmin} from "@/store/admin"
 import {
   AdminClass,
   AdminClassData,
   apiAdminGetClass,
   apiAdminPostUpdateClass,
 } from "#/admin/class";
-import pushTo from "@/views/admin/router_push";
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()

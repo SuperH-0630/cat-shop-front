@@ -1,4 +1,4 @@
-import {config} from "@/utils/request";
+import {config} from "@/utils/request"
 
 export function apiAdminPostUploadImageUrl() {
     const baseUrl = (config.baseURL || "/api") as string

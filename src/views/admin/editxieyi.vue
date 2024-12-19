@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import {isAdmin} from "@/store/admin";
-import {apiAdminGetXieyi, apiAdminPostUpdateXieyi} from "#/admin/xieyi";
+import {isAdmin} from "@/store/admin"
+import {apiAdminGetXieyi, apiAdminPostUpdateXieyi} from "#/admin/xieyi"
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig } from '@wangeditor/editor'
 import { IEditorConfig } from '@wangeditor/editor'
-import '@wangeditor/editor/dist/css/style.css';
-import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image";
-import {getXtoken} from "@/store/user";
+import '@wangeditor/editor/dist/css/style.css'
+import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image"
+import {getXtoken} from "@/store/user"
+import { ElMessage } from "element-plus"
 
 const router = useRouter()
 

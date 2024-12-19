@@ -1,6 +1,6 @@
-import {Result, Success} from "@/utils/request";
-import wupinPic from "@/assets/images/tmp.jpg";
-import {Wupin} from "@/store/hotwupin";
+import {Result, Success} from "@/utils/request"
+import wupinPic from "@/assets/images/tmp.jpg"
+import {Wupin} from "@/store/hotwupin"
 
 export interface AdminShopRecord {
     id: number

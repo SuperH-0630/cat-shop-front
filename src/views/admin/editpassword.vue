@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import {isAdmin, isRootAdmin} from "@/store/admin";
-import pushTo from "@/views/admin/router_push";
+import useAdminUserStore, {AdminUser} from "@/store/admin/user"
+import {isAdmin, isRootAdmin} from "@/store/admin"
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()
@@ -118,7 +118,7 @@ const update = () => {
       </el-result>
     </el-card>
     <el-card v-else style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
-      <el-form :model="ub" label-width="auto" style="width: 15vw">
+      <el-form :model="form" label-width="auto" style="width: 15vw">
         <el-form-item>
           <template #label>
             <el-text>新密码</el-text>

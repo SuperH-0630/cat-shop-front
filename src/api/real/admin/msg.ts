@@ -1,4 +1,4 @@
-import {Result} from "@/utils/request";
+import {Result} from "@/utils/request"
 
 export interface AdminMsg {
     id: number

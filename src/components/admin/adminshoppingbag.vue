@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {formatDate} from "@/utils/time"
-import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-import {AdminShopRecord, apiAdminPostAddToShoppingBag} from "#/admin/shoppingbag";
+import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price"
+import {AdminShopRecord, apiAdminPostAddToShoppingBag} from "#/admin/shoppingbag"
+import { ElMessage } from "element-plus"
+import pushTo from "@/views/admin/router_push"
 
 const props = defineProps({
   "record": {
@@ -10,6 +12,7 @@ const props = defineProps({
   }
 })
 
+const route = useRoute()
 const router = useRouter()
 
 const emits = defineEmits(["reload"])
@@ -29,23 +32,14 @@ const totalPrice = computed(() => {
 })
 
 const onClassClick = () => {
-  record.value && router.push({
-    path: "/shop/search",
-    query: {
-      "info": JSON.stringify({
-        select: [record.value.wupin.classid],
-        search: "",
-      })
-    }
+  pushTo(router, route, "/admin/class/list/info", {
+    classId: record.value.wupin.classid.toString(),
   })
 }
 
 const onWupinClick = () => {
-  record.value && router.push({
-    path: "/shop/wupin",
-    query: {
-      id: record.value.wupin.id,
-    }
+  pushTo(router, route, "/admin/wupin/list/info", {
+    wupinId: record.value.wupin.id.toString(),
   })
 }
 
@@ -99,8 +93,8 @@ if (num.value < 0) {
         <div class="header">
           <div style="display: flow-root">
             <div style="display:block; float: left">
-              <el-badge  class="title" :value="record.wupin.tag" style="margin-top: 10px" @click="onWupinClick">
-                <el-text class="wupin_name" @click="onGoWupin"> {{ record.wupin.name }} </el-text>
+              <el-badge  class="title" :value="record.wupin.tag" style="margin-top: 10px">
+                <el-text class="wupin_name" @click="onWupinClick"> {{ record.wupin.name }} </el-text>
               </el-badge>
               <el-text class="title wupin_class_name">
                 商品来源：

@@ -1,5 +1,5 @@
 import {Result, Success} from "@/utils/request"
-import {UserBase, UserWithoutPre} from "@/store/user";
+import {UserBase, UserWithoutPre} from "@/store/user"
 
 export interface LoginResult {
     autiregister?: boolean,

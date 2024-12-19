@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { Wupin } from "@/store/hotwupin"
-  import {getFacePrice, getRealPrice} from "@/utils/price";
+  import {getFacePrice, getRealPrice} from "@/utils/price"
 
   const props = defineProps({
     "wp": {

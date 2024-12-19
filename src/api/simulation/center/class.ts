@@ -1,5 +1,5 @@
-import {Class} from "@/store/class";
-import {Result} from "@/utils/request";
+import {Class} from "@/store/class"
+import {Result} from "@/utils/request"
 
 export interface ClassLst {
     list: Class[],

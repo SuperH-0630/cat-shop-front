@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import {BuyRecordStatus, apiGetUserBuyRecordByPage} from "#/center/buyrecord"
 import {ElNotification} from "element-plus"
+import { ElMessage } from "element-plus"
+
 import BuyRecord from "@/components/center/buyrecord.vue"
 const router = useRouter()
 const activeModel = ref("1")
 const dataInfo = ref({} as any)
-const currentPage = ref({} as { [key: number]: number })
+const currentPage = ref<{ [key: string]: number }>({})
 
 const changePage = (status: number | string) => {
   const page = currentPage.value[status] || 1
@@ -48,8 +50,8 @@ const toHome = () => {
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; min-width: 50%; justify-content: center; margin-top: 10px">
       <el-tabs v-model="activeModel" @tab-change="changePage(activeModel)">
-        <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status" :name="index">
-         <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
+        <el-tab-pane v-for="(status, index) in BuyRecordStatus" :key="index" :hidden="!dataInfo[index]" :label="status as string" :name="index">
+          <div v-if="(dataInfo[index]?.maxpage || 0) > 0">
            <div style="display: flex; justify-content: center">
              <el-pagination v-model:current-page="currentPage[index]" class="pager" background layout="prev, pager, next" :page-size="dataInfo[index]?.pgesize || 20" :total="dataInfo[index]?.maxpage || 0" @change="changePage(index)" />
            </div>

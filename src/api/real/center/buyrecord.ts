@@ -1,7 +1,7 @@
 import {Wupin} from "@/store/hotwupin"
 import {Result} from "@/utils/request"
 import wupinPic from "@/assets/images/tmp.jpg"
-import {LocationForUser} from "#/center/pay";
+import {LocationForUser} from "#/center/pay"
 
 export const BuyRecordStatus = {
     1: "已下单，支付代确认",
@@ -17,7 +17,7 @@ export const BuyRecordStatus = {
     11: "已退货",
     12: "申请取消订单审核中",
     13: "已取消订单",
-} as Object
+} as {[key: number]: string}
 
 export interface BuyRecord {
     id: number

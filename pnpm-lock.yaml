@@ -29,6 +29,9 @@ dependencies:
   crypto-es:
     specifier: 1.2.7
     version: 1.2.7
+  dotenv:
+    specifier: ^16.4.7
+    version: 16.4.7
   element-plus:
     specifier: ^2.9.0
     version: 2.9.0(vue@3.2.47)
@@ -1710,6 +1713,11 @@ packages:
       dom-serializer: 2.0.0
       domelementtype: 2.3.0
       domhandler: 5.0.3
+    dev: false
+
+  /dotenv@16.4.7:
+    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /ee-first@1.1.1:

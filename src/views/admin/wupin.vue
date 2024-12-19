@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import {Location} from "@element-plus/icons-vue";
-  import {getFacePrice, getRealPrice} from "@/utils/price";
-  import {isAdmin} from "@/store/admin";
-  import {AdminWupin, apiAdminGetWupin} from "#/admin/wupin";
-  import pushTo from "@/views/admin/router_push";
+  import {Location} from "@element-plus/icons-vue"
+  import {getFacePrice, getRealPrice} from "@/utils/price"
+  import {isAdmin} from "@/store/admin"
+  import {AdminWupin, apiAdminGetWupin} from "#/admin/wupin"
+  import pushTo from "@/views/admin/router_push"
 
   const router = useRouter()
   const route = useRoute()
@@ -31,6 +31,7 @@
     return getFacePrice(wupin.value?.hotPrice, wupin.value?.realPrice)
   })
 
+  const totalBuy = computed(() => (wupin.value && wupin.value.buytotal >= 0) ? wupin.value.buytotal : 0)
   const totalDaoHuo = computed(() => (wupin.value && wupin.value.buydaohuo >= 0) ? wupin.value.buydaohuo : 0)
   const totalBuyGood = computed(() => {
     const g = (wupin.value && wupin.value.buygood >= 0) ? wupin.value.buygood : 0

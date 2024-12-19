@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {apiAdminGetBuyRecordInfo, AdminBuyRecord as AdminBuyRecordData } from "#/admin/buyrecord"
-import AdminBuyRecord from "@/components/admin/buyrecord.vue"
-import {isAdmin} from "@/store/admin";
-import useAdminUserStore, {AdminUser} from "@/store/admin/user";
-import pushTo from "@/views/admin/router_push";
+import AdminBuyRecord from "@/components/admin/adminbuyrecord.vue"
+import {isAdmin} from "@/store/admin"
+import useAdminUserStore, {AdminUser} from "@/store/admin/user"
+import pushTo from "@/views/admin/router_push"
 
 const router = useRouter()
 const route = useRoute()

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {apiPostAddToShoppingBag, ShopRecord} from "#/center/shoppingbag"
 import {formatDate} from "@/utils/time"
-import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price";
-import {ElNotification} from "element-plus";
+import {getFacePrice, getRealPrice, getTotalPrice} from "@/utils/price"
+import {ElNotification} from "element-plus"
+import { ElMessage } from "element-plus"
 
 const props = defineProps({
   "record": {
@@ -122,8 +123,8 @@ const buy = () => {
         <div class="header">
           <div style="display: flow-root">
             <div style="display:block; float: left">
-              <el-badge  class="title" :value="record.wupin.tag" style="margin-top: 10px" @click="onWupinClick">
-                <el-text class="wupin_name" @click="onGoWupin"> {{ record.wupin.name }} </el-text>
+              <el-badge  class="title" :value="record.wupin.tag" style="margin-top: 10px">
+                <el-text class="wupin_name" @click="onWupinClick"> {{ record.wupin.name }} </el-text>
               </el-badge>
               <el-text class="title wupin_class_name">
                 商品来源：

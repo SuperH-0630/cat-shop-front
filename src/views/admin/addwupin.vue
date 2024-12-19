@@ -9,8 +9,9 @@ import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IToolbarConfig } from '@wangeditor/editor'
 import { IEditorConfig } from '@wangeditor/editor'
-import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image";
-import {getXtoken} from "@/store/user";
+import {apiAdminPostUploadImageUrl, apiAdminPostUploadVideoUrl} from "#/admin/image"
+import {getXtoken} from "@/store/user"
+import { UploadFile } from "element-plus"
 
 const router = useRouter()
 
@@ -151,11 +152,11 @@ const add = () => {
       form.value.realPrice = 0
     }
 
-    if (!newPic.value) {
+    if (!newPic.value || !newPic.value.raw) {
       return
     }
 
-    return apiAdminPostAddWupin(form.value, newPic.value).then((res) => {
+    return apiAdminPostAddWupin(form.value, newPic.value.raw).then((res) => {
       if (res.data.data.success) {
         ElMessage({
           type: 'success',
@@ -192,7 +193,7 @@ const add = () => {
 
 const pictureLst = ref([])
 const pictureUpload = ref<UploadInstance>()
-const newPic = ref(null as UploadRawFile | null)
+const newPic = ref(null as UploadFile | null)
 
 const handleExceed: UploadProps['onExceed'] = (files) => {
   pictureUpload.value!.clearFiles()
@@ -201,12 +202,13 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   pictureUpload.value!.handleStart(file)
 }
 
-const updatePicture = (pic: UploadRawFile) => {
-  if (!pic) {
+const updatePicture = (pic: UploadFile) => {
+  if (!pic || !pic.size || !pic.raw) {
     ElMessage({
       type: 'warning',
       message: "请上传图片"
     })
+    return
   }
 
   if (pic.size > 500000) {// 500KB
@@ -289,7 +291,7 @@ const openEdit = () => {
                       :limit="1"
                       :on-exceed="handleExceed"
                       :show-file-list="false"
-                      :on-change="updatePicture"
+                      :om-change="updatePicture"
                   >
                     <el-tooltip
                         effect="dark"
@@ -509,7 +511,7 @@ const openEdit = () => {
     <template #header>
       <div style="width: 100%; display: flex; justify-content: center;">
         <el-text style="font-size: 1vw; font-weight: bold; margin-bottom: 10px;">
-          {{ wupin && wupin.name }} 商品介绍编辑器
+          商品介绍编辑器
         </el-text>
       </div>
     </template>

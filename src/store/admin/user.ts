@@ -1,12 +1,12 @@
-import useConfigStore from "@/store/config";
-import {isAdmin, isRootAdmin} from "@/store/admin/index";
+import useConfigStore from "@/store/config"
+import {isAdmin, isRootAdmin} from "@/store/admin/index"
 import {
     apiAdminGetUserInfo,
     apiAdminGetUserLst, apiAdminPostNewUser,
     apiAdminPostUpdateAvatarData,
     apiAdminPostUpdateInfo, apiAdminPostUpdatePassword, apiAdminPostUpdatePhone, NewUserData
 } from "#/admin/user";
-import {sha256} from "@/utils/encrypt";
+import {sha256} from "@/utils/encrypt"
 
 export const AdminUserType = {
     1: "用户",

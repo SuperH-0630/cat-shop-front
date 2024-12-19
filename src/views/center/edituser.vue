@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import useUserStore, {isLogin, UserBase} from "@/store/user"
-import {isEmail} from "@/utils/str";
+import {isEmail} from "@/utils/str"
 
 const router = useRouter()
 const route = useRoute()

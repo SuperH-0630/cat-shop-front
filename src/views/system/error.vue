@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import {asString} from "@/utils/str";
+
 const route = useRoute()
 const router = useRouter()
 const goHome = () => {
@@ -8,7 +10,7 @@ const goHome = () => {
   })
 }
 
-const msg = ref(route.query?.msg || "")
+const msg = ref<string>(asString(route.query.msg))
 if (!msg.value || msg.value.length > 20) {
   msg.value = "遇到系统未能捕获的错误，请稍后臭重试。"
 }
@@ -34,7 +36,7 @@ backTimer()
           style="min-width: 10vw; min-height: 40vh"
           icon="error"
           title="错误发生"
-          :sub-title="msg"
+          :sub-title="msg || ''"
       >
         <template #extra>
           <el-button  type="primary" @click="goHome">回到主页（{{ backSec > 5 ? 5 : backSec }}s）</el-button>

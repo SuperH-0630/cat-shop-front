@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import useConfigStore from "@/store/config";
+import useConfigStore from "@/store/config"
 
 const route = useRoute()
 const isAdmin = computed(() => route.meta?.admin === true || route.meta?.rootAdmin === true)

@@ -71,7 +71,7 @@ const update = () => {
 <template>
   <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px">
     <el-card style="display: flex; max-width: 75%; justify-content: center; margin-top: 10px">
-      <el-form :model="ub" label-width="auto" style="width: 15vw">
+      <el-form :model="form" label-width="auto" style="width: 15vw">
         <el-form-item>
           <template #label>
             <el-text>旧密码</el-text>

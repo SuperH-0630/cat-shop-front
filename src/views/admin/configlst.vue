@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import {isRootAdmin} from "@/store/admin";
+import {isRootAdmin} from "@/store/admin"
 import {
   AdminConfig,
   apiAdminConfigAsDefault,
-  apiAdminGetConfig, apiAdminGetConfigInfo,
-  apiAdminGetConfigType, apiAdminGetConfigTypeName,
+  apiAdminGetConfig,
   apiAdminPostDeleteConfig,
   apiAdminPostUpdateConfigSPic,
   apiAdminPostUpdateConfigString
 } from "#/admin/config";
-import {Edit} from "@element-plus/icons-vue";
-import {ElMessage, genFileId, UploadInstance, UploadProps, UploadRawFile} from "element-plus";
+import {Edit} from "@element-plus/icons-vue"
+import {ElMessage, genFileId, UploadFile, UploadInstance, UploadProps, UploadRawFile} from "element-plus"
 
 const router = useRouter()
 
@@ -66,15 +65,16 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
   pictureUpload.value!.handleStart(file)
 }
 
-const updatePicture = (key: string) => (pic: UploadRawFile) => {
-  if (!pic) {
+const updatePicture = (key: string) => (pic: UploadFile) => {
+  if (!pic || !pic.size || !pic.raw) {
     ElMessage({
       type: 'warning',
       message: "请上传图片"
     })
+    return
   }
 
-  if (pic.size > 500000) {// 500KB
+  if ((pic.size || 0) > 500000) {// 500KB
     ElMessage({
       type: 'warning',
       message: "文件过大"
@@ -82,7 +82,7 @@ const updatePicture = (key: string) => (pic: UploadRawFile) => {
     return
   }
 
-  apiAdminPostUpdateConfigSPic(key, pic).then((res) => {
+  apiAdminPostUpdateConfigSPic(key, pic.raw).then((res) => {
     if (res.data.data.success) {
       ElMessage({
         type: 'success',
@@ -226,7 +226,7 @@ const deleteConfig = (key: string) => {
         </el-table-column>
         <el-table-column label="配置值" >
           <template #default="{ row }">
-            <el-button v-if="configtype[row] === 'pic|must' || configtype[row] === 'pic'" :disabled="!config[row]" @click="openPic(config[row])">
+            <el-button v-if="configtype[row] === 'pic|must' || configtype[row] === 'pic'" :disabled="!config[row]" @click="openPic(config && config[row])">
               查看图片
             </el-button>
             <el-text v-else>
@@ -247,7 +247,7 @@ const deleteConfig = (key: string) => {
                   :limit="1"
                   :on-exceed="handleExceed"
                   :show-file-list="false"
-                  :on-change="updatePicture(row)"
+                  :0n-change="updatePicture(row)"
               >
                 <el-tooltip
                     effect="dark"
