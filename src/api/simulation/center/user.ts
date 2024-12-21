@@ -2,7 +2,6 @@ import {Result, Success} from "@/utils/request"
 import {UserBase, UserWithoutPre} from "@/store/user"
 
 export interface LoginResult {
-    autiregister?: boolean,
     xtoken: string
     success: boolean
 }
@@ -13,7 +12,6 @@ export function apiPostLoginGetXToken(phone: string, password: string): Result<L
             data: {
                 code: 0,
                 data: {
-                    autiregister: false,
                     xtoken: "123456" + phone + password,
                     success: true,
                 },
@@ -39,7 +37,6 @@ export function apiPostRegisterGetXToken(phone: string, password: string): Resul
         data: {
             code: 0,
             data: {
-                autiregister: false,
                 xtoken: "123456" + phone + password,
                 success: true,
             },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import useAdminUserStore, {AdminUser, AdminUserBase, GetAdminUserStatus} from "@/store/admin/user"
+import useAdminUserStore, {AdminUser, AdminUserBase, AdminUserType, GetAdminUserStatus} from "@/store/admin/user"
 import pushTo from "@/views/admin/router_push"
 import {isAdmin, isRootAdmin} from "@/store/admin"
 import {isEmail} from "@/utils/str"
@@ -28,6 +28,7 @@ const ub = ref({
   status: 1,
   wechat: "",
   email: "",
+  type: 1,
 } as AdminUserBase)
 
 const toBack = () => {
@@ -58,6 +59,7 @@ const onChangeUser = () => {
         status: res.status,
         wechat: res.wechat,
         email: res.email,
+        type: res.type,
       }
       if (user.value.type === 3) {
         if (!isRootAdmin()) {
@@ -65,6 +67,9 @@ const onChangeUser = () => {
         }
         userStatusLst.value = {
           1: "正常",
+        }
+        userTypeLst.value = {
+          3: "根管理员",
         }
         ub.value.status = 1
         if (res.status !== 1) {
@@ -89,22 +94,24 @@ watch(() => route.query?.userId, onChangeUser)
 onChangeUser()
 
 const hasChange = computed(() => {
-  return ub.value.name !== user.value?.name || ub.value.location !== user.value?.location || ub.value.status !== user.value?.status || ub.value.wechat !== user.value?.wechat || ub.value.email !== user.value?.email
+  return ub.value.type !== user.value?.type && ub.value.name !== user.value?.name || ub.value.location !== user.value?.location || ub.value.status !== user.value?.status || ub.value.wechat !== user.value?.wechat || ub.value.email !== user.value?.email
 })
 
 const userStatusLst = ref(GetAdminUserStatus() as { [key: number]: string })
+const userTypeLst = ref(AdminUserType as { [key: number]: string })
 
 const deleteCheck = computed(() => !(user.value && user.value.status === 3 && ub.value.status !== 3))
 const rootAdminCheck = computed(() => !(user.value && user.value.type === 3 && ub.value.status !== 1))
 const checkName = computed(() => ub.value.name && ub.value.name.length > 0 && ub.value.name.length <= 10)
 const checkStatus = computed(() => !Object.keys(userStatusLst).some((v) => Number(v).valueOf() === ub.value.status))
+const checkType = computed(() => !Object.keys(userTypeLst).some((v) => Number(v).valueOf() === ub.value.type))
 const checkEmail = computed(() => {
   if (!ub.value.email) {
     return true
   }
   return isEmail(ub.value.email)
 })
-const allCheck = computed(() => checkEmail.value && checkStatus.value && checkName.value && hasChange.value && rootAdminCheck.value && deleteCheck.value)
+const allCheck = computed(() => checkType.value && checkEmail.value && checkStatus.value && checkName.value && hasChange.value && rootAdminCheck.value && deleteCheck.value)
 
 const update = () => {
   ElMessageBox.confirm('您是否确定更新你的用户信息', '提示', {
@@ -212,6 +219,23 @@ const update = () => {
             />
           </el-select>
         </el-form-item>
+        <el-form-item>
+          <template #label>
+            <el-text>类型</el-text>
+          </template>
+          <el-select
+              v-model="ub.type"
+              placeholder="类型"
+              size="large"
+          >
+            <el-option
+                v-for="(item, i) in userTypeLst"
+                :key="i"
+                :label="item"
+                :value="Number(i).valueOf()"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div style="display: flex; width: 15vw; justify-content: center">
         <el-button :disabled="!allCheck" @click="update">
@@ -221,6 +245,10 @@ const update = () => {
       <div style="width: 15vw; margin-top: 5px">
         <div v-if="!checkStatus" class="tip_box" style="display: flex; justify-content: center">
           <el-alert title="请输入正确的状态！" :closable="false" type="warning" center show-icon>
+          </el-alert>
+        </div>
+        <div v-if="!checkType" class="tip_box" style="display: flex; justify-content: center">
+          <el-alert title="请输入正确的类型！" :closable="false" type="warning" center show-icon>
           </el-alert>
         </div>
         <div v-if="!checkName" class="tip_box" style="display: flex; justify-content: center">

@@ -43,6 +43,7 @@ export interface AdminUserBase {
     email: string,
     location: string
     status: number
+    type: number
 }
 
 export interface AdminUserAvatar {
@@ -50,7 +51,6 @@ export interface AdminUserAvatar {
 }
 
 export interface AdminUserWithoutPre extends AdminUserId, AdminUserBase, AdminUserAvatar{
-    type: number
     phone: string
     totalPrice: number
     totalBuy: number
